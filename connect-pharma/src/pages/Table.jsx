@@ -5,6 +5,8 @@ import UserTable from "./UserTable";
 import firebase from './../firebase';
 import { faAdd } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { collection, deleteDoc, doc, getDocs, getFirestore, onSnapshot, query, where } from 'firebase/firestore';
+
 
 
 const Table = () => {
@@ -40,6 +42,29 @@ const Table = () => {
 
 
   useEffect(() => {
+
+    /*   Firebase v9    */
+    const db = getFirestore();
+    const usersRef = collection(db, 'users');
+    const q = query(usersRef, where("name", "!=", null));
+
+
+    getDocs(q).then((querySnapshot) => {
+      const newUsers = [];
+      querySnapshot.forEach((doc) => {
+        const item = {
+          id: doc.id,
+          ...doc.data()
+        };
+        newUsers.push(item);
+      });
+      console.log(newUsers);
+      setUsers(newUsers);
+    }).catch((error) => {
+      console.error("Error getting documents: ", error);
+    })
+
+    /*  Firebase old method
     const unsubscribe = firebase
       .firestore()
       .collection("users")
@@ -48,10 +73,11 @@ const Table = () => {
           id: doc.id,
           ...doc.data()
         }));
-        // console.log(newUsers);
         setUsers(newUsers);
       });
     return () => unsubscribe();
+    */
+
   }, []);
 
 
@@ -59,15 +85,30 @@ const Table = () => {
     navigate("/addUser");
   };
 
-  const handleDelete = (id) => { 
-    console.log(id);
+  const handleDelete = (id) => {
+    /*   Firebase v9   */
+    const db = getFirestore();
+    deleteDoc(doc(db, "users", id))
+      .then(() => {
+        console.log("user deleted sucessfully");
+        setUsers(prev => {
+          return prev.filter(user => user.id !== id);
+        })
+      })
+      .catch(error => {
+        console.error(error);
+      });
+
+ 
+      /*
     firebase.firestore().collection("users").doc(id).delete()
-    .then(() => {
-      console.log("user deleted sucessfully");
-    })
-    .catch(error => {
-      console.error(error);
-    });
+      .then(() => {
+        console.log("user deleted sucessfully");
+      })
+      .catch(error => {
+        console.error(error);
+      });
+    */
   };
 
 

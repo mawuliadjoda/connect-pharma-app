@@ -4,6 +4,10 @@ import { useOutletContext } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAt } from "@fortawesome/free-solid-svg-icons";
 import firebase from './../firebase';
+import { addDoc, collection, getFirestore } from "firebase/firestore";
+
+const db = getFirestore();
+const usersRef = collection(db, 'users');
 
 function AddUser() {
     const [sidebarToggle] = useOutletContext();
@@ -12,11 +16,29 @@ function AddUser() {
 
     const handleInputChange = (event) => {
         const { name, value } = event.target
-    
+
         setUser({ ...user, [name]: value })
     }
 
-    const addUser = (user) => {    
+    const addUser = (user) => {
+        
+        const data = {
+            name: user.name,
+            username: user.username,
+            email: user.email,
+            roles: ["user"]
+        }
+
+        /*   Firebase v9    */
+        addDoc(usersRef, data)
+            .then(() => {
+                console.log("Data sucessfuly submitted")
+            })
+            .catch((error) => {
+                console.log("Error adding document:", error);
+            });
+
+        /*  Firebase old method   
         firebase.firestore().collection("users").add({    
           name: user.name,
           username: user.username,
@@ -27,7 +49,7 @@ function AddUser() {
         .catch( (error) => {
           console.log("Error adding document:", error);
         });   
-    
+        */
     }
 
     return (

@@ -15,3 +15,17 @@
 	npm i react-scripts
 	npm i web-vitals@2.1.4
 	npm install firebase
+
+	# .env Files with Vite
+	https://vitejs.dev/guide/env-and-mode.html
+
+	# tailwindcss
+	https://tailwindcss.com/docs/guides/vite
+
+
+	# Firebase doc
+	https://cloud.google.com/firestore/docs/query-data/queries?hl=fr
+	
+	https://softauthor.com/firebase-v8-v9-compare-cloud-firestore-crud-queries/#getting-started-with-firebase-version-8
+
+	https://modularfirebase.web.app/common-use-cases/firestore/
