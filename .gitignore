@@ -1,0 +1,24 @@
+# Logs
+connect-pharma/logs
+connect-pharma/*.log
+connect-pharma/npm-debug.log*
+connect-pharma/yarn-debug.log*
+connect-pharma/yarn-error.log*
+connect-pharma/pnpm-debug.log*
+connect-pharma/lerna-debug.log*
+
+connect-pharma/node_modules
+connect-pharma/dist
+connect-pharma/dist-ssr
+connect-pharma/*.local
+
+# Editor directories and files
+connect-pharma/.vscode/*
+connect-pharma/!.vscode/extensions.json
+connect-pharma/.idea
+connect-pharma/.DS_Store
+connect-pharma/*.suo
+connect-pharma/*.ntvs*
+connect-pharma/*.njsproj
+connect-pharma/*.sln
+connect-pharma/*.sw?
