@@ -1,13 +1,20 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import Datatables from "../components/Datatables/Table";
 import TableCell from "../components/Datatables/TableCell";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faRemove } from "@fortawesome/free-solid-svg-icons";
 
 function UserTable({ loading, dataHeader, data, handleDelete }) {
+  const navigate = useNavigate();
+
+  const handleClickEditButton = (user) => {
+    navigate("/editUser", { state: user });
+  };
+
   return (
-    <Datatables loading={loading} dataHeader={dataHeader}>
+    <div>
+      <Datatables loading={loading} dataHeader={dataHeader}>
       {data?.map((row, index) => (
         <tr
           key={index}
@@ -31,13 +38,18 @@ function UserTable({ loading, dataHeader, data, handleDelete }) {
                   key={index}
                   className="rounded-full py-1 px-3 text-xs font-semibold bg-emerald-200 text-green-900"
                 >
-                  {role.name}
+                  {role}
                 </span>
               ))}
             </span>
           </TableCell>
           <TableCell>
             <Link
+              onClick={(e) => {
+                e.preventDefault();
+                handleClickEditButton(row);
+              }}
+
               to={`/auth/master/user/${row.id}/edit`}
               className={`text-sky-700 inline-flex py-2 px-2 rounded  text-sm`}
             >
@@ -57,6 +69,8 @@ function UserTable({ loading, dataHeader, data, handleDelete }) {
         </tr>
       ))}
     </Datatables>
+    </div>
+    
   );
 }
 

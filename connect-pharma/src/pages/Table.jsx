@@ -1,12 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar/Index";
-import { useOutletContext } from "react-router-dom";
+import { Navigate, useNavigate, useOutletContext } from "react-router-dom";
 import UserTable from "./UserTable";
+import firebase from './../firebase';
+import { faAdd } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-function Table() {
+
+const Table = () => {
+  const navigate = useNavigate();
   const [sidebarToggle] = useOutletContext();
 
   const [loading] = useState(false);
+
+  const [users, setUsers] = useState([]);
 
   const dataHeader = [
     {
@@ -27,78 +34,43 @@ function Table() {
     },
     {
       key: "action",
-      label: "Aksi",
+      label: "Action",
     },
   ];
 
-  const handleDelete = () => {};
-  const data = [
-    {
-      id: 1,
-      name: "Indah Sari Devi",
-      email: "mamahdedeh34@gmail.com",
-      username: "indahsdev01",
-      roles: [{ name: "Admin" }, { name: "Writer" }],
-    },
-    {
-      id: 2,
-      name: "Mahindra Putra",
-      email: "maheend@gmail.com",
-      username: "maheeend01",
-      roles: [{ name: "Editor" }],
-    },
-    {
-      id: 3,
-      name: "Ujang Ilman",
-      email: "ujangil03@gmail.com",
-      username: "uujang44",
-      roles: [{ name: "Writer" }],
-    },
 
-    {
-      id: 4,
-      name: "Hadi Pradhana",
-      email: "hapra09@gmail.com",
-      username: "hapra09",
-      roles: [{ name: "Writer" }],
-    },
-    {
-      id: 1,
-      name: "Indah Sari Devi",
-      email: "mamahdedeh34@gmail.com",
-      username: "indahsdev01",
-      roles: [{ name: "Admin" }, { name: "Writer" }],
-    },
-    {
-      id: 2,
-      name: "Mahindra Putra",
-      email: "maheend@gmail.com",
-      username: "maheeend01",
-      roles: [{ name: "Editor" }],
-    },
-    {
-      id: 3,
-      name: "Ujang Ilman",
-      email: "ujangil03@gmail.com",
-      username: "uujang44",
-      roles: [{ name: "Writer" }],
-    },
+  useEffect(() => {
+    const unsubscribe = firebase
+      .firestore()
+      .collection("users")
+      .onSnapshot(snapshot => {
+        const newUsers = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        // console.log(newUsers);
+        setUsers(newUsers);
+      });
+    return () => unsubscribe();
+  }, []);
 
-    {
-      id: 4,
-      name: "Hadi Pradhana",
-      email: "hapra09@gmail.com",
-      username: "hapra09",
-      roles: [{ name: "Writer" }],
-    },
-    {
-      id: 4,
-      name: "Hadi Pradhana",
-      email: "hapra09@gmail.com",
-      username: "hapra09",
-      roles: [{ name: "Writer" }],
-    },
-  ];
+
+  const addUser = () => {
+    navigate("/addUser");
+  };
+
+  const handleDelete = (id) => { 
+    console.log(id);
+    firebase.firestore().collection("users").doc(id).delete()
+    .then(() => {
+      console.log("user deleted sucessfully");
+    })
+    .catch(error => {
+      console.error(error);
+    });
+  };
+
+
   return (
     <>
       <main className="h-full">
@@ -106,11 +78,19 @@ function Table() {
 
         {/* Main Content */}
         <div className="mainCard">
+
+          {/* Add user Button */}
+          <button
+            className="py-2 px-4 border border-emerald-500 bg-emerald-600 w-full rounded-full text-gray-200 hover:bg-emerald-600 hover:border-emerald-600 justify-end text-sm"
+            onClick={() => addUser()}>
+            <FontAwesomeIcon icon={faAdd}></FontAwesomeIcon> Add User
+          </button>
+
           <div className="border w-full border-gray-200 bg-white py-4 px-6 rounded-md">
             <UserTable
               loading={loading}
               dataHeader={dataHeader}
-              data={data}
+              data={users}
               handleDelete={handleDelete}
             />
           </div>
