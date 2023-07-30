@@ -5,7 +5,7 @@ import UserTable from "./UserTable";
 import firebase from './../firebase';
 import { faAdd } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { collection, deleteDoc, doc, getDocs, getFirestore, onSnapshot, query, where } from 'firebase/firestore';
+import { FirestoreError, collection, deleteDoc, doc, getDocs, getFirestore, limit, onSnapshot, orderBy, query, where } from 'firebase/firestore';
 
 
 
@@ -46,9 +46,16 @@ const Table = () => {
     /*   Firebase v9    */
     const db = getFirestore();
     const usersRef = collection(db, 'users');
-    const q = query(usersRef, where("name", "!=", null));
 
+    /*   Use paginate later  onSnapshot() equivalent de hooks
+     https://firebase.google.com/docs/firestore/query-data/listen?hl=fr
+     https://firebase.google.com/docs/firestore/query-data/query-cursors?hl=fr#paginate_a_query
+     https://firebase.google.com/docs/firestore/manage-data/transactions?hl=fr
+     */
+    const q = query(usersRef, where("name", "!=", null), orderBy("name", "asc"), limit(50));
 
+    
+    /*
     getDocs(q).then((querySnapshot) => {
       const newUsers = [];
       querySnapshot.forEach((doc) => {
@@ -63,6 +70,29 @@ const Table = () => {
     }).catch((error) => {
       console.error("Error getting documents: ", error);
     })
+    */
+
+    
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const newUsers = [];
+      querySnapshot.forEach((doc) => {
+        const item = {
+          id: doc.id,
+          ...doc.data()
+        };
+        newUsers.push(item);
+      });
+      console.log(newUsers);
+      setUsers(newUsers);
+    },
+
+    (error) => {
+      console.log(error);
+    }
+    
+    );
+    return () => unsubscribe();
+    // return unsubscribe();
 
     /*  Firebase old method
     const unsubscribe = firebase

@@ -1,4 +1,5 @@
 # React + TypeScript + Vite
+https://react.dev/reference/react/useMemo#usage
 
 # Admin template dependencies
 	npm i react-router-dom
@@ -23,9 +24,14 @@
 	https://tailwindcss.com/docs/guides/vite
 
 
-	# Firebase doc
+	# firestore doc
 	https://cloud.google.com/firestore/docs/query-data/queries?hl=fr
-	
+	https://firebase.google.com/docs/firestore/query-data/order-limit-data?hl=fr
+	https://firebase.google.com/docs/firestore/query-data/query-cursors?hl=fr#paginate_a_query
+
+	# firestore  doc transaction 
+	https://firebase.google.com/docs/firestore/manage-data/transactions?hl=fr
+
 	https://softauthor.com/firebase-v8-v9-compare-cloud-firestore-crud-queries/#getting-started-with-firebase-version-8
 
 	https://modularfirebase.web.app/common-use-cases/firestore/
