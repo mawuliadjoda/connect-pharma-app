@@ -1,21 +1,26 @@
-import React from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Datatables from "../components/Datatables/Table";
 import TableCell from "../components/Datatables/TableCell";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faRemove } from "@fortawesome/free-solid-svg-icons";
 
-function UserTable({ loading, dataHeader, data, handleDelete }) {
+type UserTableProps = {
+  loading: any, 
+  dataHeader: any, 
+  data: any, 
+  handleDelete: any
+}
+function UserTable({ loading, dataHeader, data, handleDelete }: UserTableProps) {
   const navigate = useNavigate();
 
-  const handleClickEditButton = (user) => {
+  const handleClickEditButton = (user: any) => {
     navigate("/editUser", { state: user });
   };
 
   return (
     <div>
       <Datatables loading={loading} dataHeader={dataHeader}>
-      {data?.map((row, index) => (
+      {data?.map((row: any, index: any) => (
         <tr
           key={index}
           className="bg-white border md:border-b block md:table-row rounded-md shadow-md md:rounded-none md:shadow-none mb-5"
@@ -33,7 +38,7 @@ function UserTable({ loading, dataHeader, data, handleDelete }) {
           </TableCell>
           <TableCell dataLabel="Role" showLabel={true}>
             <span className=" space-x-1">
-              {row.roles?.map((role, index) => (
+              {row.roles?.map((role: [], index: any) => (
                 <span
                   key={index}
                   className="rounded-full py-1 px-3 text-xs font-semibold bg-emerald-200 text-green-900"

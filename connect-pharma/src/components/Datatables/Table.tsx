@@ -1,14 +1,22 @@
-import React from "react";
+
 import Header from "./Header";
 
+type TableProps = {
+  loading?: boolean,
+  dataHeader: any,
+  handleSort?: any,
+  direction?: any,
+  field?: any,
+  children?: any
+}
 function Table({
-  loading,
+ 
   dataHeader,
   handleSort,
   direction,
   field,
   children,
-} = {}) {
+}: TableProps) {
   return (
     <div className="overflow-x-auto">
       <table

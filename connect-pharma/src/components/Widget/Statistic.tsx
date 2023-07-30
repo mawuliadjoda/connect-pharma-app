@@ -1,12 +1,11 @@
-import React from "react";
-import Chart from "chart.js/auto";
+import Chart, { ChartData } from "chart.js/auto";
 import { Bar } from "react-chartjs-2";
 import "./widget.css";
 
 Chart.register();
 
 function Statistic({ ...props }) {
-  const data = {
+  const data: ChartData<"bar", string[], string> = {
     labels: ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli"],
     datasets: [
       {
@@ -16,7 +15,7 @@ function Statistic({ ...props }) {
       {
         label: "Target",
         data: ["11", "20", "89", "149", "150"],
-        type: "line",
+        type: "bar",
       },
     ],
   };

@@ -1,6 +1,18 @@
-import React from "react";
 
-function ScrolledCard({ data, ...props }) {
+type ScrolledCardProps = {
+  data: Data,
+
+}
+
+type Data = {
+  color: string,
+  title: string,
+  date: any,
+  os: any,
+  gs: any,
+  percentage: any
+}
+function ScrolledCard({ data }:ScrolledCardProps ) {
   return (
     <div className={`scrolledCard ${data.color} text-slate-50 flex flex-col`}>
       <h1 className="pb-3 font-semibold">{data.title}</h1>

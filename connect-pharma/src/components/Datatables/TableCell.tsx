@@ -1,6 +1,11 @@
-import React from "react";
+type TableCellProps = {
+  dataLabel?: any, 
+  className?: any, 
+  children?: any, 
+  showLabel?: any
+}
 
-function TableCell({ dataLabel, className, children, showLabel }) {
+function TableCell({ dataLabel, className, children, showLabel }:TableCellProps ) {
   return (
     <>
       <td

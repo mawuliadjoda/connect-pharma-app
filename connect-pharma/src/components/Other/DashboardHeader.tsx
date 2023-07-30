@@ -5,10 +5,18 @@ import {
   faMessage,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
 import { Link } from "react-router-dom";
 
-function DashboardHeader({ user, avatar, toggle }) {
+type DashboardHeaderProps = {
+  user: User
+  avatar: string, 
+ // toggle: () => void;
+}
+
+type User = {
+  name: string
+}
+function DashboardHeader({ user, avatar }: DashboardHeaderProps) {
   return (
     <div className="px-3 sm:px-8 pt-9 pb-4 flex flex-wrap w-full justify-between items-center">
       <div className="flex flex-row gap-3">
@@ -46,7 +54,7 @@ function DashboardHeader({ user, avatar, toggle }) {
           />
         </p>
 
-        <p className="cursor-pointer md:hidden text-2xl" onClick={toggle}>
+        <p className="cursor-pointer md:hidden text-2xl" >
           <FontAwesomeIcon icon={faBars} />
         </p>
       </div>

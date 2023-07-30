@@ -1,6 +1,11 @@
-import React from "react";
-
-function HeaderSort({ tkey, label, field, direction, handleSort }) {
+type HeaderSortProps = {
+  tkey: any, 
+  label: string, 
+  field: any, 
+  direction: any, 
+  handleSort: any
+}
+function HeaderSort({ tkey, label, field, direction, handleSort }: HeaderSortProps) {
   return (
     <>
       <div
@@ -50,7 +55,13 @@ function HeaderSort({ tkey, label, field, direction, handleSort }) {
   );
 }
 
-function Header({ data, handleSort, direction, field } = {}) {
+type HeaderProps ={
+  data: any [], 
+  handleSort: any, 
+  direction: any, 
+  field: any
+}
+function Header({ data, handleSort, direction, field }: HeaderProps ) {
   return (
     <>
       <thead className="hidden bg-slate-100 md:table-header-group text-gray-600">

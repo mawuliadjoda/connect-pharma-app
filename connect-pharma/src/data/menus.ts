@@ -6,15 +6,13 @@ import {
   faNoteSticky,
   faNotdef
 } from "@fortawesome/free-solid-svg-icons";
+import { Menu } from "../components/Sidebar/MenuList";
 
-const initMenu = [
+const initMenu: Menu[] = [
   {
     label: "Dashboard",
     path: "/",
     icon: faTachometer,
-  },
-  {
-    label: 'Halaman'
   },
   {
     label: "Blank",
@@ -26,10 +24,6 @@ const initMenu = [
     path: "/404",
     icon: faNotdef,
   },
-  
-  {
-    label: 'Tabel dan Form'
-  },
   {
     label: "Form",
     path: "/form",
@@ -39,10 +33,6 @@ const initMenu = [
     label: "Tabel",
     path: "/table",
     icon: faTable,
-  },
-
-  {
-    label: 'Otentikasi'
   },
   {
     label: "Login",

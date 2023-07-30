@@ -1,9 +1,7 @@
-import React from "react";
-import StatisticWidget from "../components/Widget/Statistic.jsx";
-import AchievementWidget from "../components/Widget/Achievment.jsx";
-import DashboardHeader from "../components/Other/DashboardHeader.jsx";
-import ScrolledCard from "../components/Widget/ScrolledCard.jsx";
-import { useOutletContext } from "react-router-dom";
+import StatisticWidget from "../components/Widget/Statistic.tsx";
+import AchievementWidget from "../components/Widget/Achievment.tsx";
+import DashboardHeader from "../components/Other/DashboardHeader.tsx";
+import ScrolledCard from "../components/Widget/ScrolledCard.tsx";
 
 function Dashboard() {
   const avatar =
@@ -60,14 +58,14 @@ function Dashboard() {
     },
   ];
 
-  const [sidebarToggle] = useOutletContext();
+  // const [sidebarToggle] = useOutletContext();
 
   return (
     <>
       <main className="h-full">
         {/* Welcome Header */}
         <DashboardHeader
-          toggle={sidebarToggle}
+          //toggle={sidebarToggle}
           avatar={avatar}
           user={{ name: "Connect Pharma" }}
         />

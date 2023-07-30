@@ -1,8 +1,14 @@
 import { faMagnifyingGlass, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
 
-function SidebarSearch({ scButton, handleChange, clearSearch, search }) {
+
+type SidebarSearchProps = {
+  scButton: any, 
+  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void, 
+  clearSearch: () => void, 
+  search: any
+}
+function SidebarSearch({ scButton, handleChange, clearSearch, search }: SidebarSearchProps) {
   return (
     <div className="px-4">
       <div className="w-full py-4 px-2 items-center flex relative">

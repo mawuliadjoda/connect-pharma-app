@@ -6,7 +6,7 @@ import {
   faUserAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import "./style.css";
 import { useEffect } from "react";

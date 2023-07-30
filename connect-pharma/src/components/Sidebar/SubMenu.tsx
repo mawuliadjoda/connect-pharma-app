@@ -1,10 +1,27 @@
 import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { NavLink, useLocation } from "react-router-dom";
+import { Menu } from "./MenuList";
 
-function SubMenu({ menu, ...props }) {
+type SubMenuProps = {
+  menu: Menu,
+  toggle: () => void
+}
+/*
+type Menu = {
+  label: string,
+  path: string,
+  icon?: IconDefinition,
+  submenu?: Submenu []
+}
+type Submenu = {
+  label: string,
+  path: string
+}
+*/
+function SubMenu({ menu, toggle }: SubMenuProps) {
   const { pathname } = useLocation();
   const [subMenuOpen, setSubMenuOpen] = useState(pathname.includes(menu.path));
   return (
@@ -33,8 +50,8 @@ function SubMenu({ menu, ...props }) {
         }
         className="flex flex-col pl-[39px] text-[0.7rem] h-0 overflow-hidden"
       >
-        {menu.submenu.map((sm) => (
-          <li key={sm.label} onClick={props.props.toggle}>
+        {menu.submenu?.map((sm) => (
+          <li key={sm.label} onClick={toggle}>
             <NavLink to={`${menu.path}/${sm.path}`} className="link">
               {sm.label}
             </NavLink>

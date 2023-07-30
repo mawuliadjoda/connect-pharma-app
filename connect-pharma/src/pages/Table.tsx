@@ -1,21 +1,27 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar/Index";
-import { Navigate, useNavigate, useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import UserTable from "./UserTable";
-import firebase from './../firebase';
+
 import { faAdd } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { FirestoreError, collection, deleteDoc, doc, getDocs, getFirestore, limit, onSnapshot, orderBy, query, where } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getFirestore, limit, onSnapshot, orderBy, query, where } from 'firebase/firestore';
+import { getDb } from "../services/db";
 
-
+export type User = {
+  id: string,
+  name: string,
+  username: string
+  roles: string[]
+}
 
 const Table = () => {
   const navigate = useNavigate();
-  const [sidebarToggle] = useOutletContext();
+  const [sidebarToggle] = useOutletContext<any>();
 
   const [loading] = useState(false);
 
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState<User[]>([]);
 
   const dataHeader = [
     {
@@ -44,8 +50,8 @@ const Table = () => {
   useEffect(() => {
 
     /*   Firebase v9    */
-    const db = getFirestore();
-    const usersRef = collection(db, 'users');
+    // const db = getFirestore();
+    const usersRef = collection(getDb(), 'users');
 
     /*   Use paginate later  onSnapshot() equivalent de hooks
      https://firebase.google.com/docs/firestore/query-data/listen?hl=fr
@@ -74,12 +80,15 @@ const Table = () => {
 
     
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const newUsers = [];
+      const newUsers: User []= [];
       querySnapshot.forEach((doc) => {
         const item = {
           id: doc.id,
-          ...doc.data()
-        };
+          name: doc.data().name,
+          username: doc.data().username,
+          email: doc.data().email,
+          roles: doc.data().roles
+      };
         newUsers.push(item);
       });
       console.log(newUsers);
@@ -115,7 +124,7 @@ const Table = () => {
     navigate("/addUser");
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = (id: string) => {
     /*   Firebase v9   */
     const db = getFirestore();
     deleteDoc(doc(db, "users", id))

@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
-import Sidebar from "../Sidebar/Sidebar";
-import { sidebarToggle } from "./../../utils/toggler.js";
-import BottomNavbar from "../BottomNavbar/Index";
+import Sidebar from "../Sidebar/Sidebar.jsx";
+import { sidebarToggle } from "../../utils/toggler.ts";
+import BottomNavbar from "../BottomNavbar/Index.tsx";
 
-function AuthLayout({ ...props }) {
+function AuthLayout() {
   const isDesktop = () => document.body.clientWidth > 768;
-  const [sidebarStatus, setSidebarStatus] = useState("");
+  const [sidebarStatus, setSidebarStatus] = useState(false);
 
   useEffect(() => {
     window.addEventListener("resize", () => {

@@ -1,9 +1,8 @@
-import React from "react";
 import Navbar from "../components/Navbar/Index";
 import { Link, useOutletContext } from "react-router-dom";
 
 function NotFound() {
-  const [sidebarToggle] = useOutletContext();
+  const [sidebarToggle] = useOutletContext<any>();
   return (
     <main className="h-full">
       <Navbar toggle={sidebarToggle} />
@@ -17,7 +16,7 @@ function NotFound() {
           <Link to="/" className="py-2 px-4 border border-emerald-500 bg-emerald-600 rounded-full text-gray-200 hover:bg-emerald-600 hover:border-emerald-600 justify-end text-sm" >
             <span aria-hidden="true">&larr;</span> Go back home
           </Link>
-          <Link className="py-2 px-4 border border-emerald-500 bg-emerald-600 rounded-full text-gray-200 hover:bg-emerald-600 hover:border-emerald-600 justify-end text-sm">
+          <Link to="/" className="py-2 px-4 border border-emerald-500 bg-emerald-600 rounded-full text-gray-200 hover:bg-emerald-600 hover:border-emerald-600 justify-end text-sm">
             Contact support <span aria-hidden="true">&rarr;</span>
           </Link>
         </div>

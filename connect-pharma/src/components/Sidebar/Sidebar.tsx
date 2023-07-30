@@ -1,11 +1,11 @@
 import { faLeaf, faSignOut } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useRef, useState } from "react";
-import initMenus from "../../data/menus.js";
+import { useRef, useState } from "react";
+import initMenus from "../../data/menus.ts";
 import "./sidebar.css";
 import SidebarLogo from "./SidebarLogo.jsx";
-import SidebarSearch from "./SidebarSearch.jsx";
-import MenuList from "./MenuList.jsx";
+import SidebarSearch from "./SidebarSearch.tsx";
+import MenuList from "./MenuList.tsx";
 import { useNavigate } from "react-router-dom";
 
 function Sidebar({ ...props }) {
@@ -14,7 +14,7 @@ function Sidebar({ ...props }) {
   const [scButton, setScButton] = useState(false);
   const search = useRef("");
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value) {
       setScButton(true);
       setMenus(
@@ -29,7 +29,7 @@ function Sidebar({ ...props }) {
   };
 
   const clearSearch = () => {
-    search.current.value = "";
+    // search.current.value = "";
     setMenus(initMenus);
     setScButton(false);
   };

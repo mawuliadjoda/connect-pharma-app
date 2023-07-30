@@ -1,19 +1,19 @@
-import { faFacebook, faGoogle } from "@fortawesome/free-brands-svg-icons";
+
 import { faEnvelope, faLock, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 function RegisterIndex() {
   const navigate = useNavigate();
-  const [error, setError] = useState(null);
+  // const [error, setError] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const handleSubmit = () => {
-    setError(false);
+   // setError(false);
     console.log(email);
     console.log(name);
     console.log(password);
@@ -85,11 +85,7 @@ function RegisterIndex() {
                         placeholder="E-Mail Address"
                       />
                     </div>
-                    {error?.email && (
-                      <span className="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1">
-                        {error.email[0]}
-                      </span>
-                    )}
+                  
                   </div>
 
                   {/* Username */}
@@ -108,11 +104,7 @@ function RegisterIndex() {
                         placeholder="Nama Lengkap"
                       />
                     </div>
-                    {error?.name && (
-                      <span className="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1">
-                        {error.email[0]}
-                      </span>
-                    )}
+                   
                   </div>
 
                   {/* Password */}
@@ -131,11 +123,7 @@ function RegisterIndex() {
                         placeholder="Password"
                       />
                     </div>
-                    {error?.password && (
-                      <span className="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1">
-                        {error.password[0]}
-                      </span>
-                    )}
+                  
                   </div>
 
                   {/* Konfirmasi Password */}
@@ -154,11 +142,8 @@ function RegisterIndex() {
                         placeholder="Konfirmasi Password"
                       />
                     </div>
-                    {error?.confirm_password && (
-                      <span className="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1">
-                        {error.confirm_password[0]}
-                      </span>
-                    )}
+                    
+                    
                   </div>
 
                   {/* Forgot Password Link */}
@@ -207,7 +192,7 @@ function RegisterIndex() {
                   type="submit"
                   className="flex items-center justify-center focus:outline-none text-slate-500 text-sm bg-slate-200 rounded-lg md:rounded md:py-2 px-3 py-3 w-full transition duration-150 ease-in"
                 >
-                  <FontAwesomeIcon icon={faGoogle} />
+                  <FontAwesomeIcon icon={faUser} />
                   <span className="mr-2 flex-1">Login with Google</span>
                 </button>
               </div>
@@ -217,7 +202,7 @@ function RegisterIndex() {
                   type="submit"
                   className="flex items-center justify-center focus:outline-none text-slate-500 text-sm bg-slate-200 rounded-lg md:rounded md:py-2 px-3 py-3 w-full transition duration-150 ease-in"
                 >
-                  <FontAwesomeIcon icon={faFacebook} />
+                  <FontAwesomeIcon icon={faUser} />
                   <span className="mr-2 flex-1">Login with Facebook</span>
                 </button>
               </div>
