@@ -1,6 +1,6 @@
 import { Suspense } from "react";
-import { Loading } from "../utils/Loading";
 import Table from "./Table";
+import { Loading } from "../../utils/Loading";
 
 function UserList() {
 

@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import Navbar from "../components/Navbar/Index";
+import Navbar from "../../components/Navbar/Index";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import UserTable from "./UserTable";
 
 import { faAdd } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { collection, deleteDoc, doc, getFirestore, limit, onSnapshot, orderBy, query, where } from 'firebase/firestore';
-import { getDb } from "../services/db";
+import { getDb } from "../../services/db";
 import { User } from "./AddUser";
 
 

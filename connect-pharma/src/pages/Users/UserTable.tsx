@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
-import Datatables from "../components/Datatables/Table";
-import TableCell from "../components/Datatables/TableCell";
+import Datatables from "../../components/Datatables/Table";
+import TableCell from "../../components/Datatables/TableCell";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faRemove } from "@fortawesome/free-solid-svg-icons";
 

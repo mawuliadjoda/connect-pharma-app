@@ -1,70 +1,60 @@
-import { FormEvent, useRef} from "react";
-import Navbar from "../components/Navbar/Index";
-import { useLocation, useNavigate, useOutletContext } from "react-router-dom";
-import firebase from '../firebase';
-import { User } from "./AddUser";
+import { FormEvent, useRef } from "react";
+import Navbar from "../../components/Navbar/Index";
+import { useNavigate, useOutletContext } from "react-router-dom";
+import { addDoc, collection } from "firebase/firestore";
+import { getDb } from "../../services/db";
 
 
-function EditUser() {
-    const location = useLocation();
+export type User = {
+    id?: string,
+    name: string,
+    username: string,
+    email?: string,
+    roles?: string[]
+}
+
+function AddUser() {
+    const [sidebarToggle] = useOutletContext<any>();
+    const initialFormState = { id: null, name: '', username: '', email: '' }
+
+    const nameRef = useRef<HTMLInputElement>(null);
+    const userNameRef = useRef<HTMLInputElement>(null);
+    const emailRef = useRef<HTMLInputElement>(null);
     const navigate = useNavigate();
 
-    const [sidebarToggle] = useOutletContext<any>();
-    const initialFormState = location.state;
 
-    const nameRef = useRef<HTMLInputElement>(initialFormState.name);
-    const userNameRef = useRef<HTMLInputElement>(initialFormState.username);
-    const emailRef = useRef<HTMLInputElement>(initialFormState.email);
 
     function handleSubmit(e: FormEvent) {
         e.preventDefault();
 
-        const updatedUser = {
-            id: initialFormState.id,        
+        addUser({
             name: nameRef.current!.value,
             username: userNameRef.current!.value,
-            email: emailRef.current!.value,
-            roles: initialFormState.roles,
+            email: emailRef.current!.value
+        });
+
+    }
+
+    const addUser = (user: User) => {
+
+        const data = {
+            name: user.name,
+            username: user.username,
+            email: user.email,
+            roles: ["user"]
         }
-        updateUser(updatedUser);
-        
 
-    }
-
-    const updateUser = (userToUpdate: User) => {
-
-   
-        
-       
-        /*   Firebase v9    
-        const userRef = doc(getDb(), "users", userToUpdate.id);
-        updateDoc(userRef, {
-            name: userToUpdate.name,
-            username: userToUpdate.username,
-            email: userToUpdate.email
-        })
+        /*   Firebase v9    */
+        const usersRef = collection(getDb(), 'users');
+        addDoc(usersRef, data)
             .then(() => {
-                console.log("user updated sucessfully");
-                navigate("/table");
-            })
-            .catch((error) => {
-                console.log("Error updating document:", error);
-            });
-        */
-
-        /*  Firebase old method    */
-        firebase.firestore().collection("users").doc(userToUpdate.id).update(userToUpdate)
-            .then(() => {
-                console.log("user updated sucessfully");
                 navigate("/userList");
+                console.log("Data sucessfuly submitted")
             })
             .catch((error) => {
-                console.error(error);
+                console.log("Error adding document:", error);
             });
-        
-
     }
-
 
     return (
         <>
@@ -74,6 +64,7 @@ function EditUser() {
                 <div className="mainCard">
                     <div className="border w-full border-gray-200 bg-white py-4 px-6 rounded-md">
                         <form onSubmit={handleSubmit}>
+
                             <div>
                                 <label htmlFor="name" className="text-sm text-gray-600">
                                     Name
@@ -138,4 +129,4 @@ function EditUser() {
     );
 }
 
-export default EditUser;
+export default AddUser;

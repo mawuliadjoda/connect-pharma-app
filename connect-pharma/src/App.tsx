@@ -10,10 +10,11 @@ import NotFound from './pages/NotFound';
 // import LoginIndex from './pages/auth/Login/index';
 import RegisterIndex from './pages/auth/Register/index';
 import Dashboard from "./pages/Dashboard";
-import UserList from "./pages/UserList";
 import LearnSuspense from './learnReact/suspense/LearnSuspense';
-import AddUser from "./pages/AddUser";
-import EditUser from "./pages/EditUser";
+import AddUser from "./pages/Users/AddUser";
+import UserList from "./pages/Users/UserList";
+import EditUser from "./pages/Users/EditUser";
+
 
 
 
