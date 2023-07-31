@@ -1,7 +1,7 @@
 import { Form, Route, Routes } from "react-router-dom";
 import AuthLayout from './components/Layout/AuthLayout';
 
-import Table from './pages/Table';
+
 
 import NotFound from './pages/NotFound';
 //import AddUser from './pages/AddUser';
@@ -10,6 +10,14 @@ import NotFound from './pages/NotFound';
 // import LoginIndex from './pages/auth/Login/index';
 import RegisterIndex from './pages/auth/Register/index';
 import Dashboard from "./pages/Dashboard";
+import UserList from "./pages/UserList";
+import LearnSuspense from './learnReact/suspense/LearnSuspense';
+import AddUser from "./pages/AddUser";
+import EditUser from "./pages/EditUser";
+
+
+
+
 
 
 
@@ -19,14 +27,17 @@ function App() {
     <Routes>
       <Route path="/" element={<AuthLayout />}>
         <Route path="/" element={<Dashboard />}></Route>
-        <Route path="/table" element={<Table />}></Route>
+        <Route path="/userList" element={<UserList />}></Route>
        
         <Route path="/*" element={<NotFound />}></Route>
         <Route path="/form" element={<Form />}></Route>
+        <Route path="/learnSuspense" element={<LearnSuspense />}></Route>
+        <Route path="/addUser" element={<AddUser />} ></Route>
+        <Route path="/editUser" element={<EditUser />} ></Route>
        {/*   
         <Route path="/profile" element={<Blank />}></Route>
 
-        <Route path="/addUser" element={<AddUser />} ></Route>
+        
         <Route path="/editUser" element={<EditUser />} ></Route>
       */}
         

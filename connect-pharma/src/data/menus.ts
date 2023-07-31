@@ -30,8 +30,8 @@ const initMenu: Menu[] = [
     icon: faWindows,
   },
   {
-    label: "Tabel",
-    path: "/table",
+    label: "Users List",
+    path: "/userList",
     icon: faTable,
   },
   {

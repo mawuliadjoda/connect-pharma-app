@@ -1,34 +1,43 @@
-import React, { useState } from "react";
+import { FormEvent, useRef} from "react";
 import Navbar from "../components/Navbar/Index";
 import { useLocation, useNavigate, useOutletContext } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAt } from "@fortawesome/free-solid-svg-icons";
-import firebase from './../firebase';
-import { collection, doc, getFirestore, updateDoc } from "firebase/firestore";
+import firebase from '../firebase';
+import { User } from "./AddUser";
 
 
 function EditUser() {
     const location = useLocation();
     const navigate = useNavigate();
 
-    const [sidebarToggle] = useOutletContext();
+    const [sidebarToggle] = useOutletContext<any>();
     const initialFormState = location.state;
-    const [user, setUser] = useState(initialFormState);
 
+    const nameRef = useRef<HTMLInputElement>(initialFormState.name);
+    const userNameRef = useRef<HTMLInputElement>(initialFormState.username);
+    const emailRef = useRef<HTMLInputElement>(initialFormState.email);
 
-    const handleInputChange = (event) => {
-        const { name, value } = event.target
+    function handleSubmit(e: FormEvent) {
+        e.preventDefault();
 
-        setUser({ ...user, [name]: value })
-    }
-
-    const updateUser = (userToUpdate) => {
-
-        const db = getFirestore();
-        const userRef = doc(db, "users", userToUpdate.id);
+        const updatedUser = {
+            id: initialFormState.id,        
+            name: nameRef.current!.value,
+            username: userNameRef.current!.value,
+            email: emailRef.current!.value,
+            roles: initialFormState.roles,
+        }
+        updateUser(updatedUser);
         
 
-        /*   Firebase v9    */
+    }
+
+    const updateUser = (userToUpdate: User) => {
+
+   
+        
+       
+        /*   Firebase v9    
+        const userRef = doc(getDb(), "users", userToUpdate.id);
         updateDoc(userRef, {
             name: userToUpdate.name,
             username: userToUpdate.username,
@@ -41,21 +50,18 @@ function EditUser() {
             .catch((error) => {
                 console.log("Error updating document:", error);
             });
+        */
 
-        /*  Firebase old method   
-        firebase.firestore().collection("users").doc(updatedUser.id).update({
-            name: updatedUser.name,
-            username: updatedUser.username,
-            email: updatedUser.email
-        })
+        /*  Firebase old method    */
+        firebase.firestore().collection("users").doc(userToUpdate.id).update(userToUpdate)
             .then(() => {
                 console.log("user updated sucessfully");
-                navigate("/table");
+                navigate("/userList");
             })
             .catch((error) => {
                 console.error(error);
             });
-        */
+        
 
     }
 
@@ -65,17 +71,9 @@ function EditUser() {
             <main className="h-full">
                 <Navbar toggle={sidebarToggle} />
 
-                {/* Main Content */}
                 <div className="mainCard">
                     <div className="border w-full border-gray-200 bg-white py-4 px-6 rounded-md">
-                        <form onSubmit={(event) => {
-                            event.preventDefault()
-                            if (!user.name || !user.username) return
-
-                            updateUser(user);
-                            setUser(user);
-                        }}>
-                            {/* Form Default */}
+                        <form onSubmit={handleSubmit}>
                             <div>
                                 <label htmlFor="name" className="text-sm text-gray-600">
                                     Name
@@ -84,16 +82,16 @@ function EditUser() {
                                     id="name"
                                     type="text"
                                     name="name"
-                                    // onChange={(e) => setEmail(e.target.value)}
                                     className="text-sm placeholder-gray-500 px-4 rounded-lg border border-gray-200 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400 mt-1"
                                     placeholder="Name"
-                                    value={user.name}
-                                    onChange={handleInputChange}
+                                    ref={nameRef}
+                                    required
+                                    defaultValue={initialFormState.name}
+
                                 />
                             </div>
 
-                            {/* Form Large */}
-                            <div className="mt-6">
+                            <div>
                                 <label htmlFor="username" className="text-sm text-gray-600">
                                     User name
                                 </label>
@@ -101,35 +99,29 @@ function EditUser() {
                                     id="username"
                                     type="text"
                                     name="username"
-                                    // onChange={(e) => setEmail(e.target.value)}
                                     className="text-sm placeholder-gray-500 px-4 rounded-lg border border-gray-200 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400 mt-1"
-                                    placeholder="User name"
-                                    value={user.username}
-                                    onChange={handleInputChange}
+                                    placeholder="username"
+                                    ref={userNameRef}
+                                    required
+                                    defaultValue={initialFormState.username}
+
                                 />
                             </div>
 
-                            {/* With Icon */}
-                            <div className="mt-6 relative">
-                                <label
-                                    htmlFor="email"
-                                    className="text-sm text-gray-600"
-                                >
+                            <div>
+                                <label htmlFor="email" className="text-sm text-gray-600">
                                     Email
                                 </label>
-
-                                <div className="inline-flex items-center justify-center absolute left-0 top-[0.85rem] h-full w-10 text-gray-400">
-                                    <FontAwesomeIcon icon={faAt} />
-                                </div>
                                 <input
                                     id="email"
                                     type="text"
                                     name="email"
-                                    // onChange={(e) => setEmail(e.target.value)}
-                                    className="text-sm placeholder-gray-500 pl-10 px-4 rounded-lg border border-gray-200 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400 mt-1"
-                                    placeholder="Email"
-                                    value={user.email}
-                                    onChange={handleInputChange}
+                                    className="text-sm placeholder-gray-500 px-4 rounded-lg border border-gray-200 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400 mt-1"
+                                    placeholder="email"
+                                    ref={emailRef}
+                                    required
+                                    defaultValue={initialFormState.email}
+
                                 />
                             </div>
 

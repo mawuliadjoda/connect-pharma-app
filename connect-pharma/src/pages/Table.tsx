@@ -7,13 +7,10 @@ import { faAdd } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { collection, deleteDoc, doc, getFirestore, limit, onSnapshot, orderBy, query, where } from 'firebase/firestore';
 import { getDb } from "../services/db";
+import { User } from "./AddUser";
 
-export type User = {
-  id: string,
-  name: string,
-  username: string
-  roles: string[]
-}
+
+
 
 const Table = () => {
   const navigate = useNavigate();
@@ -60,7 +57,7 @@ const Table = () => {
      */
     const q = query(usersRef, where("name", "!=", null), orderBy("name", "asc"), limit(50));
 
-    
+
     /*
     getDocs(q).then((querySnapshot) => {
       const newUsers = [];
@@ -78,9 +75,9 @@ const Table = () => {
     })
     */
 
-    
+
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const newUsers: User []= [];
+      const newUsers: User[] = [];
       querySnapshot.forEach((doc) => {
         const item = {
           id: doc.id,
@@ -88,17 +85,17 @@ const Table = () => {
           username: doc.data().username,
           email: doc.data().email,
           roles: doc.data().roles
-      };
+        };
         newUsers.push(item);
       });
       console.log(newUsers);
       setUsers(newUsers);
     },
 
-    (error) => {
-      console.log(error);
-    }
-    
+      (error) => {
+        console.log(error);
+      }
+
     );
     return () => unsubscribe();
     // return unsubscribe();
@@ -138,21 +135,22 @@ const Table = () => {
         console.error(error);
       });
 
- 
-      /*
-    firebase.firestore().collection("users").doc(id).delete()
-      .then(() => {
-        console.log("user deleted sucessfully");
-      })
-      .catch(error => {
-        console.error(error);
-      });
-    */
+
+    /*
+  firebase.firestore().collection("users").doc(id).delete()
+    .then(() => {
+      console.log("user deleted sucessfully");
+    })
+    .catch(error => {
+      console.error(error);
+    });
+  */
   };
 
 
   return (
     <>
+
       <main className="h-full">
         <Navbar toggle={sidebarToggle} />
 
@@ -166,6 +164,7 @@ const Table = () => {
             <FontAwesomeIcon icon={faAdd}></FontAwesomeIcon> Add User
           </button>
 
+
           <div className="border w-full border-gray-200 bg-white py-4 px-6 rounded-md">
             <UserTable
               loading={loading}
@@ -174,6 +173,7 @@ const Table = () => {
               handleDelete={handleDelete}
             />
           </div>
+
         </div>
       </main>
     </>
