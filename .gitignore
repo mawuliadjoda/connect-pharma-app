@@ -22,3 +22,5 @@ connect-pharma/*.ntvs*
 connect-pharma/*.njsproj
 connect-pharma/*.sln
 connect-pharma/*.sw?
+connect-pharma/.gitignore
+connect-pharma/.firebaserc

@@ -7,14 +7,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { collection, deleteDoc, doc, getFirestore, limit, onSnapshot, orderBy, query, where } from 'firebase/firestore';
 import { getDb } from "../../services/db";
 import { User } from "./User";
+import { Loading } from "../../utils/Loading";
 
 
 const Table = () => {
   const navigate = useNavigate();
   const [sidebarToggle] = useOutletContext<any>();
-  const [loading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [users, setUsers] = useState<User[]>([]);
-
 
   useEffect(() => {
 
@@ -41,6 +41,7 @@ const Table = () => {
       });
       console.log(newUsers);
       setUsers(newUsers);
+      setLoading(false);
     },
 
       (error) => {
@@ -78,7 +79,8 @@ const Table = () => {
       <main className="h-full">
         <Navbar toggle={sidebarToggle} />
 
-        {/* Main Content */}
+        {loading && <Loading />}
+
         <div className="mainCard">
 
           {/* Add user Button */}
