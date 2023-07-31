@@ -10,13 +10,13 @@ import { Link } from "react-router-dom";
 type DashboardHeaderProps = {
   user: User
   avatar: string, 
- // toggle: () => void;
+  toggle: () => void;
 }
 
 type User = {
   name: string
 }
-function DashboardHeader({ user, avatar }: DashboardHeaderProps) {
+function DashboardHeader({ user, avatar, toggle }: DashboardHeaderProps) {
   return (
     <div className="px-3 sm:px-8 pt-9 pb-4 flex flex-wrap w-full justify-between items-center">
       <div className="flex flex-row gap-3">
@@ -54,7 +54,7 @@ function DashboardHeader({ user, avatar }: DashboardHeaderProps) {
           />
         </p>
 
-        <p className="cursor-pointer md:hidden text-2xl" >
+        <p className="cursor-pointer md:hidden text-2xl" onClick={toggle} >
           <FontAwesomeIcon icon={faBars} />
         </p>
       </div>

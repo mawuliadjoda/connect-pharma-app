@@ -2,6 +2,7 @@ import StatisticWidget from "../components/Widget/Statistic.tsx";
 import AchievementWidget from "../components/Widget/Achievment.tsx";
 import DashboardHeader from "../components/Other/DashboardHeader.tsx";
 import ScrolledCard from "../components/Widget/ScrolledCard.tsx";
+import { useOutletContext } from "react-router-dom";
 
 function Dashboard() {
   const avatar =
@@ -58,14 +59,14 @@ function Dashboard() {
     },
   ];
 
-  // const [sidebarToggle] = useOutletContext();
+  const [sidebarToggle] = useOutletContext<any>();
 
   return (
     <>
       <main className="h-full">
         {/* Welcome Header */}
         <DashboardHeader
-          //toggle={sidebarToggle}
+          toggle={sidebarToggle}
           avatar={avatar}
           user={{ name: "Connect Pharma" }}
         />
