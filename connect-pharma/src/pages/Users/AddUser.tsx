@@ -3,15 +3,11 @@ import Navbar from "../../components/Navbar/Index";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { addDoc, collection } from "firebase/firestore";
 import { getDb } from "../../services/db";
+import { User } from "./User";
+import UserForm from "./UserForm";
 
 
-export type User = {
-    id?: string,
-    name: string,
-    username: string,
-    email?: string,
-    roles?: string[]
-}
+
 
 function AddUser() {
     const [sidebarToggle] = useOutletContext<any>();
@@ -22,9 +18,10 @@ function AddUser() {
     const emailRef = useRef<HTMLInputElement>(null);
     const navigate = useNavigate();
 
+    const initialUserData: User = { id: undefined, name: '', username: '', email: '' };
 
 
-    function handleSubmit(e: FormEvent) {
+    /*function handleSubmit(e: FormEvent) {
         e.preventDefault();
 
         addUser({
@@ -33,7 +30,7 @@ function AddUser() {
             email: emailRef.current!.value
         });
 
-    }
+    }*/
 
     const addUser = (user: User) => {
 
@@ -60,7 +57,8 @@ function AddUser() {
         <>
             <main className="h-full">
                 <Navbar toggle={sidebarToggle} />
-
+                <UserForm onSubmit={addUser} initialUserData={initialUserData} />
+                { /*   
                 <div className="mainCard">
                     <div className="border w-full border-gray-200 bg-white py-4 px-6 rounded-md">
                         <form onSubmit={handleSubmit}>
@@ -124,6 +122,8 @@ function AddUser() {
                         </form>
                     </div>
                 </div>
+
+                */}
             </main>
         </>
     );

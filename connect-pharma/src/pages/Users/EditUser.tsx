@@ -2,7 +2,9 @@ import { FormEvent, useRef} from "react";
 import Navbar from "../../components/Navbar/Index";
 import { useLocation, useNavigate, useOutletContext } from "react-router-dom";
 import firebase from '../../firebase';
-import { User } from "./AddUser";
+import { User } from "./User";
+import UserForm from "./UserForm";
+
 
 
 function EditUser() {
@@ -10,12 +12,15 @@ function EditUser() {
     const navigate = useNavigate();
 
     const [sidebarToggle] = useOutletContext<any>();
-    const initialFormState = location.state;
+    // const initialFormState = location.state;
 
-    const nameRef = useRef<HTMLInputElement>(initialFormState.name);
-    const userNameRef = useRef<HTMLInputElement>(initialFormState.username);
-    const emailRef = useRef<HTMLInputElement>(initialFormState.email);
+    // const nameRef = useRef<HTMLInputElement>(initialFormState.name);
+    // const userNameRef = useRef<HTMLInputElement>(initialFormState.username);
+    // const emailRef = useRef<HTMLInputElement>(initialFormState.email);
 
+    const initialUserData: User = location.state;
+
+    /*
     function handleSubmit(e: FormEvent) {
         e.preventDefault();
 
@@ -26,14 +31,15 @@ function EditUser() {
             email: emailRef.current!.value,
             roles: initialFormState.roles,
         }
-        updateUser(updatedUser);
-        
+        updateUser(updatedUser);       
 
     }
+    */
 
     const updateUser = (userToUpdate: User) => {
 
-   
+        console.log(location.state);
+        
         
        
         /*   Firebase v9    
@@ -53,7 +59,7 @@ function EditUser() {
         */
 
         /*  Firebase old method    */
-        firebase.firestore().collection("users").doc(userToUpdate.id).update(userToUpdate)
+        firebase.firestore().collection("users").doc(location.state.id).update(userToUpdate)
             .then(() => {
                 console.log("user updated sucessfully");
                 navigate("/userList");
@@ -70,7 +76,8 @@ function EditUser() {
         <>
             <main className="h-full">
                 <Navbar toggle={sidebarToggle} />
-
+                <UserForm onSubmit = {updateUser} initialUserData={initialUserData}/>
+                {/*
                 <div className="mainCard">
                     <div className="border w-full border-gray-200 bg-white py-4 px-6 rounded-md">
                         <form onSubmit={handleSubmit}>
@@ -133,6 +140,7 @@ function EditUser() {
                         </form>
                     </div>
                 </div>
+                */}
             </main>
         </>
     );

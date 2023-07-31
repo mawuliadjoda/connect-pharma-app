@@ -7,7 +7,8 @@ import { faAdd } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { collection, deleteDoc, doc, getFirestore, limit, onSnapshot, orderBy, query, where } from 'firebase/firestore';
 import { getDb } from "../../services/db";
-import { User } from "./AddUser";
+import { User } from "./User";
+
 
 
 
