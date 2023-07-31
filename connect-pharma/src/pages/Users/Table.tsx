@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar/Index";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import UserTable from "./UserTable";
-
 import { faAdd } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { collection, deleteDoc, doc, getFirestore, limit, onSnapshot, orderBy, query, where } from 'firebase/firestore';
@@ -10,45 +9,16 @@ import { getDb } from "../../services/db";
 import { User } from "./User";
 
 
-
-
-
 const Table = () => {
   const navigate = useNavigate();
   const [sidebarToggle] = useOutletContext<any>();
-
   const [loading] = useState(false);
-
   const [users, setUsers] = useState<User[]>([]);
-
-  const dataHeader = [
-    {
-      key: "name",
-      label: "Name",
-    },
-    {
-      key: "email",
-      label: "Email",
-    },
-    {
-      key: "username",
-      label: "Username",
-    },
-    {
-      key: "role",
-      label: "Role",
-    },
-    {
-      key: "action",
-      label: "Action",
-    },
-  ];
 
 
   useEffect(() => {
 
     /*   Firebase v9    */
-    // const db = getFirestore();
     const usersRef = collection(getDb(), 'users');
 
     /*   Use paginate later  onSnapshot() equivalent de hooks
@@ -57,26 +27,6 @@ const Table = () => {
      https://firebase.google.com/docs/firestore/manage-data/transactions?hl=fr
      */
     const q = query(usersRef, where("name", "!=", null), orderBy("name", "asc"), limit(50));
-
-
-    /*
-    getDocs(q).then((querySnapshot) => {
-      const newUsers = [];
-      querySnapshot.forEach((doc) => {
-        const item = {
-          id: doc.id,
-          ...doc.data()
-        };
-        newUsers.push(item);
-      });
-      console.log(newUsers);
-      setUsers(newUsers);
-    }).catch((error) => {
-      console.error("Error getting documents: ", error);
-    })
-    */
-
-
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const newUsers: User[] = [];
       querySnapshot.forEach((doc) => {
@@ -99,22 +49,6 @@ const Table = () => {
 
     );
     return () => unsubscribe();
-    // return unsubscribe();
-
-    /*  Firebase old method
-    const unsubscribe = firebase
-      .firestore()
-      .collection("users")
-      .onSnapshot(snapshot => {
-        const newUsers = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }));
-        setUsers(newUsers);
-      });
-    return () => unsubscribe();
-    */
-
   }, []);
 
 
@@ -135,17 +69,6 @@ const Table = () => {
       .catch(error => {
         console.error(error);
       });
-
-
-    /*
-  firebase.firestore().collection("users").doc(id).delete()
-    .then(() => {
-      console.log("user deleted sucessfully");
-    })
-    .catch(error => {
-      console.error(error);
-    });
-  */
   };
 
 
@@ -165,7 +88,6 @@ const Table = () => {
             <FontAwesomeIcon icon={faAdd}></FontAwesomeIcon> Add User
           </button>
 
-
           <div className="border w-full border-gray-200 bg-white py-4 px-6 rounded-md">
             <UserTable
               loading={loading}
@@ -182,3 +104,28 @@ const Table = () => {
 }
 
 export default Table;
+
+
+
+const dataHeader = [
+  {
+    key: "name",
+    label: "Name",
+  },
+  {
+    key: "email",
+    label: "Email",
+  },
+  {
+    key: "username",
+    label: "Username",
+  },
+  {
+    key: "role",
+    label: "Role",
+  },
+  {
+    key: "action",
+    label: "Action",
+  },
+];

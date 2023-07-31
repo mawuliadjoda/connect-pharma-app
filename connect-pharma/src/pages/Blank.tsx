@@ -1,9 +1,8 @@
-import React from "react";
 import Navbar from "../components/Navbar/Index";
 import { useOutletContext } from "react-router-dom";
 
 function Blank() {
-  const [sidebarToggle] = useOutletContext();
+  const [sidebarToggle] = useOutletContext<any>();
   return (
     <>
       <main className="h-full">
