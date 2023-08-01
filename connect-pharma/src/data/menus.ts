@@ -19,13 +19,13 @@ const initMenu: Menu[] = [
     path: "/userList",
     icon: faTable,
   },
-  /*
-  {
-    label: "Blank",
-    path: "/blank",
-    icon: faPage4,
-  },
 
+  {
+    label: "Pharmacy List",
+    path: "/pharmacies",
+    icon: faTable,
+  },
+  /*
   {
     label: "404",
     path: "/404",

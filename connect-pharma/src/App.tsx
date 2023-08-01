@@ -15,6 +15,9 @@ import AddUser from "./pages/Users/AddUser";
 import UserList from "./pages/Users/UserList";
 import EditUser from "./pages/Users/EditUser";
 import LoginIndex from "./pages/auth/Login";
+import PharmacyList from "./pages/pharmacies/PharmacyList";
+import AddPharmacy from "./pages/pharmacies/AddPharmacy";
+import NearestPharmacies from "./pages/pharmacies/NearestPharmacies";
 
 
 
@@ -36,12 +39,10 @@ function App() {
         <Route path="/learnSuspense" element={<LearnSuspense />}></Route>
         <Route path="/addUser" element={<AddUser />} ></Route>
         <Route path="/editUser" element={<EditUser />} ></Route>
-       {/*   
-        <Route path="/profile" element={<Blank />}></Route>
-
-        
-        <Route path="/editUser" element={<EditUser />} ></Route>
-      */}
+      
+        <Route path="/pharmacies" element={<PharmacyList />} ></Route>
+        <Route path="/nearestPharmacies/:latitude/:longitude" element={<NearestPharmacies />} ></Route>
+        <Route path="/pharmacies/add" element={<AddPharmacy  />} />
         
       </Route>
       
