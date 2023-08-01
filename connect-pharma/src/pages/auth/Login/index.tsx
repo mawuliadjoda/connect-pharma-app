@@ -1,12 +1,12 @@
-import { faFacebook, faGoogle } from "@fortawesome/free-brands-svg-icons";
+// import { faFacebook, faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 function LoginIndex() {
   const navigate = useNavigate();
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<any>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -157,7 +157,7 @@ function LoginIndex() {
                   type="submit"
                   className="flex items-center justify-center focus:outline-none text-slate-500 text-sm bg-slate-200 rounded-lg md:rounded md:py-2 px-3 py-3 w-full transition duration-150 ease-in"
                 >
-                  <FontAwesomeIcon icon={faGoogle} />
+                  {/* <FontAwesomeIcon icon={faGoogle} /> */} 
                   <span className="mr-2 flex-1">Login with Google</span>
                 </button>
               </div>
@@ -167,7 +167,7 @@ function LoginIndex() {
                   type="submit"
                   className="flex items-center justify-center focus:outline-none text-slate-500 text-sm bg-slate-200 rounded-lg md:rounded md:py-2 px-3 py-3 w-full transition duration-150 ease-in"
                 >
-                  <FontAwesomeIcon icon={faFacebook} />
+                {/* <FontAwesomeIcon icon={faFacebook} /> */}  
                   <span className="mr-2 flex-1">Login with Facebook</span>
                 </button>
               </div>

@@ -14,6 +14,7 @@ import LearnSuspense from './learnReact/suspense/LearnSuspense';
 import AddUser from "./pages/Users/AddUser";
 import UserList from "./pages/Users/UserList";
 import EditUser from "./pages/Users/EditUser";
+import LoginIndex from "./pages/auth/Login";
 
 
 
@@ -45,6 +46,7 @@ function App() {
       </Route>
       
       <Route path="/auth/register" element={<RegisterIndex />}></Route>
+      <Route path="/auth/login" element={<LoginIndex />}></Route>
     </Routes>
   );
 }

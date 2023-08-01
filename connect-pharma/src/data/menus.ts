@@ -1,10 +1,10 @@
-import { faPage4, faWindows } from "@fortawesome/free-brands-svg-icons";
+// import { faPage4, faWindows } from "@fortawesome/free-brands-svg-icons";
 import {
   faTachometer,
   faTable,
-  faLock,
-  faNoteSticky,
-  faNotdef
+  // faLock,
+  // faNoteSticky,
+  // faNotdef
 } from "@fortawesome/free-solid-svg-icons";
 import { Menu } from "../components/Sidebar/MenuList";
 
@@ -15,10 +15,17 @@ const initMenu: Menu[] = [
     icon: faTachometer,
   },
   {
+    label: "Users List",
+    path: "/userList",
+    icon: faTable,
+  },
+  /*
+  {
     label: "Blank",
     path: "/blank",
     icon: faPage4,
   },
+
   {
     label: "404",
     path: "/404",
@@ -29,11 +36,8 @@ const initMenu: Menu[] = [
     path: "/form",
     icon: faWindows,
   },
-  {
-    label: "Users List",
-    path: "/userList",
-    icon: faTable,
-  },
+ 
+ 
   {
     label: "Login",
     path: "/auth/login",
@@ -44,6 +48,7 @@ const initMenu: Menu[] = [
     path: "/auth/register",
     icon: faNoteSticky,
   },
+  */
 ];
 
 export default initMenu
