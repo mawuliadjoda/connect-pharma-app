@@ -35,3 +35,7 @@ https://react.dev/reference/react/useMemo#usage
 	https://softauthor.com/firebase-v8-v9-compare-cloud-firestore-crud-queries/#getting-started-with-firebase-version-8
 
 	https://modularfirebase.web.app/common-use-cases/firestore/
+
+
+
+https://stackoverflow.com/questions/48846289/why-is-my-react-component-is-rendering-twice

@@ -18,6 +18,7 @@ import LoginIndex from "./pages/auth/Login";
 import PharmacyList from "./pages/pharmacies/PharmacyList";
 import AddPharmacy from "./pages/pharmacies/AddPharmacy";
 import NearestPharmacies from "./pages/pharmacies/NearestPharmacies";
+import PopulatePharmacies from "./pages/pharmacies/PopulatePharmacies";
 
 
 
@@ -43,6 +44,7 @@ function App() {
         <Route path="/pharmacies" element={<PharmacyList />} ></Route>
         <Route path="/nearestPharmacies/:latitude/:longitude" element={<NearestPharmacies />} ></Route>
         <Route path="/pharmacies/add" element={<AddPharmacy  />} />
+        <Route path="/pharmacies/populate" element={<PopulatePharmacies  />} />
         
       </Route>
       

@@ -1,16 +1,14 @@
 import { useOutletContext, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Pharmacy } from "./Pharmacy";
-// import { GeoPoint, collection, limit, onSnapshot, orderBy, query, where } from "firebase/firestore";
-// import { getDb } from "../../services/db";
 import { Loading } from "../../utils/Loading";
 import PharmacyTable from "./PharmacyTable";
 import Navbar from "../../components/Navbar/Index";
-import { getPharmacyData } from "../../services/FileService";
 import { applyHaversine, getNearPharmacies } from "../../services/LocationService";
 import { Coordinate } from "calculate-distance-between-coordinates";
 import { convertToENecimal } from "../../utils/Utils";
-import { GeoPoint } from "firebase/firestore";
+import { collection, limit, onSnapshot, orderBy, query, where } from "firebase/firestore";
+import { getDb } from "../../services/db";
 
 
 // https://gps-coordinates.org/my-location.php
@@ -40,63 +38,46 @@ export default function NearestPharmacies() {
             lon: longitudeNumber.valueOf()
         }
 
-        const data = getPharmacyData();
-        const pharmacyData = data.map(item => {
-            const pharmacy: Pharmacy = {
+        const usersRef = collection(getDb(), 'pharmacies');
+        const q = query(usersRef, where("name", "!=", null), orderBy("name", "asc"), limit(50));
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            const newPharmacies: Pharmacy[] = [];
+            querySnapshot.forEach((doc) => {
+                const item = {
+                    id: doc.id,
+                    address: doc.data().address,
+                    email: doc.data().email,
+                    isActive: doc.data().isActive,
+                    location: doc.data().location,
+                    name: doc.data().name,
+                    tel: doc.data().tel
+                };
+                newPharmacies.push(item);
+            });
+            console.log(newPharmacies);
 
-                address: item.adresse,
-                email: item.email,
-                isActive: item.visible,
-                location: new GeoPoint(item.lat, item.lng),
-                name: item.label,
-                tel: item.tel
+            const haversinePharmacies = applyHaversine(newPharmacies, userLocation);
+            const pharmaciesWithDistance = getNearPharmacies(haversinePharmacies);
+
+
+            setPharmacies(pharmaciesWithDistance);
+            setLoading(false);
+        },
+
+            (error) => {
+                console.log(error);
             }
-            return pharmacy;
-        })
 
-        console.log(pharmacyData);
+        );
+        return () => unsubscribe();
 
-        const haversinePharmacies = applyHaversine(pharmacyData, userLocation);
-        const pharmaciesWithDistance = getNearPharmacies(haversinePharmacies);
-
-        setPharmacies(pharmaciesWithDistance);
-        setLoading(false);
-
-        /*    
-            const usersRef = collection(getDb(), 'pharmacies');
-            const q = query(usersRef, where("name", "!=", null), orderBy("name", "asc"), limit(50));
-            const unsubscribe = onSnapshot(q, (querySnapshot) => {
-                const newPharmacies: Pharmacy[] = [];
-                querySnapshot.forEach((doc) => {
-                    const item = {
-                        id: doc.id,
-                        address: doc.data().address,
-                        email: doc.data().email,
-                        isActive: doc.data().isActive,
-                        location: doc.data().location,
-                        name: doc.data().name,
-                        tel: doc.data().tel
-                    };
-                    newPharmacies.push(item);
-                });
-                console.log(newPharmacies);
-                setPharmacies(newPharmacies);
-                setLoading(false);
-            },
-    
-                (error) => {
-                    console.log(error);
-                }
-    
-            );
-            return () => unsubscribe();
-        */
 
     }, []);
 
 
+    // https://signal.me/#p/+41794997040
     const openWhatsapp = (tel: string) => {
-        const url = 'https://wa.me/' + tel;
+        const url = 'https://wa.me/+' + tel;
         console.log(url);
         window.open(url);
     }
@@ -116,9 +97,7 @@ export default function NearestPharmacies() {
 
                 <div className="mainCard">
                     <button
-                        className="py-2 px-4 border border-emerald-500 bg-emerald-600 w-full rounded-full text-gray-200 hover:bg-emerald-600 hover:border-emerald-600 justify-end text-sm"
-                    // onClick={() => AddPharmacy()}
-                    >
+                        className="py-2 px-4 border border-emerald-500 bg-emerald-600 w-full rounded-full text-gray-200 hover:bg-emerald-600 hover:border-emerald-600 justify-end text-sm">
                         Pharmacy List
                     </button>
 
