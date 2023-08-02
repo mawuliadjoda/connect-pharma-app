@@ -57,7 +57,7 @@ export default function NearestPharmacies() {
         console.log(pharmacyData);
 
         const haversinePharmacies = applyHaversine(pharmacyData, userLocation);
-        const pharmaciesWithDistance = getNearPharmacies( haversinePharmacies );
+        const pharmaciesWithDistance = getNearPharmacies(haversinePharmacies);
 
         setPharmacies(pharmaciesWithDistance);
         setLoading(false);
@@ -95,6 +95,18 @@ export default function NearestPharmacies() {
     }, []);
 
 
+    const openWhatsapp = (tel: string) => {
+        const url = 'https://wa.me/' + tel;
+        console.log(url);
+        window.open(url);
+    }
+
+    const openTelegram = (tel: string) => {
+        const url = 'https://t.me/+' + tel;
+        console.log(url);
+        window.open(url);
+    }
+
     return (
         <>
             <main className="h-full">
@@ -112,7 +124,14 @@ export default function NearestPharmacies() {
 
 
                     <div className="border w-full border-gray-200 bg-white py-4 px-6 rounded-md">
-                        <PharmacyTable loading={loading} dataHeader={dataHeader} data={pharmacies} />
+                        <PharmacyTable
+                            loading={loading}
+                            dataHeader={dataHeader}
+                            data={pharmacies}
+                            showDistance={true}
+                            openWhatsapp={openWhatsapp}
+                            openTelegram={openTelegram}
+                        />
                     </div>
 
                 </div>
@@ -140,11 +159,7 @@ const dataHeader = [
         label: "Distance",
     },
     {
-        key: "lat",
-        label: "Latitude",
-    },
-    {
-        key: "lng",
-        label: "Longitude",
-    },
+        key: "action",
+        label: "Action",
+    }
 ];

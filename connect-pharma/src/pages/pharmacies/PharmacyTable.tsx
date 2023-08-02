@@ -1,16 +1,30 @@
 import { Pharmacy } from "./Pharmacy"
 import Datatables from "../../components/Datatables/Table";
 import TableCell from "../../components/Datatables/TableCell";
+import { Link } from "react-router-dom";
 
 type PharmacyTableProps = {
     loading: boolean,
     dataHeader: any,
     data: Pharmacy[],
-    showDistance?: boolean
+    showDistance?: boolean,
+    openWhatsapp?: (tel: string) => void,
+    openTelegram?: (tel: string) => void
 }
 
-export default function PharmacyTable({ loading, dataHeader, data, showDistance = false }: PharmacyTableProps) {
 
+/*
+const iconPropTelegram: IconProp = {iconName:'telegram', prefix: 'fab'};
+
+const telegramIcon: FontAwesomeIconProps = {
+    icon: iconPropTelegram
+}
+*/
+
+// https://fontawesomeicons.com/whatsapp
+export default function PharmacyTable({ loading, dataHeader, data, openWhatsapp, openTelegram, showDistance }: PharmacyTableProps) {
+
+    console.log(showDistance);
 
     return (
         <>
@@ -35,17 +49,55 @@ export default function PharmacyTable({ loading, dataHeader, data, showDistance 
                                 <p className="font-normal text-sm text-gray-500">{row.email}</p>
                             </TableCell>
 
-                            <TableCell dataLabel="distance" showLabel={showDistance}>
-                                <p className="font-normal text-sm text-gray-500">{row.distanceStr} km</p>
-                            </TableCell>
+                            {
+                                showDistance &&
+                                <TableCell dataLabel="distance" showLabel={showDistance}>
+                                    <p className="font-normal text-sm text-gray-500">{row.distanceStr} km</p>
+                                </TableCell>
+                            }
 
-                            <TableCell dataLabel="Lat" showLabel={true}>
-                                <p className="font-normal text-sm text-gray-500">{row.location.latitude}</p>
-                            </TableCell>
+                            {
+                                !showDistance &&
+                                <>
+                                    <TableCell dataLabel="Lat" showLabel={true}>
+                                        <p className="font-normal text-sm text-gray-500">{row.location.latitude}</p>
+                                    </TableCell>
 
-                            <TableCell dataLabel="Lng" showLabel={true}>
-                                <p className="font-normal text-sm text-gray-500">{row.location.longitude}</p>
-                            </TableCell>
+                                    <TableCell dataLabel="Lng" showLabel={true}>
+                                        <p className="font-normal text-sm text-gray-500">{row.location.longitude}</p>
+                                    </TableCell>
+                                </>
+                            }
+
+
+                            {
+                                showDistance &&
+                                <TableCell showLabel={showDistance}>
+                                    <Link
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            openWhatsapp!(row.tel);
+                                        }}
+
+                                        to={`/auth/master/user/${row.id}/edit`}
+                                        className={`text-sky-700 inline-flex py-2 px-2 rounded  text-sm`}
+                                    >
+                                        <i className="fa fa-whatsapp" aria-hidden="true"></i>
+
+                                    </Link>
+                                    <Link
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            openTelegram!(row.tel);
+                                        }}
+                                        to={`/auth/master/user/${row.id}/edit`}
+                                        className={`text-sky-700 inline-flex py-2 px-2 rounded  text-sm`}
+                                    >
+                                        <i className="fa fa-telegram" aria-hidden="true"></i>
+                                    </Link>
+                                </TableCell>
+                            }
+
                         </tr>
                     ))}
                 </Datatables>

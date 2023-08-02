@@ -64,7 +64,7 @@ export default function PharmacyList() {
 
 
                     <div className="border w-full border-gray-200 bg-white py-4 px-6 rounded-md">
-                        <PharmacyTable loading={loading} dataHeader={dataHeader} data={pharmacies} />
+                        <PharmacyTable loading={loading} dataHeader={dataHeader} data={pharmacies} showDistance={false} />
                     </div>
 
                 </div>
