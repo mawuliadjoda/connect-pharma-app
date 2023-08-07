@@ -33,7 +33,7 @@ export default function AddPharmacy() {
         const pharmaciesRef = collection(getDb(), 'pharmacies');
         addDoc(pharmaciesRef, pharmacy)
             .then(() => {
-                navigate("/pharmacies");
+                navigate(`/nearestPharmacies/${latitude}/${longitude}`);
                 console.log("Data sucessfuly submitted")
             })
             .catch((error) => {
@@ -45,7 +45,13 @@ export default function AddPharmacy() {
         <>
             <main className="h-full">
                 <Navbar toggle={sidebarToggle} />
-                <PharmacyForm onSubmit={addPharmacy} initialPharmacyData={initialPharmacyData} />
+                <div className="mainCard">
+                    <button
+                        className="py-2 px-4 border border-emerald-500 bg-emerald-600 w-full rounded-full text-gray-200 hover:bg-emerald-600 hover:border-emerald-600 justify-end text-sm">
+                        Ajout de pharmacie
+                    </button>
+                    <PharmacyForm onSubmit={addPharmacy} initialPharmacyData={initialPharmacyData} />
+                </div>
             </main>
         </>
     )

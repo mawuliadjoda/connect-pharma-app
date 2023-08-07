@@ -105,7 +105,7 @@ export default function PharmacyForm({ onSubmit, initialPharmacyData }: Pharmacy
 
                         <div className="mt-6 flex flex-row gap-4">
                             <button className="bg-emerald-600 text-gray-100 px-3 py-2 rounded-lg shadow-lg text-sm">
-                                Save
+                                Enregistrer
                             </button>
                         </div>
                     </form>
