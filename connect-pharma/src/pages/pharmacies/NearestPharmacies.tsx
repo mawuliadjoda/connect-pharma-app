@@ -7,7 +7,7 @@ import Navbar from "../../components/Navbar/Index";
 import { applyHaversine, getNearPharmacies } from "../../services/LocationService";
 import { Coordinate } from "calculate-distance-between-coordinates";
 import { convertToENecimal } from "../../utils/Utils";
-import { collection, limit, onSnapshot, orderBy, query, where } from "firebase/firestore";
+import { GeoPoint, collection, limit, onSnapshot, orderBy, query, where } from "firebase/firestore";
 import { getDb } from "../../services/db";
 
 
@@ -88,6 +88,11 @@ export default function NearestPharmacies() {
         window.open(url);
     }
 
+    const openMag = (location: GeoPoint) => {
+        const url = `https://www.google.com/maps/dir//${location.latitude},${location.longitude}`;
+        window.open(url);
+    }
+
     return (
         <>
             <main className="h-full">
@@ -110,6 +115,7 @@ export default function NearestPharmacies() {
                             showDistance={true}
                             openWhatsapp={openWhatsapp}
                             openTelegram={openTelegram}
+                            openMag={openMag}
                         />
                     </div>
 

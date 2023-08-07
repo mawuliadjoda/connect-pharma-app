@@ -2,6 +2,7 @@ import { Pharmacy } from "./Pharmacy"
 import Datatables from "../../components/Datatables/Table";
 import TableCell from "../../components/Datatables/TableCell";
 import { Link } from "react-router-dom";
+import { GeoPoint } from "firebase/firestore";
 
 type PharmacyTableProps = {
     loading: boolean,
@@ -9,7 +10,8 @@ type PharmacyTableProps = {
     data: Pharmacy[],
     showDistance?: boolean,
     openWhatsapp?: (tel: string) => void,
-    openTelegram?: (tel: string) => void
+    openTelegram?: (tel: string) => void,
+    openMag?:(location: GeoPoint) => void
 }
 
 
@@ -22,7 +24,7 @@ const telegramIcon: FontAwesomeIconProps = {
 */
 
 // https://fontawesomeicons.com/whatsapp
-export default function PharmacyTable({ loading, dataHeader, data, openWhatsapp, openTelegram, showDistance }: PharmacyTableProps) {
+export default function PharmacyTable({ loading, dataHeader, data, openWhatsapp, openTelegram, openMag, showDistance }: PharmacyTableProps) {
 
     console.log(showDistance);
 
@@ -82,7 +84,7 @@ export default function PharmacyTable({ loading, dataHeader, data, openWhatsapp,
                                         to={`/auth/master/user/${row.id}/edit`}
                                         className={`text-sky-700 inline-flex py-2 px-2 rounded  text-sm`}
                                     >
-                                        <i className="fa fa-whatsapp" aria-hidden="true"></i>
+                                        <i className="fa fa-whatsapp" aria-hidden="true" />
 
                                     </Link>
                                     <Link
@@ -91,9 +93,20 @@ export default function PharmacyTable({ loading, dataHeader, data, openWhatsapp,
                                             openTelegram!(row.tel);
                                         }}
                                         to={`/auth/master/user/${row.id}/edit`}
-                                        className={`text-sky-700 inline-flex py-2 px-2 rounded  text-sm`}
+                                        className={`text-sky-700 inline-flex py-2 px-2 rounded  text-sm ml-5`}
                                     >
-                                        <i className="fa fa-telegram" aria-hidden="true"></i>
+                                        <i className="fa fa-telegram" aria-hidden="true" />
+                                    </Link>
+
+                                    <Link
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            openMag!(row.location);
+                                        }}
+                                        to={`/auth/master/user/${row.id}/edit`}
+                                        className={`text-sky-700 inline-flex py-2 px-2 rounded  text-sm ml-5`}
+                                    >
+                                        <i className="fa fa-map-marker" aria-hidden="true" />
                                     </Link>
                                 </TableCell>
                             }
