@@ -39,3 +39,18 @@ https://react.dev/reference/react/useMemo#usage
 
 
 https://stackoverflow.com/questions/48846289/why-is-my-react-component-is-rendering-twice
+
+
+# Ideas
+1: add search zone on the top of Nearest Pharmacies result
+  => search on the nearest pharmacies, if no result then search on database
+2: add hidden to pharmacy tel
+   allow user to display tel then add to my stat
+
+   add stat to the click of open whatsapp or telegram button
+
+   send notification to pharmacies when user click on them
+
+Manage pharmacie :
+    isActive
+	payment

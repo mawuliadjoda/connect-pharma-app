@@ -30,8 +30,8 @@ export default function NearestPharmacies() {
 
     useEffect(() => {
 
-        const latitudeNumber: Number = convertToENecimal(latitude);
-        const longitudeNumber: Number = convertToENecimal(longitude);
+        const latitudeNumber: number = convertToENecimal(latitude);
+        const longitudeNumber: number = convertToENecimal(longitude);
 
         const userLocation: Coordinate = {
             lat: latitudeNumber.valueOf(),
