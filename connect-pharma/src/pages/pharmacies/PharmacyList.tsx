@@ -1,5 +1,5 @@
 import { useOutletContext } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo} from "react";
 import { Pharmacy } from "./Pharmacy";
 import { collection, limit, onSnapshot, orderBy, query, where } from "firebase/firestore";
 import { getDb } from "../../services/db";
@@ -13,6 +13,14 @@ export default function PharmacyList() {
     const [sidebarToggle] = useOutletContext<any>();
     const [loading, setLoading] = useState(true);
     const [pharmacies, setPharmacies] = useState<Pharmacy[]>([]);
+    const [searchQuery, setSearchQuery] = useState("");
+
+    const filteredPharmacies = useMemo(() => {
+        return pharmacies.map(pharmacy => pharmacy).filter(pharmacy => {
+            return pharmacy.name.toLowerCase().includes(searchQuery.toLowerCase());
+        })
+    }, [pharmacies, searchQuery]);
+
 
     useEffect(() => {
 
@@ -57,14 +65,27 @@ export default function PharmacyList() {
                 <div className="mainCard">
                     <button
                         className="py-2 px-4 border border-emerald-500 bg-emerald-600 w-full rounded-full text-gray-200 hover:bg-emerald-600 hover:border-emerald-600 justify-end text-sm"
-                    // onClick={() => AddPharmacy()}
                     >
                         Pharmacy List
                     </button>
 
+                    <form>
+                        <div className="relative">
+
+                            <input
+                                value={searchQuery}
+                                onChange={e => setSearchQuery(e.target.value)}
+                                type="search"
+                                id="default-search"
+                                className="mb-2 mt-2 text-sm placeholder-gray-500 px-4 rounded-lg border border-gray-200 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400 mt-1"
+                                placeholder="Search"
+                                required />
+                        </div>
+                    </form>
+
 
                     <div className="border w-full border-gray-200 bg-white py-4 px-6 rounded-md">
-                        <PharmacyTable loading={loading} dataHeader={dataHeader} data={pharmacies} showDistance={false} />
+                        <PharmacyTable loading={loading} dataHeader={dataHeader} data={filteredPharmacies} showDistance={false} />
                     </div>
 
                 </div>

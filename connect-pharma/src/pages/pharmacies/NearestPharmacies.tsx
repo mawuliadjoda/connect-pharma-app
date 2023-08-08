@@ -1,5 +1,5 @@
 import { useOutletContext, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Pharmacy } from "./Pharmacy";
 import { Loading } from "../../utils/Loading";
 import PharmacyTable from "./PharmacyTable";
@@ -25,6 +25,14 @@ export default function NearestPharmacies() {
     const [pharmacies, setPharmacies] = useState<Pharmacy[]>([]);
 
     const { latitude, longitude } = useParams();
+
+    const [searchQuery, setSearchQuery] = useState("");
+
+    const filteredPharmacies = useMemo(() => {
+        return pharmacies.map(pharmacy => pharmacy).filter(pharmacy => {
+            return pharmacy.name.toLowerCase().includes(searchQuery.toLowerCase());
+        })
+    }, [pharmacies, searchQuery]);
 
 
 
@@ -106,12 +114,26 @@ export default function NearestPharmacies() {
                         Pharmacies Proches
                     </button>
 
+                    <form>
+                        <div className="relative">
+
+                            <input
+                                value={searchQuery}
+                                onChange={e => setSearchQuery(e.target.value)}
+                                type="search"
+                                id="default-search"
+                                className="mb-2 mt-2 text-sm placeholder-gray-500 px-4 rounded-lg border border-gray-200 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400 mt-1"
+                                placeholder="Search"
+                                required />
+                        </div>
+                    </form>
+
 
                     <div className="border w-full border-gray-200 bg-white py-4 px-6 rounded-md">
                         <PharmacyTable
                             loading={loading}
                             dataHeader={dataHeader}
-                            data={pharmacies}
+                            data={filteredPharmacies}
                             showDistance={true}
                             openWhatsapp={openWhatsapp}
                             openTelegram={openTelegram}
