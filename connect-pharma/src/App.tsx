@@ -42,7 +42,7 @@ function App() {
         <Route path="/editUser" element={<EditUser />} ></Route>
       
         <Route path="/pharmacies" element={<PharmacyList />} ></Route>
-        <Route path="/nearestPharmacies/:latitude/:longitude" element={<NearestPharmacies />} ></Route>
+        <Route path="/nearestPharmacies/:latitude/:longitude/:userTelephone" element={<NearestPharmacies />} ></Route>
         <Route path="/pharmacies/add/:latitude/:longitude" element={<AddPharmacy  />} />
         <Route path="/pharmacies/populate" element={<PopulatePharmacies  />} />
         

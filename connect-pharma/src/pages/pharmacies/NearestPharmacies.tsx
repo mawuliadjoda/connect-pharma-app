@@ -24,7 +24,7 @@ export default function NearestPharmacies() {
     const [loading, setLoading] = useState(true);
     const [pharmacies, setPharmacies] = useState<Pharmacy[]>([]);
 
-    const { latitude, longitude } = useParams();
+    const { latitude, longitude, userTelephone } = useParams();
 
     const [searchQuery, setSearchQuery] = useState("");
 
@@ -87,17 +87,20 @@ export default function NearestPharmacies() {
     const openWhatsapp = (tel: string) => {
         const url = 'https://wa.me/+' + tel;
         console.log(url);
+        console.log(userTelephone);
         window.open(url);
     }
 
     const openTelegram = (tel: string) => {
         const url = 'https://t.me/+' + tel;
         console.log(url);
+        console.log(userTelephone);
         window.open(url);
     }
 
     const openMag = (location: GeoPoint) => {
         const url = `https://www.google.com/maps/dir//${location.latitude},${location.longitude}`;
+        console.log(userTelephone);
         window.open(url);
     }
 
