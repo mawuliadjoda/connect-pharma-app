@@ -4,10 +4,11 @@ import { User } from './User';
 
 type UserFormProps = {
     onSubmit: (userData: User) => void,
-    initialUserData: User
+    initialUserData: User,
+    isLoading?: boolean
 }
 
-function UserForm({ onSubmit, initialUserData }: UserFormProps) {
+function UserForm({ onSubmit, initialUserData, isLoading }: UserFormProps) {
 
     const nameRef = useRef<HTMLInputElement>(null);
     const userNameRef = useRef<HTMLInputElement>(null);
@@ -82,8 +83,10 @@ function UserForm({ onSubmit, initialUserData }: UserFormProps) {
                         </div>
 
                         <div className="mt-6 flex flex-row gap-4">
-                            <button className="bg-emerald-600 text-gray-100 px-3 py-2 rounded-lg shadow-lg text-sm">
-                                Save
+                            <button 
+                                disabled={isLoading}
+                                className="bg-emerald-600 text-gray-100 px-3 py-2 rounded-lg shadow-lg text-sm">
+                                {isLoading ? 'Loading ...' : 'Enregistrer'} 
                             </button>
                         </div>
                     </form>

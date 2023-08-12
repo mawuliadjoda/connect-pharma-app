@@ -5,13 +5,14 @@ import { GeoPoint, addDoc, collection } from "firebase/firestore";
 import { getDb } from "../../services/db";
 import PharmacyForm from "./PharmacyForm";
 import { convertToENecimal } from "../../utils/Utils";
+import { useState } from "react";
 
 
 export default function AddPharmacy() {
     const [sidebarToggle] = useOutletContext<any>();
-    // const [loading, setLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
 
-    const { latitude, longitude } = useParams();
+    const { latitude, longitude, userTelephone } = useParams();
     const navigate = useNavigate();
 
 
@@ -28,12 +29,14 @@ export default function AddPharmacy() {
     }
 
     const addPharmacy = (pharmacy: Pharmacy) => {
-
+        console.log(userTelephone);
         /*   Firebase v9    */
         const pharmaciesRef = collection(getDb(), 'pharmacies');
+        setIsLoading(true);
         addDoc(pharmaciesRef, pharmacy)
             .then(() => {
-                navigate(`/nearestPharmacies/${latitude}/${longitude}`);
+                setIsLoading(false);
+                navigate(`/nearestPharmacies/${latitude}/${longitude}/${userTelephone}`);
                 console.log("Data sucessfuly submitted")
             })
             .catch((error) => {
@@ -50,7 +53,7 @@ export default function AddPharmacy() {
                         className="py-2 px-4 border border-emerald-500 bg-emerald-600 w-full rounded-full text-gray-200 hover:bg-emerald-600 hover:border-emerald-600 justify-end text-sm">
                         Ajout de pharmacie
                     </button>
-                    <PharmacyForm onSubmit={addPharmacy} initialPharmacyData={initialPharmacyData} />
+                    <PharmacyForm onSubmit={addPharmacy} initialPharmacyData={initialPharmacyData} isLoading={isLoading} />
                 </div>
             </main>
         </>
