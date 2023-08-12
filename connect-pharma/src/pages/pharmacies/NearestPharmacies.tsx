@@ -1,9 +1,9 @@
-import { useOutletContext, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useEffect, useState, useMemo } from "react";
 import { Pharmacy } from "./Pharmacy";
 import { Loading } from "../../utils/Loading";
 import PharmacyTable from "./PharmacyTable";
-import Navbar from "../../components/Navbar/Index";
+// import Navbar from "../../components/Navbar/Index";
 import { applyHaversine, getNearPharmacies } from "../../services/LocationService";
 import { Coordinate } from "calculate-distance-between-coordinates";
 import { convertToENecimal } from "../../utils/Utils";
@@ -20,7 +20,7 @@ const USER_LOCATION: Coordinate = {
 */
 
 export default function NearestPharmacies() {
-    const [sidebarToggle] = useOutletContext<any>();
+    // const [sidebarToggle] = useOutletContext<any>();
     const [loading, setLoading] = useState(true);
     const [pharmacies, setPharmacies] = useState<Pharmacy[]>([]);
 
@@ -107,7 +107,7 @@ export default function NearestPharmacies() {
     return (
         <>
             <main className="h-full">
-                <Navbar toggle={sidebarToggle} />
+                {/* <Navbar toggle={sidebarToggle} /> */}
 
                 {loading && <Loading />}
 
