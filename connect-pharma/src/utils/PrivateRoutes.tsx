@@ -1,7 +1,8 @@
-import { Outlet } from 'react-router-dom'
+import { Navigate, Outlet } from 'react-router-dom'
 import { auth } from '../services/db';
 import { User, onAuthStateChanged } from 'firebase/auth';
 import { useEffect, useState } from 'react';
+import LoginIndex from '../pages/auth/Login';
 
 
 // https://medium.com/@dennisivy/creating-protected-routes-with-react-router-v6-2c4bbaf7bc1c
@@ -24,10 +25,8 @@ const PrivateRoutes = () => {
         return () => unsubscribe();
     }, []);
 
-    if (!conectedUser) {
-        return <span>User is logged out</span>;
-    }
-    return <Outlet /> ;
+ 
+    return conectedUser ? <Outlet /> : <LoginIndex />;
 
   
     /*
