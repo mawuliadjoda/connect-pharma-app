@@ -1,8 +1,12 @@
 // import { faFacebook, faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+
+const LoginImage = "https://edp.raincode.my.id/static/media/login.cc0578413db10119a7ff.png";
+
 
 function LoginIndex() {
   const navigate = useNavigate();
@@ -10,15 +14,47 @@ function LoginIndex() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+
+
   const handleSubmit = () => {
     setError(false);
     console.log(email);
     console.log(password);
     setLoading(true);
-    navigate("/");
+
+    onSubmit(email, password);
+    // navigate("/");
+    // onLogout();
   };
-  const LoginImage =
-    "https://edp.raincode.my.id/static/media/login.cc0578413db10119a7ff.png";
+
+
+  /*
+  function onLogout() {
+    auth.signOut();
+    navigate("/sign-in");
+  }
+  */
+
+  async function onSubmit(email: string, password: string) {
+
+    try {
+      const auth = getAuth();
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      setLoading(false);
+      if (userCredential.user) {
+        navigate("/pharmacies");
+      }
+    } catch (error: any) {
+      console.log(error.code);
+      console.log(error.message);
+    }
+  }
+
+
   return (
     <>
       <div className="flex min-h-screen">
@@ -157,7 +193,7 @@ function LoginIndex() {
                   type="submit"
                   className="flex items-center justify-center focus:outline-none text-slate-500 text-sm bg-slate-200 rounded-lg md:rounded md:py-2 px-3 py-3 w-full transition duration-150 ease-in"
                 >
-                  {/* <FontAwesomeIcon icon={faGoogle} /> */} 
+                  {/* <FontAwesomeIcon icon={faGoogle} /> */}
                   <span className="mr-2 flex-1">Login with Google</span>
                 </button>
               </div>
@@ -167,7 +203,7 @@ function LoginIndex() {
                   type="submit"
                   className="flex items-center justify-center focus:outline-none text-slate-500 text-sm bg-slate-200 rounded-lg md:rounded md:py-2 px-3 py-3 w-full transition duration-150 ease-in"
                 >
-                {/* <FontAwesomeIcon icon={faFacebook} /> */}  
+                  {/* <FontAwesomeIcon icon={faFacebook} /> */}
                   <span className="mr-2 flex-1">Login with Facebook</span>
                 </button>
               </div>

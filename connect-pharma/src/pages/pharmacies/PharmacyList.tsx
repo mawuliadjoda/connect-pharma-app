@@ -10,6 +10,7 @@ import Navbar from "../../components/Navbar/Index";
 
 
 export default function PharmacyList() {
+    
     const [sidebarToggle] = useOutletContext<any>();
     const [loading, setLoading] = useState(true);
     const [pharmacies, setPharmacies] = useState<Pharmacy[]>([]);

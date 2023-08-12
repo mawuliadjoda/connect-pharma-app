@@ -1,8 +1,13 @@
 
-import { faEnvelope, faLock, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faEnvelope, faLock, faPhone, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
+import { UserCredential, createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import { FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { User } from "../../Users/User";
+import { addDoc, collection } from "firebase/firestore";
+import { getDb } from "../../../services/db";
+
 
 function RegisterIndex() {
   const navigate = useNavigate();
@@ -11,16 +16,71 @@ function RegisterIndex() {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [tel, setTel] = useState("");
   const [loading, setLoading] = useState(false);
-  const handleSubmit = () => {
+
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+
+
    // setError(false);
     console.log(email);
     console.log(name);
     console.log(password);
     console.log(confirmPassword);
+    console.log(tel);
     setLoading(true);
-    navigate("/");
+
+
+    onSubmit(name, email, password, tel);
+
+    // navigate("/");
   };
+
+  async function onSubmit(name: string, email: string, password: string, tel: string ) {
+   
+    try {
+      const auth = getAuth();
+      const userCredential: UserCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      )
+      addUser(name, userCredential.user.email!, tel);
+      const user = userCredential.user;
+      console.log(user);
+      setLoading(false);
+
+
+      navigate("/");
+
+    } catch (error: any) {
+      console.log(error.code);
+      console.log(error.message);
+    }
+  }
+
+  const addUser = (username: string, email: string, tel: string) => {
+    const data: User = {
+      name: username,
+      username: username,
+      email: email,
+      roles: ["user"],
+      tel: tel
+  }
+  const usersRef = collection(getDb(), 'users');
+  addDoc(usersRef, data)
+      .then(() => {
+          setLoading(true);
+          navigate("/userList");
+          console.log("Data sucessfuly submitted")
+      })
+      .catch((error) => {
+          console.log("Error adding document:", error);
+      });
+  }
+
   const registerImage =
     "https://edp.raincode.my.id/static/media/login.cc0578413db10119a7ff.png";
   return (
@@ -50,14 +110,14 @@ function RegisterIndex() {
             <div className="loginWrapper flex flex-col w-full lg:px-36 md:px-8 px-8 md:py-8">
               {/* Login Header Text */}
               <div className="hidden md:block font-medium self-center text-xl sm:text-3xl text-gray-800">
-                Buatkan Akun
+                S'enregistrer
               </div>
 
               {/* Sparator */}
               <div className="hidden md:block relative mt-10 h-px bg-gray-300">
                 <div className="absolute left-0 top-0 flex justify-center w-full -mt-2">
                   <span className="bg-white px-4 text-xs text-gray-500 uppercase">
-                    Daftarkan akun Anda sekarang, Gratis!
+                    Formulaire d'enregistrement 
                   </span>
                 </div>
               </div>
@@ -82,7 +142,7 @@ function RegisterIndex() {
                         name="email"
                         onChange={(e) => setEmail(e.target.value)}
                         className="text-sm placeholder-gray-500 pl-10 pr-4 rounded-lg border border-gray-400 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400"
-                        placeholder="E-Mail Address"
+                        placeholder="@email"
                       />
                     </div>
                   
@@ -101,10 +161,29 @@ function RegisterIndex() {
                         name="name"
                         onChange={(e) => setName(e.target.value)}
                         className="text-sm placeholder-gray-500 pl-10 pr-4 rounded-lg border border-gray-400 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400"
-                        placeholder="Nama Lengkap"
+                        placeholder="Login"
                       />
                     </div>
                    
+                  </div>
+
+                    {/* tel */}
+                    <div className="flex flex-col mb-3">
+                    <div className="relative">
+                      <div className="inline-flex items-center justify-center absolute left-0 top-0 h-full w-10 text-gray-400">
+                        <FontAwesomeIcon icon={faPhone} />
+                      </div>
+
+                      <input
+                        id="tel"
+                        type="text"
+                        name="tel"
+                        onChange={(e) => setTel(e.target.value)}
+                        className="text-sm placeholder-gray-500 pl-10 pr-4 rounded-lg border border-gray-400 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400"
+                        placeholder="Tel"
+                      />
+                    </div>
+                  
                   </div>
 
                   {/* Password */}
@@ -126,7 +205,7 @@ function RegisterIndex() {
                   
                   </div>
 
-                  {/* Konfirmasi Password */}
+                  {/* confirm Password */}
                   <div className="flex flex-col mb-6">
                     <div className="relative">
                       <div className="inline-flex items-center justify-center absolute left-0 top-0 h-full w-10 text-gray-400">
@@ -139,7 +218,7 @@ function RegisterIndex() {
                         name="confirm_password"
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         className="text-sm placeholder-gray-500 pl-10 pr-4 rounded-lg border border-gray-400 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400"
-                        placeholder="Konfirmasi Password"
+                        placeholder="confirmer Password"
                       />
                     </div>
                     
@@ -156,7 +235,7 @@ function RegisterIndex() {
                         }}
                         className="inline-flex font-semibold text-xs sm:text-sm text-emerald-500 hover:text-emerald-700"
                       >
-                        Lupa password?
+                        password oublié ?
                       </Link>
                     </div>
                   </div>
@@ -227,7 +306,7 @@ function RegisterIndex() {
                       <path d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
                     </svg>
                   </span>
-                  <span className="ml-2">Sudah punya akun?</span>
+                  <span className="ml-2">Register Link ?</span>
                 </Link>
               </div>
               {/* End Register Link */}
