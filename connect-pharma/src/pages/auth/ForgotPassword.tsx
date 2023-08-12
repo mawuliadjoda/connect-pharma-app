@@ -34,7 +34,7 @@ export default function ForgotPassword() {
 
                         <div>
                             <label htmlFor="name" className="text-sm text-gray-600">
-                                Nom
+                                Email
                             </label>
                             <input
                                 id="name"
