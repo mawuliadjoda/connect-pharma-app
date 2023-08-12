@@ -48,12 +48,6 @@ function RegisterIndex() {
         password,
       )
       addUser(name, userCredential.user.email!, tel);
-      const user = userCredential.user;
-      console.log(user);
-      setLoading(false);
-
-
-      navigate("/");
 
     } catch (error: any) {
       console.log(error.code);
@@ -73,7 +67,7 @@ function RegisterIndex() {
   addDoc(usersRef, data)
       .then(() => {
           setLoading(true);
-          navigate("/userList");
+          navigate("/");
           console.log("Data sucessfuly submitted")
       })
       .catch((error) => {

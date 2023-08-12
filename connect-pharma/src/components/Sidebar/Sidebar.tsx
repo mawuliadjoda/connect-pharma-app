@@ -7,6 +7,7 @@ import SidebarLogo from "./SidebarLogo.jsx";
 import SidebarSearch from "./SidebarSearch.tsx";
 import MenuList from "./MenuList.tsx";
 import { useNavigate } from "react-router-dom";
+import { auth } from "../../services/db.tsx";
 
 function Sidebar({ ...props }) {
   const navigate = useNavigate();
@@ -35,8 +36,13 @@ function Sidebar({ ...props }) {
   };
 
   const logout = () => {
+    onLogout();
     navigate("/auth/login");
   };
+
+  function onLogout() {
+    auth.signOut();
+  }
 
   return (
     <>
