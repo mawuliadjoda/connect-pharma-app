@@ -2,7 +2,7 @@
 import { faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 const LoginImage = "https://edp.raincode.my.id/static/media/login.cc0578413db10119a7ff.png";
@@ -16,7 +16,8 @@ function LoginIndex() {
   const [loading, setLoading] = useState(false);
 
 
-  const handleSubmit = () => {
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
     setError(false);
     console.log(email);
     console.log(password);

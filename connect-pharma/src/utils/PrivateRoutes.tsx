@@ -24,7 +24,10 @@ const PrivateRoutes = () => {
         return () => unsubscribe();
     }, []);
 
-    return conectedUser ? <Outlet /> : null;
+    if (!conectedUser) {
+        return <span>User is logged out</span>;
+    }
+    return <Outlet /> ;
 
   
     /*
