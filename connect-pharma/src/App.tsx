@@ -20,6 +20,7 @@ import AddPharmacy from "./pages/pharmacies/AddPharmacy";
 import NearestPharmacies from "./pages/pharmacies/NearestPharmacies";
 import PopulatePharmacies from "./pages/pharmacies/PopulatePharmacies";
 import PrivateRoutes from "./utils/PrivateRoutes";
+import ForgotPassword from "./pages/auth/ForgotPassword";
 
 
 
@@ -85,6 +86,7 @@ function App() {
 
           <Route path="/auth/register" element={<RegisterIndex />}></Route>
           <Route path="/auth/login" element={<LoginIndex />}></Route>
+          <Route path="/reset/password" element={<ForgotPassword />}></Route>
         </Routes>
       </Router>
 

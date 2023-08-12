@@ -10,6 +10,7 @@ const LoginImage = "https://edp.raincode.my.id/static/media/login.cc0578413db101
 
 function LoginIndex() {
   const navigate = useNavigate();
+  const history = useNavigate();
   const [error, setError] = useState<any>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -53,6 +54,10 @@ function LoginIndex() {
     }
   }
 
+  const handleReset = ()=>{
+    history("/reset/password");
+  }
+
 
   return (
     <>
@@ -81,14 +86,14 @@ function LoginIndex() {
             <div className="loginWrapper flex flex-col w-full lg:px-36 md:px-8 px-8 md:py-8">
               {/* Login Header Text */}
               <div className="hidden md:block font-medium self-center text-xl sm:text-3xl text-gray-800">
-                Welcome Back!
+                Bienvenue !
               </div>
 
               {/* Sparator */}
               <div className="hidden md:block relative mt-10 h-px bg-gray-300">
                 <div className="absolute left-0 top-0 flex justify-center w-full -mt-2">
                   <span className="bg-white px-4 text-xs text-gray-500 uppercase">
-                    Login dengan e-mail atau username
+                    Connectez-vous sur votre compte
                   </span>
                 </div>
               </div>
@@ -153,10 +158,11 @@ function LoginIndex() {
                         to=""
                         onClick={(e) => {
                           e.preventDefault();
+                          handleReset();
                         }}
                         className="inline-flex font-semibold text-xs sm:text-sm text-emerald-500 hover:text-emerald-700"
                       >
-                        Lupa password?
+                        Password oublié ?
                       </Link>
                     </div>
                   </div>
@@ -227,6 +233,7 @@ function LoginIndex() {
                       <path d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
                     </svg>
                   </span>
+                 
                   <span className="ml-2">Pas de compte ? Créez un compte </span>
                 </Link>
               </div>
