@@ -64,7 +64,7 @@ const Table = () => {
       .then(() => {
         console.log("user deleted sucessfully");
         setUsers(prev => {
-          return prev.filter(user => user.id !== id);
+          return prev.filter(user => user!.id !== id);
         })
       })
       .catch(error => {

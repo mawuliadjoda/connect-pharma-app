@@ -4,6 +4,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { getDb } from "../../../services/db";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { User } from "../../Users/User";
 
 const LoginImage = "https://edp.raincode.my.id/static/media/login.cc0578413db10119a7ff.png";
 
@@ -16,6 +19,7 @@ function LoginIndex() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const usersRef = collection(getDb(), 'users');
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -46,12 +50,35 @@ function LoginIndex() {
       );
       setLoading(false);
       if (userCredential.user) {
-        navigate("/pharmacies");
+       // navigate("/pharmacies");
+       checkUserRoleAndRedirect(email);
       }
     } catch (error: any) {
       console.log(error.code);
       console.log(error.message);
     }
+  }
+
+  const checkUserRoleAndRedirect = async (email: string) => {
+    const q = query(usersRef, where("email", "==", email));
+
+    let user: User = null ;
+
+    const querySnapshot = await getDocs(q);
+    if(querySnapshot.size === 1) {
+      querySnapshot.docs.map((doc) => {
+        user = {
+          id: doc.id,
+          name: doc.data().name,
+          username: doc.data().username,
+          email: doc.data().email,
+          roles: doc.data().roles
+        };
+      })
+    }
+    setLoading(false);
+    user!.roles?.includes('admin') ? navigate("/") : navigate("/pharmacies");
+
   }
 
   const handleReset = ()=>{

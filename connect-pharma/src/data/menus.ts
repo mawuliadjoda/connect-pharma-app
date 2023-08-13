@@ -13,17 +13,20 @@ const initMenu: Menu[] = [
     label: "Dashboard",
     path: "/",
     icon: faTachometer,
+    role: ['admin']
   },
   {
     label: "Users List",
     path: "/userList",
     icon: faTable,
+    role: ['admin']
   },
 
   {
     label: "Pharmacy List",
     path: "/pharmacies",
     icon: faTable,
+    role: ['admin', 'user'],
   },
   /*
   {

@@ -2,6 +2,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { NavLink } from "react-router-dom";
 import SubMenu from "./SubMenu";
 import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
+import { useContext } from "react";
+import { UserContext } from "../../utils/PrivateRoutes";
 
 type MenuListProps = {
   toggle: () => void,
@@ -11,15 +13,17 @@ type MenuListProps = {
 export type Menu = {
   label: string,
   path: string,
-  icon: IconDefinition | any,
-  submenu?: Submenu [],
-  role?: any
+  icon: IconDefinition,
+  submenu?: Submenu[],
+  role?: string[]
 }
 export type Submenu = {
   label: string,
   path: string,
 }
 function MenuList({ menus, toggle }: MenuListProps) {
+  const connectedUser = useContext(UserContext);
+  console.log(connectedUser?.roles);
   return (
     <div className="navWrapper p-4">
       <ul id="menu" className="">
@@ -28,10 +32,15 @@ function MenuList({ menus, toggle }: MenuListProps) {
             <SubMenu key={menu.label} menu={menu} toggle={toggle} />
           ) : menu.path ? (
             <li key={menu.label} className={``} onClick={toggle}>
-              <NavLink to={`${menu.path}`} className="link">
-                {menu.icon && <FontAwesomeIcon icon={menu.icon} />}
-                {menu.label}
-              </NavLink>
+              {
+                connectedUser?.roles!.every((value: string) => menu.role!.includes(value))
+                &&
+                <NavLink to={`${menu.path}`} className="link">
+                  {menu.icon && <FontAwesomeIcon icon={menu.icon} />}
+                  {menu.label}
+                </NavLink>
+              }
+
             </li>
           ) : (
             <li key={menu.label} className="mt-5 mb-3">

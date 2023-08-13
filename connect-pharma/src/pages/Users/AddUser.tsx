@@ -16,9 +16,9 @@ function AddUser() {
     const addUser = (user: User) => {
         setIsLoading(true);
         const data = {
-            name: user.name,
-            username: user.username,
-            email: user.email,
+            name: user!.name,
+            username: user!.username,
+            email: user!.email,
             roles: ["user"]
         }
 

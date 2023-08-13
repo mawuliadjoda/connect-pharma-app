@@ -21,7 +21,7 @@ function UserForm({ onSubmit, initialUserData, isLoading }: UserFormProps) {
             name: nameRef.current!.value,
             username: userNameRef.current!.value,
             email: emailRef.current!.value,
-            roles: initialUserData.roles
+            roles: initialUserData!.roles
         });
     }
 
@@ -43,7 +43,7 @@ function UserForm({ onSubmit, initialUserData, isLoading }: UserFormProps) {
                                 placeholder="Name"
                                 ref={nameRef}
                                 required
-                                defaultValue={initialUserData.name}
+                                defaultValue={initialUserData!.name}
 
                             />
                         </div>
@@ -60,7 +60,7 @@ function UserForm({ onSubmit, initialUserData, isLoading }: UserFormProps) {
                                 placeholder="username"
                                 ref={userNameRef}
                                 required
-                                defaultValue={initialUserData.username}
+                                defaultValue={initialUserData!.username}
 
                             />
                         </div>
@@ -77,7 +77,7 @@ function UserForm({ onSubmit, initialUserData, isLoading }: UserFormProps) {
                                 placeholder="email"
                                 ref={emailRef}
                                 required
-                                defaultValue={initialUserData.email}
+                                defaultValue={initialUserData!.email}
 
                             />
                         </div>

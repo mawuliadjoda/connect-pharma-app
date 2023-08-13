@@ -67,7 +67,7 @@ function RegisterIndex() {
   addDoc(usersRef, data)
       .then(() => {
           setLoading(true);
-          navigate("/");
+          navigate("/auth/login");
           console.log("Data sucessfuly submitted")
       })
       .catch((error) => {

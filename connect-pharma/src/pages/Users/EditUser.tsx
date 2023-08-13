@@ -15,7 +15,7 @@ function EditUser() {
     const updateUser = (userToUpdate: User) => {
 
         /*  Firebase old method    */
-        firebase.firestore().collection("users").doc(location.state.id).update(userToUpdate)
+        firebase.firestore().collection("users").doc(location.state.id).update(userToUpdate!)
             .then(() => {
                 console.log("user updated sucessfully");
                 navigate("/userList");
