@@ -5,8 +5,18 @@ import { GeoPoint, addDoc, collection } from "firebase/firestore";
 import { getDb } from "../../services/db";
 import PharmacyForm from "./PharmacyForm";
 import { convertToENecimal } from "../../utils/Utils";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
+
+export {};
+
+declare global {
+  interface Window {
+    Telegram: any; // 👈️ turn off type checking
+  }
+}
+
+const tele = window.Telegram.WebApp;
 
 export default function AddPharmacy() {
     // const [sidebarToggle] = useOutletContext<any>();
@@ -28,6 +38,11 @@ export default function AddPharmacy() {
         tel: '',
     }
 
+
+    useEffect(() => {
+        tele.ready();
+    });
+
     const addPharmacy = (pharmacy: Pharmacy) => {
         console.log(userTelephone);
         /*   Firebase v9    */
@@ -37,7 +52,10 @@ export default function AddPharmacy() {
             .then(() => {
                 setIsLoading(false);
                 navigate(`/nearestPharmacies/${latitude}/${longitude}/${userTelephone}`);
-                console.log("Data sucessfuly submitted")
+                console.log("Data sucessfuly submitted");
+
+                tele.sendData('Votre pharmacie a été bien enregistrer dans notre système ! ');
+
             })
             .catch((error) => {
                 console.log("Error adding document:", error);

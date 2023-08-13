@@ -16,6 +16,7 @@ import LoginIndex from '../pages/auth/Login';
     )
 */
 
+// TO see https://codingpr.com/react-firebase-auth-tutorial/
 const PrivateRoutes = () => {
 
     const [conectedUser, setConectedUser] = useState<User | null>();
