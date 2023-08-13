@@ -28,6 +28,26 @@ const initMenu: Menu[] = [
     icon: faTable,
     role: ['admin', 'user'],
   },
+
+  {
+    label: "Mes clients en ligne",
+    path: "/onlineClients",
+    icon: faTable,
+    role: ['admin', 'user'],
+  },
+
+  {
+    label: "Tous les clients en ligne",
+    path: "/allOnlineClients",
+    icon: faTable,
+    role: ['admin', 'user'],
+  },
+  {
+    label: "Mes statistique",
+    path: "/statistique",
+    icon: faTable,
+    role: ['admin', 'user'],
+  },
   /*
   {
     label: "404",

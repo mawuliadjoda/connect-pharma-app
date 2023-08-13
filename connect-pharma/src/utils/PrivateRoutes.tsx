@@ -47,6 +47,7 @@ const PrivateRoutes = () => {
 
 
 
+    // https://firebase.google.com/docs/firestore/query-data/get-data?hl=fr
     const getUserWithDetails = async (email: string) => {
         const q = query(usersRef, where("email", "==", email));
         let user: User = null;
