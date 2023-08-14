@@ -4,5 +4,7 @@ export type User = {
     username: string,
     email?: string,
     roles?: string[],
-    tel?: string
+    tel?: string,
+    authProvider?: string,
+    uid?: string | null
 } | null

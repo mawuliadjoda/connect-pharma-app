@@ -1,11 +1,11 @@
 // import { faFacebook, faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { GoogleAuthProvider, getAuth, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { getDb } from "../../../services/db";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { auth, db } from "../../../services/db";
+import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { User } from "../../Users/User";
 
 const LoginImage = "https://edp.raincode.my.id/static/media/login.cc0578413db10119a7ff.png";
@@ -19,7 +19,7 @@ function LoginIndex() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const usersRef = collection(getDb(), 'users');
+  // const usersRef = collection(getDb(), 'users');
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -50,8 +50,8 @@ function LoginIndex() {
       );
       setLoading(false);
       if (userCredential.user) {
-       // navigate("/pharmacies");
-       checkUserRoleAndRedirect(email);
+        // navigate("/pharmacies");
+        checkUserRoleAndRedirect(userCredential.user.email!);
       }
     } catch (error: any) {
       console.log(error.code);
@@ -59,13 +59,15 @@ function LoginIndex() {
     }
   }
 
+  // https://blog.logrocket.com/user-authentication-firebase-react-apps/
   const checkUserRoleAndRedirect = async (email: string) => {
-    const q = query(usersRef, where("email", "==", email));
+    // const q = query(usersRef, where("email", "==", email));
 
-    let user: User = null ;
-
+    const q = query(collection(db, "users"), where("email", "==", email));
     const querySnapshot = await getDocs(q);
-    if(querySnapshot.size === 1) {
+
+    let user: User = null;
+    if (querySnapshot.size === 1) {
       querySnapshot.docs.map((doc) => {
         user = {
           id: doc.id,
@@ -76,12 +78,62 @@ function LoginIndex() {
         };
       })
     }
+    localStorage.setItem("user", JSON.stringify(user));
+
+
+    /*const querySnapshot = await getDocs(q);
+     if(querySnapshot.size === 1) {
+       querySnapshot.docs.map((doc) => {
+         user = {
+           id: doc.id,
+           name: doc.data().name,
+           username: doc.data().username,
+           email: doc.data().email,
+           roles: doc.data().roles
+         };
+       })
+     }
+     */
     setLoading(false);
-    user!.roles?.includes('admin') ? navigate("/") : navigate("/pharmacies");
+    user!.roles?.includes('admin') ? navigate("/") : navigate("/pharmacies", { state: user });
 
   }
 
-  const handleReset = ()=>{
+  const googleProvider = new GoogleAuthProvider();
+
+  const signInWithGoogle = async () => {
+    setLoading(true);
+    try {
+      const res = await signInWithPopup(auth, googleProvider);
+      const user = res.user;
+      const q = query(collection(db, "users"), where("email", "==", user.email));
+      const docs = await getDocs(q);
+
+      const connectedUser: User = {
+        authProvider: "google",
+        uid: user.uid,
+        name: user.displayName!,
+        username: user.displayName!,
+        email: user.email!,
+        roles: ["user"]
+      };
+
+      if (docs.docs.length === 0) {
+        // connectedUser = {
+        //   ...connectedUser, roles: ["user"],
+        // }
+        await addDoc(collection(db, "users"), connectedUser);
+      }
+      localStorage.setItem("user", JSON.stringify(connectedUser));
+      setLoading(false);
+      navigate("/pharmacies");
+
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleReset = () => {
     history("/reset/password");
   }
 
@@ -226,7 +278,9 @@ function LoginIndex() {
                   className="flex items-center justify-center focus:outline-none text-slate-500 text-sm bg-slate-200 rounded-lg md:rounded md:py-2 px-3 py-3 w-full transition duration-150 ease-in"
                 >
                   {/* <FontAwesomeIcon icon={faGoogle} /> */}
-                  <span className="mr-2 flex-1">Login with Google</span>
+                  <span onClick={signInWithGoogle} className="mr-2 flex-1">
+                    {loading ? "Processing...." : "Login with Google"}
+                  </span>
                 </button>
               </div>
               <div className="flex justify-between w-full mt-2">
@@ -260,7 +314,7 @@ function LoginIndex() {
                       <path d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
                     </svg>
                   </span>
-                 
+
                   <span className="ml-2">Pas de compte ? Créez un compte </span>
                 </Link>
               </div>

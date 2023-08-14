@@ -5,8 +5,8 @@ import { UserCredential, createUserWithEmailAndPassword, getAuth } from "firebas
 import { FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { User } from "../../Users/User";
-import { addDoc, collection } from "firebase/firestore";
-import { getDb } from "../../../services/db";
+import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import { db, getDb } from "../../../services/db";
 
 
 function RegisterIndex() {
@@ -24,12 +24,10 @@ function RegisterIndex() {
     e.preventDefault();
 
 
-   // setError(false);
-    console.log(email);
-    console.log(name);
-    console.log(password);
+    // setError(false);
+  
     console.log(confirmPassword);
-    console.log(tel);
+
     setLoading(true);
 
 
@@ -38,16 +36,27 @@ function RegisterIndex() {
     // navigate("/");
   };
 
-  async function onSubmit(name: string, email: string, password: string, tel: string ) {
-   
+  async function onSubmit(name: string, email: string, password: string, tel: string) {
+
     try {
       const auth = getAuth();
-      const userCredential: UserCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password,
-      )
-      addUser(name, userCredential.user.email!, tel);
+      const userCredential: UserCredential = await createUserWithEmailAndPassword(auth, email, password);
+
+      const q = query(collection(db, "users"), where("email", "==", email));
+      const docs = await getDocs(q);
+      if (docs.docs.length === 0) {
+        const user: User = {
+          authProvider: "local",
+          uid: userCredential.user.uid,
+          name: name,
+          username: userCredential.user.displayName!,
+          email: userCredential.user.email!,
+          roles: ["user"],
+          tel: tel
+        };
+        addUser(user);
+      }
+
 
     } catch (error: any) {
       console.log(error.code);
@@ -55,23 +64,24 @@ function RegisterIndex() {
     }
   }
 
-  const addUser = (username: string, email: string, tel: string) => {
-    const data: User = {
-      name: username,
-      username: username,
-      email: email,
-      roles: ["user"],
-      tel: tel
-  }
-  const usersRef = collection(getDb(), 'users');
-  addDoc(usersRef, data)
+  const addUser = (user: User) => {
+    // const data: User = {
+    //   authProvider: "local",
+    //   name: username,
+    //   username: username,
+    //   email: email,
+    //   roles: ["user"],
+    //   tel: tel
+    // }
+    const usersRef = collection(getDb(), 'users');
+    addDoc(usersRef, user)
       .then(() => {
-          setLoading(true);
-          navigate("/auth/login");
-          console.log("Data sucessfuly submitted")
+        setLoading(true);
+        navigate("/auth/login");
+        console.log("Data sucessfuly submitted")
       })
       .catch((error) => {
-          console.log("Error adding document:", error);
+        console.log("Error adding document:", error);
       });
   }
 
@@ -111,7 +121,7 @@ function RegisterIndex() {
               <div className="hidden md:block relative mt-10 h-px bg-gray-300">
                 <div className="absolute left-0 top-0 flex justify-center w-full -mt-2">
                   <span className="bg-white px-4 text-xs text-gray-500 uppercase">
-                    Formulaire d'enregistrement 
+                    Formulaire d'enregistrement
                   </span>
                 </div>
               </div>
@@ -139,7 +149,7 @@ function RegisterIndex() {
                         placeholder="@email"
                       />
                     </div>
-                  
+
                   </div>
 
                   {/* Username */}
@@ -158,11 +168,11 @@ function RegisterIndex() {
                         placeholder="Login"
                       />
                     </div>
-                   
+
                   </div>
 
-                    {/* tel */}
-                    <div className="flex flex-col mb-3">
+                  {/* tel */}
+                  <div className="flex flex-col mb-3">
                     <div className="relative">
                       <div className="inline-flex items-center justify-center absolute left-0 top-0 h-full w-10 text-gray-400">
                         <FontAwesomeIcon icon={faPhone} />
@@ -177,7 +187,7 @@ function RegisterIndex() {
                         placeholder="Tel"
                       />
                     </div>
-                  
+
                   </div>
 
                   {/* Password */}
@@ -196,7 +206,7 @@ function RegisterIndex() {
                         placeholder="Password"
                       />
                     </div>
-                  
+
                   </div>
 
                   {/* confirm Password */}
@@ -215,8 +225,8 @@ function RegisterIndex() {
                         placeholder="confirmer Password"
                       />
                     </div>
-                    
-                    
+
+
                   </div>
 
                   {/* Forgot Password Link */}

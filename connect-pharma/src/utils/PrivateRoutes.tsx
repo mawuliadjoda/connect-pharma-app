@@ -1,9 +1,6 @@
 import { Outlet } from 'react-router-dom'
-import { auth, getDb } from '../services/db';
-import { onAuthStateChanged } from 'firebase/auth';
 import { createContext, useEffect, useState } from 'react';
 import LoginIndex from '../pages/auth/Login';
-import { collection, getDocs, query, where } from 'firebase/firestore';
 import { User } from '../pages/Users/User';
 
 
@@ -20,13 +17,25 @@ import { User } from '../pages/Users/User';
 
 // TO see https://codingpr.com/react-firebase-auth-tutorial/
 
-const usersRef = collection(getDb(), 'users');
+// const usersRef = collection(getDb(), 'users');
 
 export const UserContext = createContext<User>(null);
 const PrivateRoutes = () => {
-
+    // const location = useLocation();
+    // const initialUserData: User = location.state;
     const [conectedUser, setConectedUser] = useState<User>();
 
+    // console.log(initialUserData);
+
+    useEffect(() => {
+        const loggedInUser = localStorage.getItem("user");
+        if (loggedInUser) {
+          const foundUser = JSON.parse(loggedInUser);
+          setConectedUser(foundUser);
+          console.log(`------- Connected user from PrivateRoute-----: ${conectedUser}`);
+        }
+      }, []);
+    /*
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
 
@@ -44,11 +53,12 @@ const PrivateRoutes = () => {
         });
         return () => unsubscribe();
     }, []);
+    */
 
 
 
     // https://firebase.google.com/docs/firestore/query-data/get-data?hl=fr
-    const getUserWithDetails = async (email: string) => {
+    /*const getUserWithDetails = async (email: string) => {
         const q = query(usersRef, where("email", "==", email));
         let user: User = null;
         const querySnapshot = await getDocs(q);
@@ -65,6 +75,8 @@ const PrivateRoutes = () => {
         }
         return user;
     }
+
+    */
 
 
     return conectedUser 

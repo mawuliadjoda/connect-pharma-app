@@ -21,6 +21,7 @@ import NearestPharmacies from "./pages/pharmacies/NearestPharmacies";
 import PopulatePharmacies from "./pages/pharmacies/PopulatePharmacies";
 import PrivateRoutes from "./utils/PrivateRoutes";
 import ForgotPassword from "./pages/auth/ForgotPassword";
+import PharmacyListPagination from "./pages/pharmacies/PharmacyListPagination";
 
 
 
@@ -73,13 +74,16 @@ function App() {
               <Route path="/pharmacies/populate" element={<PopulatePharmacies />} />
               <Route path="/*" element={<NotFound />}></Route>
 
+
+              <Route path="/pagination" element={<PharmacyListPagination />}></Route>
             </Route>
           </Route>
 
 
-          <Route path="/" element={<AuthLayout />}>            
-            
-          </Route>
+          <Route path="/" element={<AuthLayout />}></Route>
+          
+          
+          
           <Route path="/nearestPharmacies/:latitude/:longitude/:userTelephone" element={<NearestPharmacies />} ></Route>
           <Route path="/pharmacies/add/:latitude/:longitude/:userTelephone" element={<AddPharmacy />} />
           <Route path="/*" element={<NotFound />}></Route>

@@ -36,6 +36,7 @@ function Sidebar({ ...props }) {
   };
 
   const logout = () => {
+    localStorage.removeItem("user");
     onLogout();
     navigate("/auth/login");
   };
