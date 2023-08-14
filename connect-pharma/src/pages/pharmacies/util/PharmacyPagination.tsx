@@ -1,12 +1,13 @@
 import { Pharmacy } from "../Pharmacy";
 
-type PaginationProps = {
+type PharmacyPaginationProps = {
     getNext: (item: Pharmacy) => void,
     getPrevious: (item: Pharmacy) => void,
-    pharmacies: Pharmacy[]
+    pharmacies: Pharmacy[],
+    page: number
 }
 
-export default function Pagination({ getNext, getPrevious, pharmacies }: PaginationProps) {
+export default function PharmacyPagination({ getNext, getPrevious, pharmacies, page }: PharmacyPaginationProps) {
     return (
         <nav aria-label="Page navigation example">
             <ul className="list-style-none flex">
@@ -24,7 +25,7 @@ export default function Pagination({ getNext, getPrevious, pharmacies }: Paginat
                 <li>
                     <a
                         className="relative block rounded bg-transparent px-3 py-1.5 text-sm text-neutral-600 transition-all duration-300 hover:bg-neutral-100  dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white"
-                        href="#!">1</a>
+                        href="#!">Page {page}</a>
                 </li>
                 {/* <li aria-current="page">
                     <a

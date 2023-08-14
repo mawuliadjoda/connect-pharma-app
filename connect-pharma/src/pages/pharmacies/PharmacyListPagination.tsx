@@ -1,17 +1,17 @@
 import { useOutletContext } from "react-router-dom";
 import { useState, useMemo, useContext, useEffect } from "react";
 import { Pharmacy } from "./Pharmacy";
-import { 
-    DocumentData, 
-    QueryDocumentSnapshot, 
-    collection, endBefore, 
-    limit, 
-    limitToLast, 
-    onSnapshot, 
-    orderBy, 
-    query, 
+import {
+    DocumentData,
+    QueryDocumentSnapshot,
+    collection, endBefore,
+    limit,
+    limitToLast,
+    onSnapshot,
+    orderBy,
+    query,
     // startAfter, 
-    startAt, 
+    startAt,
     // where 
 } from "firebase/firestore";
 import { db } from "../../services/db";
@@ -19,7 +19,8 @@ import { Loading } from "../../utils/Loading";
 import PharmacyTable from "./PharmacyTable";
 import Navbar from "../../components/Navbar/Index";
 import { UserContext } from "../../utils/PrivateRoutes";
-import Pagination from "./util/Pagination";
+import PharmacyPagination from "./util/PharmacyPagination";
+
 
 // https://gist.github.com/joeljerushan/e931f5ee4a4ab3664bbd47d1b06b7264
 
@@ -73,15 +74,6 @@ export default function PharmacyList() {
     }, [pharmacies, searchQuery]);
 
     useEffect(() => {
-
-        /*const q = query(collection(db, "pharmacies"), 
-        where("name", "!=", null), 
-        orderBy("name", "asc"), limit(50)
-   
-        );
-        */
-
-
         console.log(connectedUser);
         setLoading(true);
         const q = query(collection(db, 'pharmacies'),
@@ -153,14 +145,11 @@ export default function PharmacyList() {
                 // setList(items);
                 setPage(page + 1)
             },
-
                 (error) => {
                     console.log(error);
                 }
-
             );
             return () => unsubscribe();
-
         }
     };
 
@@ -189,7 +178,7 @@ export default function PharmacyList() {
                 newPharmacies.push(item);
             });
             if (querySnapshot.size > 0) {
-                setPharmacies(newPharmacies);                
+                setPharmacies(newPharmacies);
 
                 // setList(items);
                 setPage(page - 1)
@@ -209,7 +198,7 @@ export default function PharmacyList() {
 
                 {loading && <Loading />}
 
-                
+
                 <div className="mainCard">
                     <button
                         className="py-2 px-4 border border-emerald-500 bg-emerald-600 w-full rounded-full text-gray-200 hover:bg-emerald-600 hover:border-emerald-600 justify-end text-sm"
@@ -235,9 +224,10 @@ export default function PharmacyList() {
                     <div className="border w-full border-gray-200 bg-white py-4 px-6 rounded-md">
                         <PharmacyTable loading={loading} dataHeader={dataHeader} data={filteredPharmacies} showDistance={false} />
 
-                        <div className="grid place-items-center ">
-                            <Pagination getNext={getNext} getPrevious={getPrevious} pharmacies={filteredPharmacies} />
-                        </div>
+
+                    </div>
+                    <div className="border w-full border-gray-200 bg-white py-4 px-6 rounded-md grid place-items-center ">
+                        <PharmacyPagination getNext={getNext} getPrevious={getPrevious} pharmacies={filteredPharmacies}  page={page} />
                     </div>
 
                 </div>

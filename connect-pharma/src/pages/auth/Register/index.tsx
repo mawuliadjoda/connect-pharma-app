@@ -25,15 +25,12 @@ function RegisterIndex() {
 
 
     // setError(false);
-  
-    console.log(confirmPassword);
+    if(password !== confirmPassword) {
+      alert('password non identique !')
+    }
 
     setLoading(true);
-
-
     onSubmit(name, email, password, tel);
-
-    // navigate("/");
   };
 
   async function onSubmit(name: string, email: string, password: string, tel: string) {

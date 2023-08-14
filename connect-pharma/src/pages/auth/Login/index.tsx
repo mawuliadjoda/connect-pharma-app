@@ -20,25 +20,13 @@ function LoginIndex() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // const usersRef = collection(getDb(), 'users');
-
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     setError(false);
-    console.log(email);
-    console.log(password);
     setLoading(true);
 
     onSubmit(email, password);
   };
-
-
-  /*
-  function onLogout() {
-    auth.signOut();
-    navigate("/sign-in");
-  }
-  */
 
   async function onSubmit(email: string, password: string) {
 
@@ -51,7 +39,6 @@ function LoginIndex() {
       );
       setLoading(false);
       if (userCredential.user) {
-        // navigate("/pharmacies");
         checkUserRoleAndRedirect(userCredential.user.email!);
       }
     } catch (error: any) {
@@ -62,8 +49,6 @@ function LoginIndex() {
 
   // https://blog.logrocket.com/user-authentication-firebase-react-apps/
   const checkUserRoleAndRedirect = async (email: string) => {
-    // const q = query(usersRef, where("email", "==", email));
-
     const q = query(collection(db, "users"), where("email", "==", email));
     const querySnapshot = await getDocs(q);
 
@@ -83,6 +68,7 @@ function LoginIndex() {
 
     setLoading(false);
     user!.roles?.includes('admin') ? navigate("/") : navigate("/pharmacies", { state: user });
+    window.location.reload();
 
   }
 
@@ -106,15 +92,12 @@ function LoginIndex() {
       };
 
       if (docs.docs.length === 0) {
-        // connectedUser = {
-        //   ...connectedUser, roles: ["user"],
-        // }
         await addDoc(collection(db, "users"), connectedUser);
       }
       localStorage.setItem("user", JSON.stringify(connectedUser));
       setLoading(false);
       navigate("/pharmacies");
-
+      window.location.reload();
     } catch (err) {
       console.error(err);
     }
