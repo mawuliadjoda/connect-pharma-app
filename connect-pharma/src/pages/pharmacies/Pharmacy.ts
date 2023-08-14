@@ -9,5 +9,6 @@ export type Pharmacy = {
     name: string
     tel: string,
     distance?: number,
-    distanceStr?: string
+    distanceStr?: string,
+    createTime?: number
 }

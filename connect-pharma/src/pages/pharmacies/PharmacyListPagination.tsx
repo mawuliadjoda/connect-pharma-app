@@ -1,16 +1,27 @@
 import { useOutletContext } from "react-router-dom";
-import { useState, useMemo, useContext} from "react";
+import { useState, useMemo, useContext, useEffect } from "react";
 import { Pharmacy } from "./Pharmacy";
-import { DocumentData, QueryDocumentSnapshot, collection,  orderBy, query } from "firebase/firestore";
-import { getDb } from "../../services/db";
+import { 
+    DocumentData, 
+    QueryDocumentSnapshot, 
+    collection, endBefore, 
+    limit, 
+    limitToLast, 
+    onSnapshot, 
+    orderBy, 
+    query, 
+    // startAfter, 
+    startAt, 
+    // where 
+} from "firebase/firestore";
+import { db } from "../../services/db";
 import { Loading } from "../../utils/Loading";
 import PharmacyTable from "./PharmacyTable";
 import Navbar from "../../components/Navbar/Index";
 import { UserContext } from "../../utils/PrivateRoutes";
-import usePagination from 'react-firebase-pagination';
 import Pagination from "./util/Pagination";
 
-
+// https://gist.github.com/joeljerushan/e931f5ee4a4ab3664bbd47d1b06b7264
 
 const PharmacyConverter = {
     toFirestore: (pharmacy: Pharmacy) => {
@@ -20,66 +31,67 @@ const PharmacyConverter = {
             email: pharmacy.email,
             isActive: pharmacy.isActive,
             location: pharmacy.location,
-            name:pharmacy.name,
-            tel:pharmacy.tel,
+            name: pharmacy.name,
+            tel: pharmacy.tel,
             distance: pharmacy.distance,
             distanceStr: pharmacy.distanceStr
-            };
+        };
     },
     fromFirestore: (doc: QueryDocumentSnapshot<DocumentData, DocumentData>) => {
-    
+
         const pharmacy: Pharmacy = {
             id: doc.id,
             address: doc.data().address,
             email: doc.data().email,
             isActive: doc.data().isActive,
             location: doc.data().location,
-            name:doc.data().name,
-            tel:doc.data().tel,
+            name: doc.data().name,
+            tel: doc.data().tel,
             distance: doc.data().distance,
             distanceStr: doc.data().distanceStr
-            }
+        }
         return pharmacy;
     }
 };
+
+const LIMIT_PER_PAGE = 10;
 export default function PharmacyList() {
-    // const mainQuery = query(collection(getDb(), 'pharmacies'), orderBy('name', 'desc'));
-    const mainQuery = query(collection(getDb(), 'pharmacies'), orderBy('name', 'desc'));
-    const { getNext, getPrevious, data, loading } = usePagination({
-        pageSize: 10,
-        pageByPage: true,
-        query: mainQuery,
-    });
-
-
     const connectedUser = useContext(UserContext);
     const [sidebarToggle] = useOutletContext<any>();
-    // const [loading, setLoading] = useState(true);
-    // const [pharmacies, setPharmacies] = useState<Pharmacy[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [pharmacies, setPharmacies] = useState<Pharmacy[]>([]);
     const [searchQuery, setSearchQuery] = useState("");
 
-    console.log(connectedUser);
-    // console.log(pharmacies);
-
-
-    // const val = data.docs.map(doc => PharmacyConverter.fromFirestore(doc));
-    const newPharmacies = data.docs.map(doc => PharmacyConverter.fromFirestore(doc));
-    //setPharmacies(newPharmacies);
+    // const [list, setList] = useState([]);
+    const [page, setPage] = useState(1);
 
 
     const filteredPharmacies = useMemo(() => {
-        return newPharmacies.map(pharmacy => pharmacy).filter(pharmacy => {
+        return pharmacies.map(pharmacy => pharmacy).filter(pharmacy => {
             return pharmacy.name.toLowerCase().includes(searchQuery.toLowerCase());
         })
-    }, [newPharmacies, searchQuery]);
+    }, [pharmacies, searchQuery]);
 
-
-    /*
     useEffect(() => {
-        
+
+        /*const q = query(collection(db, "pharmacies"), 
+        where("name", "!=", null), 
+        orderBy("name", "asc"), limit(50)
+   
+        );
+        */
+
+
         console.log(connectedUser);
-        const usersRef = collection(getDb(), 'pharmacies');
-        const q = query(usersRef, where("name", "!=", null), orderBy("name", "asc"), limit(50));
+        setLoading(true);
+        const q = query(collection(db, 'pharmacies'),
+            // where("name", "!=", null), 
+            // orderBy("name", "asc"), 
+
+            orderBy("name", "asc"),
+            limit(LIMIT_PER_PAGE)
+        );
+
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
             const newPharmacies: Pharmacy[] = [];
             querySnapshot.forEach((doc) => {
@@ -96,7 +108,7 @@ export default function PharmacyList() {
             });
             console.log(newPharmacies);
             setPharmacies(newPharmacies);
-            // setLoading(false);
+            setLoading(false);
         },
 
             (error) => {
@@ -105,10 +117,90 @@ export default function PharmacyList() {
 
         );
         return () => unsubscribe();
-      
+
 
     }, []);
-  */
+
+    const getNext = (item: Pharmacy) => {
+
+        setLoading(true);
+        if (pharmacies.length === 0) {
+            alert("Thats all we have for now !");
+            setLoading(false);
+        } else {
+
+            const q = query(collection(db, 'pharmacies'),
+                // where("name", "!=", null), 
+                orderBy("name", "asc"),
+
+                startAt(item.name),
+                // orderBy("name", "asc"), 
+                // startAfter(item.id),
+                limit(LIMIT_PER_PAGE),
+
+            );
+
+            const unsubscribe = onSnapshot(q, (querySnapshot) => {
+                const newPharmacies: Pharmacy[] = [];
+                querySnapshot.forEach((doc) => {
+                    const item = PharmacyConverter.fromFirestore(doc);
+                    newPharmacies.push(item);
+                });
+                console.log(newPharmacies);
+                setPharmacies(newPharmacies);
+                setLoading(false);
+
+                // setList(items);
+                setPage(page + 1)
+            },
+
+                (error) => {
+                    console.log(error);
+                }
+
+            );
+            return () => unsubscribe();
+
+        }
+    };
+
+
+
+
+    const getPrevious = (item: Pharmacy) => {
+        if (!item) return;
+        setLoading(true);
+        const q = query(collection(db, 'pharmacies'),
+            // where("name", "!=", null), 
+            // orderBy("name", "asc"), 
+            // .endBefore(item.id)
+
+            orderBy("name", "asc"),
+
+            endBefore(item.name),
+            limitToLast(LIMIT_PER_PAGE)
+
+        );
+
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            const newPharmacies: Pharmacy[] = [];
+            querySnapshot.forEach((doc) => {
+                const item = PharmacyConverter.fromFirestore(doc);
+                newPharmacies.push(item);
+            });
+            if (querySnapshot.size > 0) {
+                setPharmacies(newPharmacies);                
+
+                // setList(items);
+                setPage(page - 1)
+            }
+            setLoading(false);
+
+        }, (error) => { console.log(error); }
+
+        );
+        return () => unsubscribe();
+    };
 
     return (
         <>
@@ -117,6 +209,7 @@ export default function PharmacyList() {
 
                 {loading && <Loading />}
 
+                
                 <div className="mainCard">
                     <button
                         className="py-2 px-4 border border-emerald-500 bg-emerald-600 w-full rounded-full text-gray-200 hover:bg-emerald-600 hover:border-emerald-600 justify-end text-sm"
@@ -141,10 +234,12 @@ export default function PharmacyList() {
 
                     <div className="border w-full border-gray-200 bg-white py-4 px-6 rounded-md">
                         <PharmacyTable loading={loading} dataHeader={dataHeader} data={filteredPharmacies} showDistance={false} />
+
+                        <div className="grid place-items-center ">
+                            <Pagination getNext={getNext} getPrevious={getPrevious} pharmacies={filteredPharmacies} />
+                        </div>
                     </div>
-                    <div className="grid place-items-center ">
-                         <Pagination getNext={getNext}  getPrevious={getPrevious}/>
-                    </div>
+
                 </div>
             </main>
         </>

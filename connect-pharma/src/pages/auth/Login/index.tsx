@@ -10,7 +10,8 @@ import { User } from "../../Users/User";
 
 const LoginImage = "https://edp.raincode.my.id/static/media/login.cc0578413db10119a7ff.png";
 
-
+// https://blog.logrocket.com/user-authentication-firebase-react-apps/
+// https://github.com/atharvadeosthale/firebase-auth-article/blob/master/src/Login.js
 function LoginIndex() {
   const navigate = useNavigate();
   const history = useNavigate();
