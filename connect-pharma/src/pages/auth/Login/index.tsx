@@ -80,20 +80,6 @@ function LoginIndex() {
     }
     localStorage.setItem("user", JSON.stringify(user));
 
-
-    /*const querySnapshot = await getDocs(q);
-     if(querySnapshot.size === 1) {
-       querySnapshot.docs.map((doc) => {
-         user = {
-           id: doc.id,
-           name: doc.data().name,
-           username: doc.data().username,
-           email: doc.data().email,
-           roles: doc.data().roles
-         };
-       })
-     }
-     */
     setLoading(false);
     user!.roles?.includes('admin') ? navigate("/") : navigate("/pharmacies", { state: user });
 

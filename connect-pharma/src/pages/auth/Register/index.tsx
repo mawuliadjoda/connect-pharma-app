@@ -65,14 +65,6 @@ function RegisterIndex() {
   }
 
   const addUser = (user: User) => {
-    // const data: User = {
-    //   authProvider: "local",
-    //   name: username,
-    //   username: username,
-    //   email: email,
-    //   roles: ["user"],
-    //   tel: tel
-    // }
     const usersRef = collection(getDb(), 'users');
     addDoc(usersRef, user)
       .then(() => {
