@@ -1,9 +1,7 @@
 import { useOutletContext } from "react-router-dom";
 import { useState, useMemo, useContext, useEffect } from "react";
-import { Pharmacy } from "./Pharmacy";
+import { Pharmacy, PharmacyConverter } from "./Pharmacy";
 import {
-    DocumentData,
-    QueryDocumentSnapshot,
     collection, endBefore,
     limit,
     limitToLast,
@@ -24,36 +22,6 @@ import PharmacyPagination from "./util/PharmacyPagination";
 
 // https://gist.github.com/joeljerushan/e931f5ee4a4ab3664bbd47d1b06b7264
 
-const PharmacyConverter = {
-    toFirestore: (pharmacy: Pharmacy) => {
-        return {
-            id: pharmacy.id,
-            address: pharmacy.address,
-            email: pharmacy.email,
-            isActive: pharmacy.isActive,
-            location: pharmacy.location,
-            name: pharmacy.name,
-            tel: pharmacy.tel,
-            distance: pharmacy.distance,
-            distanceStr: pharmacy.distanceStr
-        };
-    },
-    fromFirestore: (doc: QueryDocumentSnapshot<DocumentData, DocumentData>) => {
-
-        const pharmacy: Pharmacy = {
-            id: doc.id,
-            address: doc.data().address,
-            email: doc.data().email,
-            isActive: doc.data().isActive,
-            location: doc.data().location,
-            name: doc.data().name,
-            tel: doc.data().tel,
-            distance: doc.data().distance,
-            distanceStr: doc.data().distanceStr
-        }
-        return pharmacy;
-    }
-};
 
 const LIMIT_PER_PAGE = 10;
 export default function PharmacyList() {

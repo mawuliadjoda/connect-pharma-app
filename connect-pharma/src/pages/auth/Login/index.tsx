@@ -6,7 +6,7 @@ import { FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { auth, db } from "../../../services/db";
 import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
-import { User } from "../../Users/User";
+import { User, UserConverter } from "../../Users/User";
 
 const LoginImage = "https://edp.raincode.my.id/static/media/login.cc0578413db10119a7ff.png";
 
@@ -55,13 +55,7 @@ function LoginIndex() {
     let user: User = null;
     if (querySnapshot.size === 1) {
       querySnapshot.docs.map((doc) => {
-        user = {
-          id: doc.id,
-          name: doc.data().name,
-          username: doc.data().username,
-          email: doc.data().email,
-          roles: doc.data().roles
-        };
+        user = UserConverter.fromFirestore(doc)
       })
     }
     localStorage.setItem("user", JSON.stringify(user));
@@ -82,17 +76,24 @@ function LoginIndex() {
       const q = query(collection(db, "users"), where("email", "==", user.email));
       const docs = await getDocs(q);
 
-      const connectedUser: User = {
-        authProvider: "google",
-        uid: user.uid,
-        name: user.displayName!,
-        username: user.displayName!,
-        email: user.email!,
-        roles: ["user"]
-      };
+      let connectedUser: User = null;
 
       if (docs.docs.length === 0) {
+        connectedUser = {
+          authProvider: "google",
+          uid: user.uid,
+          name: user.displayName!,
+          username: user.displayName!,
+          email: user.email!,
+          roles: ['user']
+        };
         await addDoc(collection(db, "users"), connectedUser);
+      } else if(docs.docs.length === 1) {
+
+        docs.docs.map((doc) => {
+          connectedUser = UserConverter.fromFirestore(doc);
+          connectedUser = {...connectedUser, authProvider: "google"}
+        })
       }
       localStorage.setItem("user", JSON.stringify(connectedUser));
       setLoading(false);
