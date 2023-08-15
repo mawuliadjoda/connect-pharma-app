@@ -6,7 +6,7 @@ import { GeoPoint } from "firebase/firestore";
 
 type PharmacyTableProps = {
     loading: boolean,
-    dataHeader: any,
+    dataHeader: { key: string; label: string; }[],
     data: Pharmacy[],
     showDistance?: boolean,
     openWhatsapp?: (tel: string) => void,
@@ -26,13 +26,11 @@ const telegramIcon: FontAwesomeIconProps = {
 // https://fontawesomeicons.com/whatsapp
 export default function PharmacyTable({ loading, dataHeader, data, openWhatsapp, openTelegram, openMag, showDistance }: PharmacyTableProps) {
 
-    console.log(showDistance);
-
     return (
         <>
             <div>
                 <Datatables loading={loading} dataHeader={dataHeader}>
-                    {data?.map((row: any, index: any) => (
+                    {data?.map((row: Pharmacy, index: number) => (
                         <tr
                             key={index}
                             className="bg-white border md:border-b block md:table-row rounded-md shadow-md md:rounded-none md:shadow-none mb-5"

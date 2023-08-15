@@ -55,18 +55,9 @@ export default function PharmacyList() {
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
             const newPharmacies: Pharmacy[] = [];
             querySnapshot.forEach((doc) => {
-                const item = {
-                    id: doc.id,
-                    address: doc.data().address,
-                    email: doc.data().email,
-                    isActive: doc.data().isActive,
-                    location: doc.data().location,
-                    name: doc.data().name,
-                    tel: doc.data().tel
-                };
+                const item = PharmacyConverter.fromFirestore(doc);
                 newPharmacies.push(item);
             });
-            console.log(newPharmacies);
             setPharmacies(newPharmacies);
             setLoading(false);
         },
@@ -106,7 +97,6 @@ export default function PharmacyList() {
                     const item = PharmacyConverter.fromFirestore(doc);
                     newPharmacies.push(item);
                 });
-                console.log(newPharmacies);
                 setPharmacies(newPharmacies);
                 setLoading(false);
 
