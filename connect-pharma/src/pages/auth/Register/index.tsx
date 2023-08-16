@@ -5,7 +5,7 @@ import { UserCredential, createUserWithEmailAndPassword, getAuth } from "firebas
 import { FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { User } from "../../Users/User";
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import { Timestamp, addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { db, getDb } from "../../../services/db";
 
 
@@ -36,23 +36,27 @@ function RegisterIndex() {
   async function onSubmit(name: string, email: string, password: string, tel: string) {
 
     try {
+     
+      const q = query(collection(db, "users"), where("email", "==", email));
+      const docs = await getDocs(q);
+
+      if(docs.docs.length > 0 ) throw new Error(`User with email ${email} already exist !`);
+
       const auth = getAuth();
       const userCredential: UserCredential = await createUserWithEmailAndPassword(auth, email, password);
 
-      const q = query(collection(db, "users"), where("email", "==", email));
-      const docs = await getDocs(q);
-      if (docs.docs.length === 0) {
-        const user: User = {
-          authProvider: "local",
-          uid: userCredential.user.uid,
-          name: name,
-          username: userCredential.user.displayName!,
-          email: userCredential.user.email!,
-          roles: ["user"],
-          tel: tel
-        };
-        addUser(user);
-      }
+      const user: User = {
+        authProvider: "local",
+        uid: userCredential.user.uid,
+        name: name,
+        username: userCredential.user.displayName!,
+        email: userCredential.user.email!,
+        roles: ["user"],
+        tel: tel,
+        createTime: Timestamp.now()
+      };
+      
+      addUser(user);
 
 
     } catch (error: any) {

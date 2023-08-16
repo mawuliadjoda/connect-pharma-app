@@ -1,5 +1,6 @@
 import { FormEvent, useRef } from "react";
 import { Pharmacy } from "./Pharmacy"
+import { Timestamp } from "firebase/firestore";
 
 
 type PharmacyFormProps = {
@@ -27,6 +28,7 @@ export default function PharmacyForm({ onSubmit, initialPharmacyData, isLoading 
             location: initialPharmacyData.location,
             name: nameRef.current!.value,
             tel: telRef.current!.value,
+            createTime: Timestamp.now()
 
         });
     }

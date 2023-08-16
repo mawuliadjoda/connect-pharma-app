@@ -6,7 +6,7 @@ import { faAdd } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { collection, deleteDoc, doc, getFirestore, limit, onSnapshot, orderBy, query, where } from 'firebase/firestore';
 import { getDb } from "../../services/db";
-import { User } from "./User";
+import { User, UserConverter } from "./User";
 import { Loading } from "../../utils/Loading";
 
 
@@ -30,13 +30,7 @@ const Table = () => {
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const newUsers: User[] = [];
       querySnapshot.forEach((doc) => {
-        const item = {
-          id: doc.id,
-          name: doc.data().name,
-          username: doc.data().username,
-          email: doc.data().email,
-          roles: doc.data().roles
-        };
+        const item = UserConverter.fromFirestore(doc);
         newUsers.push(item);
       });
       setUsers(newUsers);

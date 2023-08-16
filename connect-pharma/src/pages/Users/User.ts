@@ -1,4 +1,4 @@
-import { DocumentData, QueryDocumentSnapshot } from "firebase/firestore";
+import { DocumentData, QueryDocumentSnapshot, Timestamp } from "firebase/firestore";
 
 export type User = {
     id?: string | undefined,
@@ -8,7 +8,8 @@ export type User = {
     roles?: string[],
     tel?: string,
     authProvider?: string,
-    uid?: string | null
+    uid?: string | null,
+    createTime?: Timestamp
 } | null
 
 
@@ -23,6 +24,7 @@ export const UserConverter = {
             tel: user!.tel,
             authProvider: user!.authProvider,
             uid: user!.uid,
+            createTime: user!.createTime
         };
     },
     fromFirestore: (doc: QueryDocumentSnapshot<DocumentData, DocumentData>) => {
@@ -36,6 +38,7 @@ export const UserConverter = {
             tel: doc.data().tel,
             authProvider: doc.data().authProvider,
             uid: doc.data().uid,
+            createTime: doc.data().createTime
         }
         return user;
     }

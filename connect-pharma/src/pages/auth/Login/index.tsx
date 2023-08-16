@@ -5,7 +5,7 @@ import { GoogleAuthProvider, getAuth, signInWithEmailAndPassword, signInWithPopu
 import { FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { auth, db } from "../../../services/db";
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import { Timestamp, addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { User, UserConverter } from "../../Users/User";
 
 const LoginImage = "https://edp.raincode.my.id/static/media/login.cc0578413db10119a7ff.png";
@@ -85,14 +85,15 @@ function LoginIndex() {
           name: user.displayName!,
           username: user.displayName!,
           email: user.email!,
-          roles: ['user']
+          roles: ['user'],
+          createTime: Timestamp.now()
         };
         await addDoc(collection(db, "users"), connectedUser);
       } else if(docs.docs.length === 1) {
 
         docs.docs.map((doc) => {
           connectedUser = UserConverter.fromFirestore(doc);
-          connectedUser = {...connectedUser, authProvider: "google"}
+          connectedUser = {...connectedUser, authProvider: "google", createTime: Timestamp.now() }
         })
       }
       localStorage.setItem("user", JSON.stringify(connectedUser));

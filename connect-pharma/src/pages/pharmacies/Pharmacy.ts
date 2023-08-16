@@ -1,4 +1,4 @@
-import { DocumentData, GeoPoint, QueryDocumentSnapshot } from "firebase/firestore"
+import { DocumentData, GeoPoint, QueryDocumentSnapshot, Timestamp } from "firebase/firestore"
 
 export type Pharmacy = {
     id?: string,
@@ -10,7 +10,7 @@ export type Pharmacy = {
     tel: string,
     distance?: number,
     distanceStr?: string,
-    createTime?: number
+    createTime?: Timestamp
 }
 
 
