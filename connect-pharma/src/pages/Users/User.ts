@@ -31,6 +31,8 @@ export const UserConverter = {
 
         const user: User = {
             id: doc.id,
+            ...doc.data()
+            /*
             name: doc.data().name,
             username: doc.data().username,
             email: doc.data().email,
@@ -39,7 +41,8 @@ export const UserConverter = {
             authProvider: doc.data().authProvider,
             uid: doc.data().uid,
             createTime: doc.data().createTime
-        }
+            */
+        } as User
         return user;
     }
 };

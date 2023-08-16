@@ -32,6 +32,8 @@ export const PharmacyConverter = {
 
         const pharmacy: Pharmacy = {
             id: doc.id,
+            ...doc.data()
+            /*
             address: doc.data().address,
             email: doc.data().email,
             isActive: doc.data().isActive,
@@ -40,7 +42,8 @@ export const PharmacyConverter = {
             tel: doc.data().tel,
             distance: doc.data().distance,
             distanceStr: doc.data().distanceStr
-        }
+            */
+        } as Pharmacy
         return pharmacy;
     }
 };

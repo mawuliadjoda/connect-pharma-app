@@ -30,8 +30,9 @@ const Table = () => {
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const newUsers: User[] = [];
       querySnapshot.forEach((doc) => {
-        const item = UserConverter.fromFirestore(doc);
-        newUsers.push(item);
+        const user = UserConverter.fromFirestore(doc);
+        // const user = {id: doc.id, ...doc.data()} as User;
+        newUsers.push(user);
       });
       setUsers(newUsers);
       setLoading(false);

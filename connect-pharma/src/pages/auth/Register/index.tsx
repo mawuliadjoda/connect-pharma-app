@@ -26,7 +26,7 @@ function RegisterIndex() {
 
     // setError(false);
     if(password !== confirmPassword) {
-      alert('password non identique !')
+      throw new Error(`Confirmation password is not the same to password !`);
     }
 
     setLoading(true);
@@ -40,7 +40,9 @@ function RegisterIndex() {
       const q = query(collection(db, "users"), where("email", "==", email));
       const docs = await getDocs(q);
 
-      if(docs.docs.length > 0 ) throw new Error(`User with email ${email} already exist !`);
+      if(docs.docs.length > 0 ) {        
+        throw new Error(`User with email ${email} already exist !`);
+      } 
 
       const auth = getAuth();
       const userCredential: UserCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -60,8 +62,8 @@ function RegisterIndex() {
 
 
     } catch (error: any) {
-      console.log(error.code);
-      console.log(error.message);
+      console.error(error.code);
+      console.error(error.message);
     }
   }
 
