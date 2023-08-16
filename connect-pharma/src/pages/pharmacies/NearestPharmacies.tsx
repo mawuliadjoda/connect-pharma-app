@@ -1,6 +1,10 @@
 import { useParams } from "react-router-dom";
-import { useEffect, useState, useMemo } from "react";
-import { Pharmacy } from "./Pharmacy";
+import { 
+    useEffect, 
+    useState, 
+    // useMemo 
+} from "react";
+import { Pharmacy, PharmacyConverter } from "./Pharmacy";
 import { Loading } from "../../utils/Loading";
 import PharmacyTable from "./PharmacyTable";
 // import Navbar from "../../components/Navbar/Index";
@@ -9,6 +13,9 @@ import { Coordinate } from "calculate-distance-between-coordinates";
 import { convertToENecimal } from "../../utils/Utils";
 import { GeoPoint, collection, limit, onSnapshot, orderBy, query, where } from "firebase/firestore";
 import { getDb } from "../../services/db";
+import { customPaginate } from "./util/PaginateCalculator";
+import PharmacyPagination from "./util/PharmacyPagination";
+
 
 
 // https://gps-coordinates.org/my-location.php
@@ -19,25 +26,33 @@ const USER_LOCATION: Coordinate = {
 };
 */
 
+const LIMIT_PER_PAGE = 5;
 export default function NearestPharmacies() {
     // const [sidebarToggle] = useOutletContext<any>();
     const [loading, setLoading] = useState(true);
     const [pharmacies, setPharmacies] = useState<Pharmacy[]>([]);
+    const [pharmaciesMap, setPharmaciesMap] = useState<Map<number, Pharmacy[]>>();
+
 
     const { latitude, longitude, userTelephone } = useParams();
 
-    const [searchQuery, setSearchQuery] = useState("");
+    // const [searchQuery, setSearchQuery] = useState("");
+    const [page, setPage] = useState(1);
 
+
+    /*
     const filteredPharmacies = useMemo(() => {
         return pharmacies.map(pharmacy => pharmacy).filter(pharmacy => {
             return pharmacy.name.toLowerCase().includes(searchQuery.toLowerCase());
         })
     }, [pharmacies, searchQuery]);
+    */
+
 
 
 
     useEffect(() => {
-
+        setLoading(true);
         const latitudeNumber: number = convertToENecimal(latitude);
         const longitudeNumber: number = convertToENecimal(longitude);
 
@@ -51,24 +66,19 @@ export default function NearestPharmacies() {
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
             const newPharmacies: Pharmacy[] = [];
             querySnapshot.forEach((doc) => {
-                const item = {
-                    id: doc.id,
-                    address: doc.data().address,
-                    email: doc.data().email,
-                    isActive: doc.data().isActive,
-                    location: doc.data().location,
-                    name: doc.data().name,
-                    tel: doc.data().tel
-                };
+                const item = PharmacyConverter.fromFirestore(doc); 
                 newPharmacies.push(item);
             });
-            console.log(newPharmacies);
+            // console.log(newPharmacies);
 
             const haversinePharmacies = applyHaversine(newPharmacies, userLocation);
             const pharmaciesWithDistance = getNearPharmacies(haversinePharmacies);
 
+            const customPharmaciesMap = customPaginate(pharmaciesWithDistance, LIMIT_PER_PAGE);
 
-            setPharmacies(pharmaciesWithDistance);
+            setPharmaciesMap(customPharmaciesMap);
+            setPharmacies(customPharmaciesMap?.get(page) as Pharmacy[]);
+
             setLoading(false);
         },
 
@@ -82,6 +92,21 @@ export default function NearestPharmacies() {
 
     }, []);
 
+    const getNext = (pharmacy: Pharmacy) => {
+        console.log(pharmacy);
+        if (pharmaciesMap?.get(page + 1)) {
+            setPage(page + 1);
+            setPharmacies(pharmaciesMap?.get(page + 1) as Pharmacy[]);
+        }
+    }
+
+    const getPrevious = (pharmacy: Pharmacy) => {
+        console.log(pharmacy);
+        if (pharmaciesMap?.get(page - 1)) {
+            setPage(page - 1);
+            setPharmacies(pharmaciesMap?.get(page - 1) as Pharmacy[]);
+        }
+    }
 
     // https://signal.me/#p/+41794997040
     const openWhatsapp = (tel: string) => {
@@ -109,42 +134,52 @@ export default function NearestPharmacies() {
             <main className="h-full">
                 {/* <Navbar toggle={sidebarToggle} /> */}
 
-                {loading && <Loading />}
+                {loading ?
 
-                <div className="mainCard">
-                    <button
-                        className="py-2 px-4 border border-emerald-500 bg-emerald-600 w-full rounded-full text-gray-200 hover:bg-emerald-600 hover:border-emerald-600 justify-end text-sm">
-                        Pharmacies Proches
-                    </button>
+                    <Loading /> :
 
-                    <form>
-                        <div className="relative">
+                    <div className="mainCard">
+                        <button
+                            className="py-2 px-4 border border-emerald-500 bg-emerald-600 w-full rounded-full text-gray-200 hover:bg-emerald-600 hover:border-emerald-600 justify-end text-sm">
+                            Pharmacies Proches
+                        </button>
 
-                            <input
-                                value={searchQuery}
-                                onChange={e => setSearchQuery(e.target.value)}
-                                type="search"
-                                id="default-search"
-                                className="mb-2 mt-2 text-sm placeholder-gray-500 px-4 rounded-lg border border-gray-200 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400 mt-1"
-                                placeholder="Search"
-                                required />
+                        {/* 
+                        <form>
+                            <div className="relative">
+
+                                <input
+                                    value={searchQuery}
+                                    onChange={e => setSearchQuery(e.target.value)}
+                                    type="search"
+                                    id="default-search"
+                                    className="mb-2 mt-2 text-sm placeholder-gray-500 px-4 rounded-lg border border-gray-200 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400 mt-1"
+                                    placeholder="Search"
+                                    required />
+                            </div>
+                        </form> 
+                        */}
+
+
+                        <div className="border w-full border-gray-200 bg-white py-4 px-6 rounded-md">
+                            <PharmacyTable
+                                loading={loading}
+                                dataHeader={dataHeader}
+                                data={pharmacies}
+                                showDistance={true}
+                                openWhatsapp={openWhatsapp}
+                                openTelegram={openTelegram}
+                                openMag={openMag}
+                            />
                         </div>
-                    </form>
 
-
-                    <div className="border w-full border-gray-200 bg-white py-4 px-6 rounded-md">
-                        <PharmacyTable
-                            loading={loading}
-                            dataHeader={dataHeader}
-                            data={filteredPharmacies}
-                            showDistance={true}
-                            openWhatsapp={openWhatsapp}
-                            openTelegram={openTelegram}
-                            openMag={openMag}
-                        />
+                        <div className="border w-full border-gray-200 bg-white py-4 px-6 rounded-md grid place-items-center ">
+                            <PharmacyPagination getNext={getNext} getPrevious={getPrevious} pharmacies={pharmacies} page={page} />
+                        </div>
                     </div>
+                }
 
-                </div>
+
             </main>
         </>
     )

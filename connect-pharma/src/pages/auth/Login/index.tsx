@@ -93,7 +93,7 @@ function LoginIndex() {
 
         docs.docs.map((doc) => {
           connectedUser = UserConverter.fromFirestore(doc);
-          connectedUser = {...connectedUser, authProvider: "google", createTime: Timestamp.now() }
+          connectedUser = {...connectedUser, authProvider: "google", createTime: Timestamp.now() } as User;
         })
       }
       localStorage.setItem("user", JSON.stringify(connectedUser));

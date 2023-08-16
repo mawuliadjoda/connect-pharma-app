@@ -8,6 +8,19 @@ type PharmacyPaginationProps = {
 }
 
 export default function PharmacyPagination({ getNext, getPrevious, pharmacies, page }: PharmacyPaginationProps) {
+
+    function handlePrevious() {
+        if (pharmacies?.length > 0) {
+            getPrevious(pharmacies[0]);
+        }   
+    }
+
+    function handleNext() {
+        if (pharmacies?.length > 0) {
+            getNext(pharmacies[pharmacies.length - 1])
+        }   
+    }
+
     return (
         <nav aria-label="Page navigation example">
             <ul className="list-style-none flex">
@@ -15,7 +28,7 @@ export default function PharmacyPagination({ getNext, getPrevious, pharmacies, p
 
 
 
-                    <a onClick={() => getPrevious(pharmacies[0])}
+                    <a onClick={handlePrevious}
                         className="relative block rounded bg-transparent px-3 py-1.5 text-sm text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white"
                         href="#!">
                         <span aria-hidden="true">&larr;</span>
@@ -41,7 +54,9 @@ export default function PharmacyPagination({ getNext, getPrevious, pharmacies, p
                         href="#!">3</a>
                 </li> */}
                 <li>
-                    <a onClick={() => getNext(pharmacies[pharmacies.length - 1])}
+                    <a 
+                        onClick={handleNext}
+                        
                         className="relative block rounded bg-transparent px-3 py-1.5 text-sm text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white"
                         href="#!">Next <span aria-hidden="true">&rarr;</span></a>
                 </li>
