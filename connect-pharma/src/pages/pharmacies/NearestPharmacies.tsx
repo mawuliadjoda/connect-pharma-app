@@ -26,7 +26,7 @@ const USER_LOCATION: Coordinate = {
 };
 */
 
-const LIMIT_PER_PAGE = 5;
+const LIMIT_PER_PAGE = 7;
 export default function NearestPharmacies() {
     // const [sidebarToggle] = useOutletContext<any>();
     const [loading, setLoading] = useState(true);
@@ -38,6 +38,8 @@ export default function NearestPharmacies() {
 
     // const [searchQuery, setSearchQuery] = useState("");
     const [page, setPage] = useState(1);
+    const [disableNextButton, setDisableNextButton] = useState(false);
+    const [disablePreviousButton, setDisablePreviousButton] = useState(false);
 
 
     /*
@@ -75,11 +77,12 @@ export default function NearestPharmacies() {
             const pharmaciesWithDistance = getNearPharmacies(haversinePharmacies);
 
             const customPharmaciesMap = customPaginate(pharmaciesWithDistance, LIMIT_PER_PAGE);
+            console.log(customPharmaciesMap);
 
+            setLoading(false);
             setPharmaciesMap(customPharmaciesMap);
             setPharmacies(customPharmaciesMap?.get(page) as Pharmacy[]);
 
-            setLoading(false);
         },
 
             (error) => {
@@ -94,18 +97,30 @@ export default function NearestPharmacies() {
 
     const getNext = (pharmacy: Pharmacy) => {
         console.log(pharmacy);
+
+        
+
+        setDisableNextButton(true);
         if (pharmaciesMap?.get(page + 1)) {
+            setDisableNextButton(false);
             setPage(page + 1);
             setPharmacies(pharmaciesMap?.get(page + 1) as Pharmacy[]);
         }
+        setDisablePreviousButton(false);
     }
 
     const getPrevious = (pharmacy: Pharmacy) => {
         console.log(pharmacy);
+
+        setDisablePreviousButton(true);
         if (pharmaciesMap?.get(page - 1)) {
+            setDisablePreviousButton(false);
             setPage(page - 1);
             setPharmacies(pharmaciesMap?.get(page - 1) as Pharmacy[]);
         }
+
+        setDisableNextButton(false);
+        console.log(disablePreviousButton);
     }
 
     // https://signal.me/#p/+41794997040
@@ -174,7 +189,14 @@ export default function NearestPharmacies() {
                         </div>
 
                         <div className="border w-full border-gray-200 bg-white py-4 px-6 rounded-md grid place-items-center ">
-                            <PharmacyPagination getNext={getNext} getPrevious={getPrevious} pharmacies={pharmacies} page={page} />
+                            <PharmacyPagination 
+                                getNext={getNext} 
+                                getPrevious={getPrevious} 
+                                pharmacies={pharmacies} 
+                                page={page} 
+                                disableNextButton={disableNextButton} 
+                                disablePreviousButton={disablePreviousButton}
+                             />
                         </div>
                     </div>
                 }

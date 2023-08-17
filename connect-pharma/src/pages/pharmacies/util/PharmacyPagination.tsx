@@ -1,13 +1,16 @@
 import { Pharmacy } from "../Pharmacy";
+import './PharmacyPagination.css'
 
 type PharmacyPaginationProps = {
     getNext: (item: Pharmacy) => void,
     getPrevious: (item: Pharmacy) => void,
     pharmacies: Pharmacy[],
-    page: number
+    page: number,
+    disableNextButton?: boolean,
+    disablePreviousButton?: boolean
 }
 
-export default function PharmacyPagination({ getNext, getPrevious, pharmacies, page }: PharmacyPaginationProps) {
+export default function PharmacyPagination({ getNext, getPrevious, pharmacies, page, disableNextButton,  disablePreviousButton}: PharmacyPaginationProps) {
 
     function handlePrevious() {
         if (pharmacies?.length > 0) {
@@ -21,6 +24,8 @@ export default function PharmacyPagination({ getNext, getPrevious, pharmacies, p
         }   
     }
 
+
+
     return (
         <nav aria-label="Page navigation example">
             <ul className="list-style-none flex">
@@ -29,10 +34,10 @@ export default function PharmacyPagination({ getNext, getPrevious, pharmacies, p
 
 
                     <a onClick={handlePrevious}
-                        className="relative block rounded bg-transparent px-3 py-1.5 text-sm text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white"
+                        className={disablePreviousButton ? "disabledLink relative block rounded bg-transparent px-3 py-1.5 text-sm text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white" : "relative block rounded bg-transparent px-3 py-1.5 text-sm text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white"}
                         href="#!">
                         <span aria-hidden="true">&larr;</span>
-                        Previous
+                        {disablePreviousButton ? 'Fin' : 'Précédent'}
                     </a>
                 </li>
                 <li>
@@ -55,10 +60,11 @@ export default function PharmacyPagination({ getNext, getPrevious, pharmacies, p
                 </li> */}
                 <li>
                     <a 
-                        onClick={handleNext}
-                        
-                        className="relative block rounded bg-transparent px-3 py-1.5 text-sm text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white"
-                        href="#!">Next <span aria-hidden="true">&rarr;</span></a>
+                        onClick={handleNext}                        
+                        className={disableNextButton ? "disabledLink relative block rounded bg-transparent px-3 py-1.5 text-sm text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white" : "relative block rounded bg-transparent px-3 py-1.5 text-sm text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white"}
+                        href="#!">
+                        {disableNextButton ? 'Fin' : 'Suivant'}
+                        <span aria-hidden="true">&rarr;</span></a>
                 </li>
             </ul>
         </nav>

@@ -15,6 +15,9 @@ export const customPaginate = (pharmacies: Pharmacy[], limitPerPage: number) => 
         end = limitPerPage * i;
 
         const paginatePharmacies: Pharmacy[] = pharmacies.slice(start, end);
+
+        if(paginatePharmacies.length === 0)  return pharmaciesMap;
+
         pharmaciesMap.set(i, paginatePharmacies);
 
         start = start + limitPerPage;
