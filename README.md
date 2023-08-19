@@ -11,3 +11,7 @@ https://tailwind-elements.com/docs/react/getting-started/quick-start/
 
 index.tsx:82 Uncaught (in promise) FirebaseError: Quota exceeded.
 https://firebase.google.com/docs/functions/quotas?hl=fr
+
+# docker 
+https://github.com/joeljerushan/hello-docker/tree/main
+https://github.com/joeljerushan/hello-docker/blob/main/Dockerfile

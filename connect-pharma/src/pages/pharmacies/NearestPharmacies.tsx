@@ -55,7 +55,7 @@ export default function NearestPharmacies() {
 
     useEffect(() => {
         setLoading(true);
-        
+
         const userLocation: Coordinate = {
             lat: latitudeNumber.valueOf(),
             lon: longitudeNumber.valueOf()
@@ -128,7 +128,7 @@ export default function NearestPharmacies() {
         window.open(url);
 
 
-        
+
         const clientHistory: ClientHistory = {
             clientPhoneNumber: userTelephone!,
             pharmacyPhoneNumber: tel,

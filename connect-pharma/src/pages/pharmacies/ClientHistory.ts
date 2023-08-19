@@ -11,6 +11,6 @@ export type ClientHistory = {
     location: GeoPoint
     clientPhoneNumber: string,
     pharmacyPhoneNumber: string,
-    createTime?: Timestamp,
+    createTime: Timestamp,
     action: ClientAction
 }

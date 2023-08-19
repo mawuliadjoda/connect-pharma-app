@@ -36,9 +36,18 @@ https://react.dev/reference/react/useMemo#usage
 
 	https://modularfirebase.web.app/common-use-cases/firestore/
 
+	# pagination
+
+	https://gist.github.com/joeljerushan/e931f5ee4a4ab3664bbd47d1b06b7264
+
 
 
 https://stackoverflow.com/questions/48846289/why-is-my-react-component-is-rendering-twice
+
+
+# docker 
+https://github.com/joeljerushan/hello-docker/tree/main
+https://github.com/joeljerushan/hello-docker/blob/main/Dockerfile
 
 
 # Ideas
