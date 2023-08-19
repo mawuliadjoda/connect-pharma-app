@@ -35,7 +35,7 @@ export default function AddPharmacy() {
         isActive: false,
         location: new GeoPoint(latitudeNumber, longitudeNumber),
         name: '',
-        tel: '',
+        tel: userTelephone ? userTelephone : '',
     }
 
 

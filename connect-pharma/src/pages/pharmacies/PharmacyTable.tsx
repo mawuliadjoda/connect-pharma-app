@@ -8,10 +8,10 @@ type PharmacyTableProps = {
     loading: boolean,
     dataHeader: { key: string; label: string; }[],
     data: Pharmacy[],
-    showDistance?: boolean,
+    isClient?: boolean,
     openWhatsapp?: (tel: string) => void,
     openTelegram?: (tel: string) => void,
-    openMag?:(location: GeoPoint) => void
+    openMag?:(location: GeoPoint, tel?: string) => void
 }
 
 
@@ -24,7 +24,7 @@ const telegramIcon: FontAwesomeIconProps = {
 */
 
 // https://fontawesomeicons.com/whatsapp
-export default function PharmacyTable({ loading, dataHeader, data, openWhatsapp, openTelegram, openMag, showDistance }: PharmacyTableProps) {
+export default function PharmacyTable({ loading, dataHeader, data, openWhatsapp, openTelegram, openMag, isClient }: PharmacyTableProps) {
 
     return (
         <>
@@ -35,29 +35,35 @@ export default function PharmacyTable({ loading, dataHeader, data, openWhatsapp,
                             key={index}
                             className="bg-white border md:border-b block md:table-row rounded-md shadow-md md:rounded-none md:shadow-none mb-5"
                         >
-                            <TableCell dataLabel="Name" showLabel={true}>
+                            <TableCell dataLabel="Nom" showLabel={true}>
                                 <span className="font-medium text-sm text-gray-900">
                                     {row.name}
                                 </span>
                             </TableCell>
 
-                            <TableCell dataLabel="Tel" showLabel={true}>
-                                <p className="font-normal text-sm text-gray-500">{row.tel}</p>
-                            </TableCell>
-
-                            <TableCell dataLabel="Email" showLabel={true}>
-                                <p className="font-normal text-sm text-gray-500">{row.email}</p>
-                            </TableCell>
+                            {
+                                !isClient &&
+                                <TableCell dataLabel="Tel" showLabel={true}>
+                                     <p className="font-normal text-sm text-gray-500">{row.tel}</p>
+                                </TableCell>
+                            }
+                            
+                            {
+                                !isClient && 
+                                <TableCell dataLabel="Email" showLabel={true}>
+                                     <p className="font-normal text-sm text-gray-500">{row.email}</p>
+                                </TableCell>
+                            }                           
 
                             {
-                                showDistance &&
-                                <TableCell dataLabel="distance" showLabel={showDistance}>
+                                isClient &&
+                                <TableCell dataLabel="distance" showLabel={isClient}>
                                     <p className="font-normal text-sm text-gray-500">{row.distanceStr} km</p>
                                 </TableCell>
                             }
 
                             {
-                                !showDistance &&
+                                !isClient &&
                                 <>
                                     <TableCell dataLabel="Lat" showLabel={true}>
                                         <p className="font-normal text-sm text-gray-500">{row.location.latitude}</p>
@@ -71,8 +77,8 @@ export default function PharmacyTable({ loading, dataHeader, data, openWhatsapp,
 
 
                             {
-                                showDistance &&
-                                <TableCell showLabel={showDistance}>
+                                isClient &&
+                                <TableCell showLabel={isClient}>
                                     <Link
                                         onClick={(e) => {
                                             e.preventDefault();
@@ -91,7 +97,7 @@ export default function PharmacyTable({ loading, dataHeader, data, openWhatsapp,
                                             openTelegram!(row.tel);
                                         }}
                                         to={`/auth/master/user/${row.id}/edit`}
-                                        className={`text-sky-700 inline-flex py-2 px-2 rounded  text-sm ml-5`}
+                                        className={`text-sky-700 inline-flex py-2 px-2 rounded  text-sm ml-10 mr-10`}
                                     >
                                         <i className="fa fa-telegram" aria-hidden="true" />
                                     </Link>
@@ -99,10 +105,10 @@ export default function PharmacyTable({ loading, dataHeader, data, openWhatsapp,
                                     <Link
                                         onClick={(e) => {
                                             e.preventDefault();
-                                            openMag!(row.location);
+                                            openMag!(row.location, row.tel);
                                         }}
                                         to={`/auth/master/user/${row.id}/edit`}
-                                        className={`text-sky-700 inline-flex py-2 px-2 rounded  text-sm ml-5`}
+                                        className={`text-sky-700 inline-flex py-2 px-2 rounded  text-sm`}
                                     >
                                         <i className="fa fa-map-marker" aria-hidden="true" />
                                     </Link>

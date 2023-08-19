@@ -102,6 +102,7 @@ export default function PharmacyForm({ onSubmit, initialPharmacyData, isLoading 
                                 ref={telRef}
                                 required
                                 defaultValue={initialPharmacyData.tel}
+                                disabled={true}
 
                             />
                         </div>

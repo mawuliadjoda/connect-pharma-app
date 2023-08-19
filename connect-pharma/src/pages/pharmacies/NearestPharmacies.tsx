@@ -11,10 +11,11 @@ import PharmacyTable from "./PharmacyTable";
 import { applyHaversine, getNearPharmacies } from "../../services/LocationService";
 import { Coordinate } from "calculate-distance-between-coordinates";
 import { convertToENecimal } from "../../utils/Utils";
-import { GeoPoint, collection, limit, onSnapshot, orderBy, query, where } from "firebase/firestore";
+import { GeoPoint, Timestamp, addDoc, collection, limit, onSnapshot, orderBy, query, where } from "firebase/firestore";
 import { getDb } from "../../services/db";
 import { customPaginate } from "./util/PaginateCalculator";
 import PharmacyPagination from "./util/PharmacyPagination";
+import { ClientAction, ClientHistory } from "./ClientHistory";
 
 
 
@@ -49,11 +50,12 @@ export default function NearestPharmacies() {
     }, [allPharmacies, searchQuery]);
 
 
+    const latitudeNumber: number = convertToENecimal(latitude);
+    const longitudeNumber: number = convertToENecimal(longitude);
+
     useEffect(() => {
         setLoading(true);
-        const latitudeNumber: number = convertToENecimal(latitude);
-        const longitudeNumber: number = convertToENecimal(longitude);
-
+        
         const userLocation: Coordinate = {
             lat: latitudeNumber.valueOf(),
             lon: longitudeNumber.valueOf()
@@ -95,8 +97,6 @@ export default function NearestPharmacies() {
     const getNext = (pharmacy: Pharmacy) => {
         console.log(pharmacy);
 
-
-
         setDisableNextButton(true);
         if (pharmaciesMap?.get(page + 1)) {
             setDisableNextButton(false);
@@ -126,6 +126,17 @@ export default function NearestPharmacies() {
         console.log(url);
         console.log(userTelephone);
         window.open(url);
+
+
+        
+        const clientHistory: ClientHistory = {
+            clientPhoneNumber: userTelephone!,
+            pharmacyPhoneNumber: tel,
+            location: new GeoPoint(latitudeNumber, longitudeNumber),
+            createTime: Timestamp.now(),
+            action: ClientAction.CLICK_WHATSAPP
+        }
+        addClientHistory(clientHistory);
     }
 
     const openTelegram = (tel: string) => {
@@ -133,13 +144,45 @@ export default function NearestPharmacies() {
         console.log(url);
         console.log(userTelephone);
         window.open(url);
+
+        const clientHistory: ClientHistory = {
+            clientPhoneNumber: userTelephone!,
+            pharmacyPhoneNumber: tel,
+            location: new GeoPoint(latitudeNumber, longitudeNumber),
+            createTime: Timestamp.now(),
+            action: ClientAction.CLICK_TELEGRAM
+        }
+        addClientHistory(clientHistory);
     }
 
-    const openMag = (location: GeoPoint) => {
+    const openMag = (location: GeoPoint, tel?: string) => {
         const url = `https://www.google.com/maps/dir//${location.latitude},${location.longitude}`;
         console.log(userTelephone);
         window.open(url);
+
+
+        const clientHistory: ClientHistory = {
+            clientPhoneNumber: userTelephone!,
+            pharmacyPhoneNumber: tel!,
+            location: new GeoPoint(latitudeNumber, longitudeNumber),
+            createTime: Timestamp.now(),
+            action: ClientAction.CLICK_MAP
+        }
+        addClientHistory(clientHistory);
     }
+
+
+    const addClientHistory = (clientHistory: ClientHistory) => {
+        const clientHistoriesRef = collection(getDb(), 'clientHistories');
+        addDoc(clientHistoriesRef, clientHistory)
+            .then(() => {
+                console.log("client added sucessfuly !");
+            })
+            .catch((error) => {
+                console.log("Error adding client:", error);
+            });
+    }
+
 
     return (
         <>
@@ -178,7 +221,7 @@ export default function NearestPharmacies() {
                                 loading={loading}
                                 dataHeader={dataHeader}
                                 data={searchQuery ? filteredPharmacies : pharmacies}
-                                showDistance={true}
+                                isClient={true}
                                 openWhatsapp={openWhatsapp}
                                 openTelegram={openTelegram}
                                 openMag={openMag}
@@ -213,16 +256,16 @@ export default function NearestPharmacies() {
 const dataHeader = [
     {
         key: "name",
-        label: "Name",
+        label: "Nom",
     },
-    {
-        key: "tel",
-        label: "Tel",
-    },
-    {
-        key: "email",
-        label: "Email",
-    },
+    // {
+    //     key: "tel",
+    //     label: "Tel",
+    // },
+    // {
+    //     key: "email",
+    //     label: "Email",
+    // },
     {
         key: "distance",
         label: "Distance",
