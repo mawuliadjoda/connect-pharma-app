@@ -1,8 +1,8 @@
 import { useParams } from "react-router-dom";
-import { 
-    useEffect, 
-    useState, 
-    // useMemo 
+import {
+    useEffect,
+    useState,
+    useMemo
 } from "react";
 import { Pharmacy, PharmacyConverter } from "./Pharmacy";
 import { Loading } from "../../utils/Loading";
@@ -32,25 +32,21 @@ export default function NearestPharmacies() {
     const [loading, setLoading] = useState(true);
     const [pharmacies, setPharmacies] = useState<Pharmacy[]>([]);
     const [pharmaciesMap, setPharmaciesMap] = useState<Map<number, Pharmacy[]>>();
-
+    const [allPharmacies, setAllPharmacies] = useState<Pharmacy[]>([]);
 
     const { latitude, longitude, userTelephone } = useParams();
 
-    // const [searchQuery, setSearchQuery] = useState("");
+    const [searchQuery, setSearchQuery] = useState("");
     const [page, setPage] = useState(1);
     const [disableNextButton, setDisableNextButton] = useState(false);
     const [disablePreviousButton, setDisablePreviousButton] = useState(false);
 
 
-    /*
     const filteredPharmacies = useMemo(() => {
-        return pharmacies.map(pharmacy => pharmacy).filter(pharmacy => {
+        return allPharmacies.map(pharmacy => pharmacy).filter(pharmacy => {
             return pharmacy.name.toLowerCase().includes(searchQuery.toLowerCase());
         })
-    }, [pharmacies, searchQuery]);
-    */
-
-
+    }, [allPharmacies, searchQuery]);
 
 
     useEffect(() => {
@@ -68,13 +64,14 @@ export default function NearestPharmacies() {
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
             const newPharmacies: Pharmacy[] = [];
             querySnapshot.forEach((doc) => {
-                const item = PharmacyConverter.fromFirestore(doc); 
+                const item = PharmacyConverter.fromFirestore(doc);
                 newPharmacies.push(item);
             });
-            // console.log(newPharmacies);
 
             const haversinePharmacies = applyHaversine(newPharmacies, userLocation);
             const pharmaciesWithDistance = getNearPharmacies(haversinePharmacies);
+
+            setAllPharmacies(pharmaciesWithDistance);
 
             const customPharmaciesMap = customPaginate(pharmaciesWithDistance, LIMIT_PER_PAGE);
             console.log(customPharmaciesMap);
@@ -98,7 +95,7 @@ export default function NearestPharmacies() {
     const getNext = (pharmacy: Pharmacy) => {
         console.log(pharmacy);
 
-        
+
 
         setDisableNextButton(true);
         if (pharmaciesMap?.get(page + 1)) {
@@ -159,28 +156,28 @@ export default function NearestPharmacies() {
                             Pharmacies Proches
                         </button>
 
-                        {/* 
-                        <form>
-                            <div className="relative">
+                        {
+                            <form>
+                                <div className="relative">
 
-                                <input
-                                    value={searchQuery}
-                                    onChange={e => setSearchQuery(e.target.value)}
-                                    type="search"
-                                    id="default-search"
-                                    className="mb-2 mt-2 text-sm placeholder-gray-500 px-4 rounded-lg border border-gray-200 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400 mt-1"
-                                    placeholder="Search"
-                                    required />
-                            </div>
-                        </form> 
-                        */}
+                                    <input
+                                        value={searchQuery}
+                                        onChange={e => setSearchQuery(e.target.value)}
+                                        type="search"
+                                        id="default-search"
+                                        className="mb-2 mt-2 text-sm placeholder-gray-500 px-4 rounded-lg border border-gray-200 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400 mt-1"
+                                        placeholder="Search"
+                                        required />
+                                </div>
+                            </form>
+                        }
 
 
                         <div className="border w-full border-gray-200 bg-white py-4 px-6 rounded-md">
                             <PharmacyTable
                                 loading={loading}
                                 dataHeader={dataHeader}
-                                data={pharmacies}
+                                data={searchQuery ? filteredPharmacies : pharmacies}
                                 showDistance={true}
                                 openWhatsapp={openWhatsapp}
                                 openTelegram={openTelegram}
@@ -188,16 +185,21 @@ export default function NearestPharmacies() {
                             />
                         </div>
 
-                        <div className="border w-full border-gray-200 bg-white py-4 px-6 rounded-md grid place-items-center ">
-                            <PharmacyPagination 
-                                getNext={getNext} 
-                                getPrevious={getPrevious} 
-                                pharmacies={pharmacies} 
-                                page={page} 
-                                disableNextButton={disableNextButton} 
-                                disablePreviousButton={disablePreviousButton}
-                             />
-                        </div>
+                        {
+                            !searchQuery &&
+                            <div className="border w-full border-gray-200 bg-white py-4 px-6 rounded-md grid place-items-center ">
+                                <PharmacyPagination
+                                    getNext={getNext}
+                                    getPrevious={getPrevious}
+                                    pharmacies={pharmacies}
+                                    page={page}
+                                    disableNextButton={disableNextButton}
+                                    disablePreviousButton={disablePreviousButton}
+                                />
+
+                            </div>
+                        }
+
                     </div>
                 }
 
