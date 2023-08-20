@@ -33,7 +33,7 @@ const initMenu: Menu[] = [
     label: "Mes clients en ligne",
     path: "/onlineClients",
     icon: faTable,
-    role: ['admin', 'user'],
+    role: ['user'],
   },
 
   {

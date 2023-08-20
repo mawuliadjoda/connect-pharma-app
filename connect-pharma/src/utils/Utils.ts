@@ -8,4 +8,4 @@ export function convertToENecimal(value: string | undefined): number {
     return +`${decimalPart}.${floatingPart}`;
 }
 
-export const formatToSimpleDateWithSeconds = (date: Date) => date ? format(new Date(date), "dd/MM/Y - HH:mm:ss") : undefined;
+export const formatToSimpleDateWithSeconds = (date: Date) : string | undefined => date ? format(new Date(date), "dd/MM/Y - HH:mm:ss") : undefined;

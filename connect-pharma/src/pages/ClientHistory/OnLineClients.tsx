@@ -9,9 +9,10 @@ import ClientHistoryTable from "./ClientHistoryTable";
 import { UserContext } from "../../utils/PrivateRoutes";
 
 type OnLineClientsProp = {
-    showAllClient: boolean
+    showAllClient: boolean,
+    title: string
 }
-const OnLineClients = ({showAllClient}: OnLineClientsProp) => {
+const OnLineClients = ({ showAllClient, title }: OnLineClientsProp) => {
     const [clientHistories, setClientHistories] = useState<ClientHistory[]>([]);
     const [loading, setLoading] = useState(true);
     const [sidebarToggle] = useOutletContext<any>();
@@ -32,27 +33,27 @@ const OnLineClients = ({showAllClient}: OnLineClientsProp) => {
         console.log(end);
 
         const onlineQuery = query(
-            usersRef, 
+            usersRef,
 
             where('pharmacyEmail', '==', connectedUser?.email),
-            where("createTime", "!=", null), 
+            where("createTime", "!=", null),
             where('createTime', '>=', start),
             where('createTime', '<=', end),
-            
+
             orderBy("createTime", "desc")
         );
 
         const allOnlineQuery = query(
-            usersRef, 
+            usersRef,
 
-           
-            where("createTime", "!=", null), 
+
+            where("createTime", "!=", null),
             where('createTime', '>=', start),
             where('createTime', '<=', end),
-            
+
             orderBy("createTime", "desc")
         );
-        const unsubscribe = onSnapshot(showAllClient ? allOnlineQuery: onlineQuery, (querySnapshot) => {
+        const unsubscribe = onSnapshot(showAllClient ? allOnlineQuery : onlineQuery, (querySnapshot) => {
             const newClientHistories: ClientHistory[] = [];
             querySnapshot.forEach((doc) => newClientHistories.push(ClientHistoryConverter.fromFirestore(doc)));
             console.log(newClientHistories);
@@ -72,13 +73,13 @@ const OnLineClients = ({showAllClient}: OnLineClientsProp) => {
 
 
     const openWhatsapp = (tel: string) => {
-        const url = `https://wa.me/${tel.includes('+') ? tel: `+${tel}`}`;
+        const url = `https://wa.me/${tel.includes('+') ? tel : `+${tel}`}`;
         console.log(url);
         window.open(url);
     }
 
     const openTelegram = (tel: string) => {
-        const url = `https://t.me/${tel.includes('+') ? tel: `+${tel}`}`;
+        const url = `https://t.me/${tel.includes('+') ? tel : `+${tel}`}`;
         console.log(url);
         window.open(url);
     }
@@ -93,14 +94,22 @@ const OnLineClients = ({showAllClient}: OnLineClientsProp) => {
 
                     :
 
-                    <ClientHistoryTable
-                        dataHeader={dataHeader}
-                        data={clientHistories}
-                        openWhatsapp={openWhatsapp}
-                        openTelegram={openTelegram}
-                        loading={loading}
+                    <div>
+                        <button
+                            className="py-2 px-4 border border-emerald-500 bg-emerald-600 w-full rounded-full text-gray-200 hover:bg-emerald-600 hover:border-emerald-600 justify-end text-sm">
+                            {title}
+                        </button>
 
-                    />
+                        <ClientHistoryTable
+                            dataHeader={dataHeader}
+                            data={clientHistories}
+                            openWhatsapp={openWhatsapp}
+                            openTelegram={openTelegram}
+                            loading={loading}
+                        />
+                        
+                    </div>
+
 
                 }
             </main>
