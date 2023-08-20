@@ -8,8 +8,9 @@ import {
     onSnapshot,
     orderBy,
     query,
+    startAfter,
     // startAfter, 
-    startAt,
+    //startAt,
     // where 
 } from "firebase/firestore";
 import { db } from "../../services/db";
@@ -23,13 +24,15 @@ import PharmacyPagination from "./util/PharmacyPagination";
 
 
 const LIMIT_PER_PAGE = 10;
-export default function PharmacyList() {
+export default function PharmacyListPagination() {
     const [sidebarToggle] = useOutletContext<any>();
     const [loading, setLoading] = useState(true);
     const [pharmacies, setPharmacies] = useState<Pharmacy[]>([]);
     const [searchQuery, setSearchQuery] = useState("");
 
-    // const [list, setList] = useState([]);
+    const [disableNextButton, setDisableNextButton] = useState(false);
+    const [disablePreviousButton, setDisablePreviousButton] = useState(false);
+
     const [page, setPage] = useState(1);
 
 
@@ -71,8 +74,10 @@ export default function PharmacyList() {
     }, []);
 
     const getNext = (item: Pharmacy) => {
+        setDisablePreviousButton(false);
 
         setLoading(true);
+        setDisableNextButton(true);
         if (pharmacies.length === 0) {
             alert("Thats all we have for now !");
             setLoading(false);
@@ -82,7 +87,8 @@ export default function PharmacyList() {
                 // where("name", "!=", null), 
                 orderBy("name", "asc"),
 
-                startAt(item.name),
+                startAfter(item.name),
+                // startAt(item.name),
                 // orderBy("name", "asc"), 
                 // startAfter(item.id),
                 limit(LIMIT_PER_PAGE),
@@ -91,15 +97,24 @@ export default function PharmacyList() {
 
             const unsubscribe = onSnapshot(q, (querySnapshot) => {
                 const newPharmacies: Pharmacy[] = [];
-                querySnapshot.forEach((doc) => {
-                    const item = PharmacyConverter.fromFirestore(doc);
-                    newPharmacies.push(item);
-                });
-                setPharmacies(newPharmacies);
-                setLoading(false);
 
-                // setList(items);
-                setPage(page + 1)
+                if (querySnapshot.docs.length == 0) {
+                    setDisableNextButton(true);
+                    setLoading(false);
+                } else {
+
+                    querySnapshot.forEach((doc) => {
+                        const item = PharmacyConverter.fromFirestore(doc);
+                        newPharmacies.push(item);
+                    });
+                    setPharmacies(newPharmacies);
+                    setLoading(false);
+                    setPage(page + 1);
+
+                    querySnapshot.docs.length < LIMIT_PER_PAGE ? setDisableNextButton(true) : setDisableNextButton(false);
+
+                }
+
             },
                 (error) => {
                     console.log(error);
@@ -113,8 +128,10 @@ export default function PharmacyList() {
 
 
     const getPrevious = (item: Pharmacy) => {
+
         if (!item) return;
         setLoading(true);
+        setDisablePreviousButton(true);
         const q = query(collection(db, 'pharmacies'),
             // where("name", "!=", null), 
             // orderBy("name", "asc"), 
@@ -134,11 +151,16 @@ export default function PharmacyList() {
                 newPharmacies.push(item);
             });
             if (querySnapshot.size > 0) {
+                setDisablePreviousButton(false);
                 setPharmacies(newPharmacies);
-
-                // setList(items);
-                setPage(page - 1)
+                setPage(page - 1);
             }
+
+            if (querySnapshot.size === 0) {
+                setDisablePreviousButton(true);
+            }
+
+            setDisableNextButton(false);
             setLoading(false);
 
         }, (error) => { console.log(error); }
@@ -183,7 +205,16 @@ export default function PharmacyList() {
 
                     </div>
                     <div className="border w-full border-gray-200 bg-white py-4 px-6 rounded-md grid place-items-center ">
-                        <PharmacyPagination getNext={getNext} getPrevious={getPrevious} pharmacies={filteredPharmacies}  page={page} />
+                        <PharmacyPagination
+                            getNext={getNext}
+                            getPrevious={getPrevious}
+                            pharmacies={filteredPharmacies}
+                            page={page}
+
+                            disableNextButton={disableNextButton}
+                            disablePreviousButton={disablePreviousButton}
+
+                        />
                     </div>
 
                 </div>

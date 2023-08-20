@@ -15,7 +15,7 @@ import AddUser from "./pages/Users/AddUser";
 import UserList from "./pages/Users/UserList";
 import EditUser from "./pages/Users/EditUser";
 import LoginIndex from "./pages/auth/Login";
-import PharmacyList from "./pages/pharmacies/PharmacyList";
+// import PharmacyList from "./pages/pharmacies/PharmacyList";
 import AddPharmacy from "./pages/pharmacies/AddPharmacy";
 import NearestPharmacies from "./pages/pharmacies/NearestPharmacies";
 import PopulatePharmacies from "./pages/pharmacies/PopulatePharmacies";
@@ -72,12 +72,13 @@ function App() {
               <Route path="/learnSuspense" element={<LearnSuspense />}></Route>
               <Route path="/addUser" element={<AddUser />} ></Route>
               <Route path="/editUser" element={<EditUser />} ></Route>
-              <Route path="/pharmacies" element={<PharmacyList />} ></Route>
+              {/* <Route path="/pharmacies" element={<PharmacyList />} ></Route> */}
               <Route path="/pharmacies/populate" element={<PopulatePharmacies />} />
               <Route path="/*" element={<NotFound />}></Route>
 
 
-              <Route path="/pagination" element={<PharmacyListPagination />}></Route>
+              {/* <Route path="/pagination" element={<PharmacyListPagination />}></Route> */}
+              <Route path="/pharmacies" element={<PharmacyListPagination />}></Route>
               <Route path="/onlineClients" element={<MyOnlineClient />}></Route>
               <Route path="/allOnlineClients" element={<AllOnlineClient />}></Route>
 
