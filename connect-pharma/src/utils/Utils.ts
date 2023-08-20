@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 
 export function convertToENecimal(value: string | undefined): number {
     if (!value?.includes(",")) return +value!;
@@ -6,3 +7,5 @@ export function convertToENecimal(value: string | undefined): number {
     const floatingPart = latTab ? latTab[1] : 0;
     return +`${decimalPart}.${floatingPart}`;
 }
+
+export const formatToSimpleDateWithSeconds = (date: Date) => date ? format(new Date(date), "dd/MM/Y - HH:mm:ss") : undefined;

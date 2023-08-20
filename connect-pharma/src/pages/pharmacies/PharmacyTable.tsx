@@ -9,9 +9,9 @@ type PharmacyTableProps = {
     dataHeader: { key: string; label: string; }[],
     data: Pharmacy[],
     isClient?: boolean,
-    openWhatsapp?: (tel: string) => void,
-    openTelegram?: (tel: string) => void,
-    openMag?:(location: GeoPoint, tel?: string) => void
+    openWhatsapp?: (tel: string, email?: string) => void,
+    openTelegram?: (tel: string, email?: string) => void,
+    openMag?:(location: GeoPoint, tel?: string, email?: string) => void
 }
 
 
@@ -82,7 +82,7 @@ export default function PharmacyTable({ loading, dataHeader, data, openWhatsapp,
                                     <Link
                                         onClick={(e) => {
                                             e.preventDefault();
-                                            openWhatsapp!(row.tel);
+                                            openWhatsapp!(row.tel, row.email);
                                         }}
 
                                         to={`/auth/master/user/${row.id}/edit`}
@@ -94,7 +94,7 @@ export default function PharmacyTable({ loading, dataHeader, data, openWhatsapp,
                                     <Link
                                         onClick={(e) => {
                                             e.preventDefault();
-                                            openTelegram!(row.tel);
+                                            openTelegram!(row.tel, row.email);
                                         }}
                                         to={`/auth/master/user/${row.id}/edit`}
                                         className={`text-sky-700 inline-flex py-2 px-2 rounded  text-sm ml-10 mr-10`}
@@ -105,7 +105,7 @@ export default function PharmacyTable({ loading, dataHeader, data, openWhatsapp,
                                     <Link
                                         onClick={(e) => {
                                             e.preventDefault();
-                                            openMag!(row.location, row.tel);
+                                            openMag!(row.location, row.tel, row.email);
                                         }}
                                         to={`/auth/master/user/${row.id}/edit`}
                                         className={`text-sky-700 inline-flex py-2 px-2 rounded  text-sm`}

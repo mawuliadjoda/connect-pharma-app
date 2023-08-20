@@ -22,6 +22,8 @@ import PopulatePharmacies from "./pages/pharmacies/PopulatePharmacies";
 import PrivateRoutes from "./utils/PrivateRoutes";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import PharmacyListPagination from "./pages/pharmacies/PharmacyListPagination";
+import MyOnlineClient from "./pages/ClientHistory/MyOnlineClient";
+import AllOnlineClient from "./pages/ClientHistory/AllOnlineClient";
 
 
 
@@ -76,6 +78,10 @@ function App() {
 
 
               <Route path="/pagination" element={<PharmacyListPagination />}></Route>
+              <Route path="/onlineClients" element={<MyOnlineClient />}></Route>
+              <Route path="/allOnlineClients" element={<AllOnlineClient />}></Route>
+
+              
             </Route>
           </Route>
 

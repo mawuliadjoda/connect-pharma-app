@@ -10,12 +10,12 @@ import PharmacyTable from "./PharmacyTable";
 // import Navbar from "../../components/Navbar/Index";
 import { applyHaversine, getNearPharmacies } from "../../services/LocationService";
 import { Coordinate } from "calculate-distance-between-coordinates";
-import { convertToENecimal } from "../../utils/Utils";
+import { convertToENecimal, formatToSimpleDateWithSeconds } from "../../utils/Utils";
 import { GeoPoint, Timestamp, addDoc, collection, limit, onSnapshot, orderBy, query, where } from "firebase/firestore";
 import { getDb } from "../../services/db";
 import { customPaginate } from "./util/PaginateCalculator";
 import PharmacyPagination from "./util/PharmacyPagination";
-import { ClientAction, ClientHistory } from "./ClientHistory";
+import { ClientAction, ClientHistory } from "../ClientHistory/ClientHistory";
 
 
 
@@ -121,8 +121,8 @@ export default function NearestPharmacies() {
     }
 
     // https://signal.me/#p/+41794997040
-    const openWhatsapp = (tel: string) => {
-        const url = 'https://wa.me/+' + tel;
+    const openWhatsapp = (tel: string, email?: string) => {
+        const url = `https://wa.me/${tel.includes('+') ? tel: `+${tel}`}`;
         console.log(url);
         console.log(userTelephone);
         window.open(url);
@@ -132,30 +132,35 @@ export default function NearestPharmacies() {
         const clientHistory: ClientHistory = {
             clientPhoneNumber: userTelephone!,
             pharmacyPhoneNumber: tel,
+            pharmacyEmail: email,
             location: new GeoPoint(latitudeNumber, longitudeNumber),
             createTime: Timestamp.now(),
+            createTimeFormat: formatToSimpleDateWithSeconds(Timestamp.now().toDate()),
             action: ClientAction.CLICK_WHATSAPP
         }
         addClientHistory(clientHistory);
     }
 
-    const openTelegram = (tel: string) => {
-        const url = 'https://t.me/+' + tel;
+    const openTelegram = (tel: string, email?: string) => {
+        
+        const url = `https://t.me/${tel.includes('+') ? tel: `+${tel}`}`;
         console.log(url);
-        console.log(userTelephone);
+        // console.log(userTelephone);
         window.open(url);
 
         const clientHistory: ClientHistory = {
             clientPhoneNumber: userTelephone!,
             pharmacyPhoneNumber: tel,
+            pharmacyEmail: email,
             location: new GeoPoint(latitudeNumber, longitudeNumber),
             createTime: Timestamp.now(),
+            createTimeFormat: formatToSimpleDateWithSeconds(Timestamp.now().toDate()),
             action: ClientAction.CLICK_TELEGRAM
         }
         addClientHistory(clientHistory);
     }
 
-    const openMag = (location: GeoPoint, tel?: string) => {
+    const openMag = (location: GeoPoint, tel?: string, email?: string) => {
         const url = `https://www.google.com/maps/dir//${location.latitude},${location.longitude}`;
         console.log(userTelephone);
         window.open(url);
@@ -164,8 +169,10 @@ export default function NearestPharmacies() {
         const clientHistory: ClientHistory = {
             clientPhoneNumber: userTelephone!,
             pharmacyPhoneNumber: tel!,
+            pharmacyEmail: email,
             location: new GeoPoint(latitudeNumber, longitudeNumber),
             createTime: Timestamp.now(),
+            createTimeFormat: formatToSimpleDateWithSeconds(Timestamp.now().toDate()),
             action: ClientAction.CLICK_MAP
         }
         addClientHistory(clientHistory);

@@ -19,6 +19,7 @@
     "@testing-library/user-event": "^13.5.0",
     "calculate-distance-between-coordinates": "^1.0.5",
     "chart.js": "^4.3.0",
+    "date-fns": "^2.30.0",
     "firebase": "^10.1.0",
     "framer-motion": "^10.12.12",
     "geopoint": "^1.0.1",
