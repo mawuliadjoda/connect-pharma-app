@@ -113,7 +113,7 @@ const OnLineClients = ({ showAllClient, title }: OnLineClientsProp) => {
 
                                 <div>
                                     <br />
-                                    <p className="text-center">Aucun client en ligne pour actuellement !...</p>
+                                    <p className="text-center">Aucun client en ligne actuellement !...</p>
                                 </div>
 
                         }
