@@ -23,7 +23,7 @@ export type Submenu = {
 }
 function MenuList({ menus, toggle }: MenuListProps) {
   const connectedUser = useContext(UserContext);
-  console.log(connectedUser?.roles);
+  // console.log(connectedUser?.roles);
   return (
     <div className="navWrapper p-4">
       <ul id="menu" className="">

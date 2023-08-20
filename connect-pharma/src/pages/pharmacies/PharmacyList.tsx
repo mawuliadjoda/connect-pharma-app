@@ -1,17 +1,15 @@
 import { useOutletContext } from "react-router-dom";
-import { useEffect, useState, useMemo, useContext} from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Pharmacy, PharmacyConverter } from "./Pharmacy";
 import { collection, limit, onSnapshot, orderBy, query, where } from "firebase/firestore";
 import { getDb } from "../../services/db";
 import { Loading } from "../../utils/Loading";
 import PharmacyTable from "./PharmacyTable";
 import Navbar from "../../components/Navbar/Index";
-import { UserContext } from "../../utils/PrivateRoutes";
 
 
 
 export default function PharmacyList() {
-    const connectedUser = useContext(UserContext);
     const [sidebarToggle] = useOutletContext<any>();
     const [loading, setLoading] = useState(true);
     const [pharmacies, setPharmacies] = useState<Pharmacy[]>([]);
@@ -25,7 +23,7 @@ export default function PharmacyList() {
 
 
     useEffect(() => {
-        console.log(connectedUser);
+        
         const usersRef = collection(getDb(), 'pharmacies');
         const q = query(usersRef, where("name", "!=", null), orderBy("name", "asc"), limit(50));
         const unsubscribe = onSnapshot(q, (querySnapshot) => {

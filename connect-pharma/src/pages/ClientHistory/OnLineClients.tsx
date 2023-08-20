@@ -29,9 +29,6 @@ const OnLineClients = ({ showAllClient, title }: OnLineClientsProp) => {
         start.setHours(0, 0, 0, 0)
         end.setHours(23, 59, 59, 0)
 
-        console.log(start);
-        console.log(end);
-
         const onlineQuery = query(
             usersRef,
 
@@ -56,8 +53,8 @@ const OnLineClients = ({ showAllClient, title }: OnLineClientsProp) => {
         const unsubscribe = onSnapshot(showAllClient ? allOnlineQuery : onlineQuery, (querySnapshot) => {
             const newClientHistories: ClientHistory[] = [];
             querySnapshot.forEach((doc) => newClientHistories.push(ClientHistoryConverter.fromFirestore(doc)));
-            console.log(newClientHistories);
-            console.log(connectedUser);
+            // console.log(newClientHistories);
+            // console.log(connectedUser);
             setClientHistories(newClientHistories)
             setLoading(false);
         },
@@ -100,14 +97,27 @@ const OnLineClients = ({ showAllClient, title }: OnLineClientsProp) => {
                             {title}
                         </button>
 
-                        <ClientHistoryTable
-                            dataHeader={dataHeader}
-                            data={clientHistories}
-                            openWhatsapp={openWhatsapp}
-                            openTelegram={openTelegram}
-                            loading={loading}
-                        />
-                        
+
+                        {
+                            clientHistories?.length > 0 ?
+
+                                <ClientHistoryTable
+                                    dataHeader={dataHeader}
+                                    data={clientHistories}
+                                    openWhatsapp={openWhatsapp}
+                                    openTelegram={openTelegram}
+                                    loading={loading}
+                                />
+
+                                :
+
+                                <div>
+                                    <br />
+                                    <p className="text-center">Aucun client en ligne pour actuellement !...</p>
+                                </div>
+
+                        }
+
                     </div>
 
 

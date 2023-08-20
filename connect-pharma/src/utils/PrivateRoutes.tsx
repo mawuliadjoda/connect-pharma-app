@@ -23,14 +23,14 @@ import { User } from '../pages/Users/User';
 
 export const UserContext = createContext<User>(null);
 const PrivateRoutes = () => {
-
     const [conectedUser, setConectedUser] = useState<User>();
+
     useEffect(() => {
         const loggedInUser = localStorage.getItem("user");
         if (loggedInUser) {
           const foundUser = JSON.parse(loggedInUser);
           setConectedUser(foundUser);
-          console.log(`------- Connected user from PrivateRoute-----: ${JSON.stringify(foundUser)}`);
+          // console.log(`------- Connected user from PrivateRoute-----: ${JSON.stringify(foundUser)}`);
         }
       }, []);
    

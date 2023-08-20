@@ -61,7 +61,7 @@ function LoginIndex() {
     localStorage.setItem("user", JSON.stringify(user));
 
     setLoading(false);
-    user!.roles?.includes('admin') ? navigate("/") : navigate("/pharmacies", { state: user });
+    user!.roles?.includes('admin') ? navigate("/") : navigate("/onlineClients", { state: user });
     window.location.reload();
 
   }
@@ -98,7 +98,10 @@ function LoginIndex() {
       }
       localStorage.setItem("user", JSON.stringify(connectedUser));
       setLoading(false);
-      navigate("/pharmacies");
+      
+      // navigate("/pharmacies");
+      connectedUser!.roles?.includes('admin') ? navigate("/") : navigate("/onlineClients", { state: connectedUser });
+
       window.location.reload();
     } catch (err) {
       console.error(err);

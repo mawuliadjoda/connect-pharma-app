@@ -1,5 +1,5 @@
 import { useOutletContext } from "react-router-dom";
-import { useState, useMemo, useContext, useEffect } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Pharmacy, PharmacyConverter } from "./Pharmacy";
 import {
     collection, endBefore,
@@ -16,7 +16,6 @@ import { db } from "../../services/db";
 import { Loading } from "../../utils/Loading";
 import PharmacyTable from "./PharmacyTable";
 import Navbar from "../../components/Navbar/Index";
-import { UserContext } from "../../utils/PrivateRoutes";
 import PharmacyPagination from "./util/PharmacyPagination";
 
 
@@ -25,7 +24,6 @@ import PharmacyPagination from "./util/PharmacyPagination";
 
 const LIMIT_PER_PAGE = 10;
 export default function PharmacyList() {
-    const connectedUser = useContext(UserContext);
     const [sidebarToggle] = useOutletContext<any>();
     const [loading, setLoading] = useState(true);
     const [pharmacies, setPharmacies] = useState<Pharmacy[]>([]);
@@ -42,7 +40,7 @@ export default function PharmacyList() {
     }, [pharmacies, searchQuery]);
 
     useEffect(() => {
-        console.log(connectedUser);
+
         setLoading(true);
         const q = query(collection(db, 'pharmacies'),
             // where("name", "!=", null), 
