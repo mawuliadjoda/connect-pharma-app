@@ -11,6 +11,7 @@ export type ClientHistory = {
     clientPhoneNumber: string,
     pharmacyPhoneNumber: string,
     pharmacyEmail?: string,
+    pharmacyName: string,
     createTime: Timestamp,
     createTimeFormat: string | undefined,
     action: ClientAction
@@ -25,6 +26,7 @@ export const ClientHistoryConverter = {
             clientPhoneNumber: doc.data().clientPhoneNumber,
             pharmacyPhoneNumber: doc.data().pharmacyPhoneNumber,
             pharmacyEmail: doc.data().pharmacyEmail,
+            pharmacyName: doc.data().pharmacyName,
             createTime: doc.data().createTime,
             createTimeFormat:  doc.data().createTimeFormat,
             action: doc.data().action

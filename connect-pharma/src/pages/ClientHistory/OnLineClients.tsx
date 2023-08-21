@@ -272,6 +272,10 @@ const dataHeader = [
         label: "Tel",
     },
     {
+        key: "pharmacyName",
+        label: "Pharmacie",
+    },
+    {
         key: "click",
         label: "Action Clik",
     },

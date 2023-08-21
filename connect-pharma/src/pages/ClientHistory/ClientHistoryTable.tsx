@@ -40,6 +40,10 @@ export default function ClientHistoryTable({
                                 <p className="font-normal text-sm text-gray-500">{row.clientPhoneNumber}</p>
                             </TableCell>
 
+                            <TableCell dataLabel="Pharmacie" showLabel={true}>
+                                <p className="font-normal text-sm text-gray-500">{row.pharmacyName}</p>
+                            </TableCell>
+
                             <TableCell dataLabel="Action Clik" showLabel={true}>
                                 <p className="font-normal text-sm text-gray-500">{row.action}</p>
                             </TableCell>

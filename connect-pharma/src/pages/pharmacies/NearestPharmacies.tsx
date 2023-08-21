@@ -64,11 +64,9 @@ export default function NearestPharmacies() {
         const usersRef = collection(getDb(), 'pharmacies');
         const q = query(usersRef, where("name", "!=", null), orderBy("name", "asc"), limit(50));
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            
             const newPharmacies: Pharmacy[] = [];
-            querySnapshot.forEach((doc) => {
-                const item = PharmacyConverter.fromFirestore(doc);
-                newPharmacies.push(item);
-            });
+            querySnapshot.forEach((doc) => newPharmacies.push(PharmacyConverter.fromFirestore(doc)) );
 
             const haversinePharmacies = applyHaversine(newPharmacies, userLocation);
             const pharmaciesWithDistance = getNearPharmacies(haversinePharmacies);
@@ -76,7 +74,7 @@ export default function NearestPharmacies() {
             setAllPharmacies(pharmaciesWithDistance);
 
             const customPharmaciesMap = customPaginate(pharmaciesWithDistance, LIMIT_PER_PAGE);
-         
+
 
             setLoading(false);
             setPage(1);
@@ -122,14 +120,15 @@ export default function NearestPharmacies() {
     }
 
     // https://signal.me/#p/+41794997040
-    const openWhatsapp = (tel: string, email?: string) => {
-        const url = `https://wa.me/${formatPhoneNumber(tel)}`;
+    const openWhatsapp = (pharmacy: Pharmacy) => {
+        const url = `https://wa.me/${formatPhoneNumber(pharmacy.tel)}`;
         window.open(url);
 
         const clientHistory: ClientHistory = {
             clientPhoneNumber: formatPhoneNumber(userTelephone!),
-            pharmacyPhoneNumber: formatPhoneNumber(tel),
-            pharmacyEmail: email,
+            pharmacyPhoneNumber: formatPhoneNumber(pharmacy.tel),
+            pharmacyEmail: pharmacy.email,
+            pharmacyName: pharmacy.name,
             location: new GeoPoint(latitudeNumber, longitudeNumber),
             createTime: Timestamp.now(),
             createTimeFormat: formatToSimpleDateWithSeconds(Timestamp.now().toDate()),
@@ -138,15 +137,16 @@ export default function NearestPharmacies() {
         addClientHistory(clientHistory);
     }
 
-    const openTelegram = (tel: string, email?: string) => {
-        
-        const url = `https://t.me/${formatPhoneNumber(tel)}`;
+    const openTelegram = (pharmacy: Pharmacy) => {
+
+        const url = `https://t.me/${formatPhoneNumber(pharmacy.tel)}`;
         window.open(url);
 
         const clientHistory: ClientHistory = {
             clientPhoneNumber: formatPhoneNumber(userTelephone!),
-            pharmacyPhoneNumber: formatPhoneNumber(tel),
-            pharmacyEmail: email,
+            pharmacyPhoneNumber: formatPhoneNumber(pharmacy.tel),
+            pharmacyEmail: pharmacy.email,
+            pharmacyName: pharmacy.name,
             location: new GeoPoint(latitudeNumber, longitudeNumber),
             createTime: Timestamp.now(),
             createTimeFormat: formatToSimpleDateWithSeconds(Timestamp.now().toDate()),
@@ -155,14 +155,15 @@ export default function NearestPharmacies() {
         addClientHistory(clientHistory);
     }
 
-    const openMag = (location: GeoPoint, tel?: string, email?: string) => {
-        const url = `https://www.google.com/maps/dir//${location.latitude},${location.longitude}`;
+    const openMag = (pharmacy: Pharmacy) => {
+        const url = `https://www.google.com/maps/dir//${pharmacy.location.latitude},${pharmacy.location.longitude}`;
         window.open(url);
 
         const clientHistory: ClientHistory = {
-            clientPhoneNumber: formatPhoneNumber(userTelephone!) ,
-            pharmacyPhoneNumber: formatPhoneNumber(tel!),
-            pharmacyEmail: email,
+            clientPhoneNumber: formatPhoneNumber(userTelephone!),
+            pharmacyPhoneNumber: formatPhoneNumber(pharmacy.tel!),
+            pharmacyEmail: pharmacy.email,
+            pharmacyName: pharmacy.name,
             location: new GeoPoint(latitudeNumber, longitudeNumber),
             createTime: Timestamp.now(),
             createTimeFormat: formatToSimpleDateWithSeconds(Timestamp.now().toDate()),

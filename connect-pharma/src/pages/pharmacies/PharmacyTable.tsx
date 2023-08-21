@@ -2,26 +2,18 @@ import { Pharmacy } from "./Pharmacy"
 import Datatables from "../../components/Datatables/Table";
 import TableCell from "../../components/Datatables/TableCell";
 import { Link } from "react-router-dom";
-import { GeoPoint } from "firebase/firestore";
 
 type PharmacyTableProps = {
     loading: boolean,
     dataHeader: { key: string; label: string; }[],
     data: Pharmacy[],
     isClient?: boolean,
-    openWhatsapp?: (tel: string, email?: string) => void,
-    openTelegram?: (tel: string, email?: string) => void,
-    openMag?:(location: GeoPoint, tel?: string, email?: string) => void
+    openWhatsapp?: (pharmacy: Pharmacy) => void,
+    openTelegram?: (pharmacy: Pharmacy) => void,
+    openMag?:(pharmacy: Pharmacy) => void
 }
 
 
-/*
-const iconPropTelegram: IconProp = {iconName:'telegram', prefix: 'fab'};
-
-const telegramIcon: FontAwesomeIconProps = {
-    icon: iconPropTelegram
-}
-*/
 
 // https://fontawesomeicons.com/whatsapp
 export default function PharmacyTable({ loading, dataHeader, data, openWhatsapp, openTelegram, openMag, isClient }: PharmacyTableProps) {
@@ -82,7 +74,7 @@ export default function PharmacyTable({ loading, dataHeader, data, openWhatsapp,
                                     <Link
                                         onClick={(e) => {
                                             e.preventDefault();
-                                            openWhatsapp!(row.tel, row.email);
+                                            openWhatsapp!(row);
                                         }}
 
                                         to={`/auth/master/user/${row.id}/edit`}
@@ -94,7 +86,7 @@ export default function PharmacyTable({ loading, dataHeader, data, openWhatsapp,
                                     <Link
                                         onClick={(e) => {
                                             e.preventDefault();
-                                            openTelegram!(row.tel, row.email);
+                                            openTelegram!(row);
                                         }}
                                         to={`/auth/master/user/${row.id}/edit`}
                                         className={`text-sky-700 inline-flex py-2 px-2 rounded  text-sm ml-10 mr-10`}
@@ -105,7 +97,7 @@ export default function PharmacyTable({ loading, dataHeader, data, openWhatsapp,
                                     <Link
                                         onClick={(e) => {
                                             e.preventDefault();
-                                            openMag!(row.location, row.tel, row.email);
+                                            openMag!(row);
                                         }}
                                         to={`/auth/master/user/${row.id}/edit`}
                                         className={`text-sky-700 inline-flex py-2 px-2 rounded  text-sm`}
