@@ -142,32 +142,6 @@ const OnLineClients = ({ showAllClient, title }: OnLineClientsProp) => {
             orderBy("createTime", "desc"),
             limit(LIMIT_PER_PAGE)
         );
-
-        /*
-        const usersRef = collection(db, 'clientHistories');
-        const onlineQuery = query(
-            usersRef,
-            where('pharmacyEmail', '==', connectedUser?.email),
-            where("createTime", "!=", null),
-            where('createTime', '>=', startDate()),
-            where('createTime', '<=', endDate()),
-
-            orderBy("createTime", "desc"),
-            limit(LIMIT_PER_PAGE)
-        );
-
-        const allOnlineQuery = query(
-            usersRef,
-            where("createTime", "!=", null),
-            where('createTime', '>=', startDate()),
-            where('createTime', '<=', endDate()),
-
-            orderBy("createTime", "desc"),
-            limit(LIMIT_PER_PAGE)
-        );
-
-        return showAllClient ? allOnlineQuery : onlineQuery;
-        */
     }
 
 
@@ -200,39 +174,6 @@ const OnLineClients = ({ showAllClient, title }: OnLineClientsProp) => {
 
             limit(LIMIT_PER_PAGE)
         );
-
-        /*
-        const usersRef = collection(db, 'clientHistories');
-
-        const onlineQuery = query(
-            usersRef,
-            where('pharmacyEmail', '==', connectedUser?.email),
-            where("createTime", "!=", null),
-            where('createTime', '>=', startDate()),
-            where('createTime', '<=', endDate()),
-
-            orderBy("createTime", "desc"),
-
-            startAfter(clientHistory.createTime),
-
-            limit(LIMIT_PER_PAGE)
-        );
-
-        const allOnlineQuery = query(
-            usersRef,
-            where("createTime", "!=", null),
-            where('createTime', '>=', startDate()),
-            where('createTime', '<=', endDate()),
-
-            orderBy("createTime", "desc"),
-
-            startAfter(clientHistory.createTime),
-
-            limit(LIMIT_PER_PAGE)
-        );
-
-        return showAllClient ? allOnlineQuery : onlineQuery;
-        */
     }
 
     const openWhatsapp = (tel: string) => {
