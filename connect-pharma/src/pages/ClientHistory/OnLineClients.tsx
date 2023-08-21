@@ -8,6 +8,8 @@ import { Loading } from "../../utils/Loading";
 import ClientHistoryTable from "./ClientHistoryTable";
 import { UserContext } from "../../utils/PrivateRoutes";
 import ClientHistoryPagination from "./ClientHistoryPagination";
+import { formatPhoneNumber } from "../../utils/Utils";
+
 
 type OnLineClientsProp = {
     showAllClient: boolean,
@@ -22,25 +24,32 @@ const OnLineClients = ({ showAllClient, title }: OnLineClientsProp) => {
     const [sidebarToggle] = useOutletContext<any>();
     const connectedUser = useContext(UserContext);
 
-    const [disableNextButton, setDisableNextButton] = useState(false);
-    const [disablePreviousButton, setDisablePreviousButton] = useState(false);
+    const [disableNextButton, setDisableNextButton] = useState(true);
+    const [disablePreviousButton, setDisablePreviousButton] = useState(true);
 
     const [clientHistoriesMap, setClientHistoriesMap] = useState<Map<number, ClientHistory[]>>();
 
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(0);
 
     useEffect(() => {
 
         const unsubscribe = onSnapshot(getQuery(showAllClient), (querySnapshot) => {
 
-            const newClientHistories: ClientHistory[] = [];
-            querySnapshot.forEach((doc) => newClientHistories.push(ClientHistoryConverter.fromFirestore(doc)));
+            if (querySnapshot.size > 0) {
 
-            setClientHistories(newClientHistories);
+                const newClientHistories: ClientHistory[] = [];
+                querySnapshot.forEach((doc) => newClientHistories.push(ClientHistoryConverter.fromFirestore(doc)));
 
-            const clientHistoriesMapInitialValue = new Map<number, ClientHistory[]>();
-            clientHistoriesMapInitialValue.set(page, newClientHistories);
-            setClientHistoriesMap(clientHistoriesMapInitialValue);
+                setClientHistories(newClientHistories);
+
+                const clientHistoriesMapInitialValue = new Map<number, ClientHistory[]>();
+                clientHistoriesMapInitialValue.set(1, newClientHistories);
+                setClientHistoriesMap(clientHistoriesMapInitialValue);
+                setPage(1);
+            }
+
+            querySnapshot.size < LIMIT_PER_PAGE ? setDisableNextButton(true) : setDisableNextButton(false);
+            setDisablePreviousButton(true);
 
             setLoading(false);
         },
@@ -64,21 +73,21 @@ const OnLineClients = ({ showAllClient, title }: OnLineClientsProp) => {
 
         const unsubscribe = onSnapshot(getNextQuery(showAllClient, clientHistory), (querySnapshot) => {
 
-            if (querySnapshot.docs.length == 0) {
+            if (querySnapshot.size == 0) {
                 setDisableNextButton(true);
             } else {
+
                 const newClientHistories: ClientHistory[] = [];
                 querySnapshot.forEach((doc) => newClientHistories.push(ClientHistoryConverter.fromFirestore(doc)));
                 setClientHistories(newClientHistories);
 
-
-                querySnapshot.docs.length < LIMIT_PER_PAGE ? setDisableNextButton(true) : setDisableNextButton(false);
+                querySnapshot.size < LIMIT_PER_PAGE ? setDisableNextButton(true) : setDisableNextButton(false);
 
                 const clientHistoriesMapInitialValue = clientHistoriesMap;
                 clientHistoriesMapInitialValue?.set(page + 1, newClientHistories);
                 setClientHistoriesMap(clientHistoriesMapInitialValue);
-
                 setPage(page + 1);
+
             }
             setLoading(false);
         },
@@ -99,7 +108,6 @@ const OnLineClients = ({ showAllClient, title }: OnLineClientsProp) => {
         if (!clientHistory) return;
 
         if (page > 1) {
-
             setClientHistories(clientHistoriesMap!.get(page - 1)!);
             setPage(page - 1);
         }
@@ -111,8 +119,32 @@ const OnLineClients = ({ showAllClient, title }: OnLineClientsProp) => {
 
     const getQuery = (showAllClient: boolean) => {
 
-        const usersRef = collection(db, 'clientHistories');
+        if (showAllClient) {
+            return query(
+                collection(db, 'clientHistories'),
 
+                where("createTime", "!=", null),
+                where('createTime', '>=', startDate()),
+                where('createTime', '<=', endDate()),
+
+                orderBy("createTime", "desc"),
+                limit(LIMIT_PER_PAGE)
+            );
+        }
+        return query(
+            collection(db, 'clientHistories'),
+
+            where('pharmacyEmail', '==', connectedUser?.email),
+            where("createTime", "!=", null),
+            where('createTime', '>=', startDate()),
+            where('createTime', '<=', endDate()),
+
+            orderBy("createTime", "desc"),
+            limit(LIMIT_PER_PAGE)
+        );
+
+        /*
+        const usersRef = collection(db, 'clientHistories');
         const onlineQuery = query(
             usersRef,
             where('pharmacyEmail', '==', connectedUser?.email),
@@ -135,11 +167,41 @@ const OnLineClients = ({ showAllClient, title }: OnLineClientsProp) => {
         );
 
         return showAllClient ? allOnlineQuery : onlineQuery;
+        */
     }
 
 
     const getNextQuery = (showAllClient: boolean, clientHistory: ClientHistory) => {
 
+        if (showAllClient) {
+            return query(
+                collection(db, 'clientHistories'),
+                where("createTime", "!=", null),
+                where('createTime', '>=', startDate()),
+                where('createTime', '<=', endDate()),
+
+                orderBy("createTime", "desc"),
+
+                startAfter(clientHistory.createTime),
+
+                limit(LIMIT_PER_PAGE)
+            );
+        }
+        return query(
+            collection(db, 'clientHistories'),
+            where('pharmacyEmail', '==', connectedUser?.email),
+            where("createTime", "!=", null),
+            where('createTime', '>=', startDate()),
+            where('createTime', '<=', endDate()),
+
+            orderBy("createTime", "desc"),
+
+            startAfter(clientHistory.createTime),
+
+            limit(LIMIT_PER_PAGE)
+        );
+
+        /*
         const usersRef = collection(db, 'clientHistories');
 
         const onlineQuery = query(
@@ -170,17 +232,16 @@ const OnLineClients = ({ showAllClient, title }: OnLineClientsProp) => {
         );
 
         return showAllClient ? allOnlineQuery : onlineQuery;
+        */
     }
 
     const openWhatsapp = (tel: string) => {
-        const url = `https://wa.me/${tel.includes('+') ? tel : `+${tel}`}`;
-        console.log(url);
+        const url = `https://wa.me/${formatPhoneNumber(tel)}`;
         window.open(url);
     }
 
     const openTelegram = (tel: string) => {
-        const url = `https://t.me/${tel.includes('+') ? tel : `+${tel}`}`;
-        console.log(url);
+        const url = `https://t.me/${formatPhoneNumber(tel)}`;
         window.open(url);
     }
 

@@ -10,7 +10,7 @@ import PharmacyTable from "./PharmacyTable";
 // import Navbar from "../../components/Navbar/Index";
 import { applyHaversine, getNearPharmacies } from "../../services/LocationService";
 import { Coordinate } from "calculate-distance-between-coordinates";
-import { convertToENecimal, formatToSimpleDateWithSeconds } from "../../utils/Utils";
+import { convertToENecimal, formatPhoneNumber, formatToSimpleDateWithSeconds } from "../../utils/Utils";
 import { GeoPoint, Timestamp, addDoc, collection, limit, onSnapshot, orderBy, query, where } from "firebase/firestore";
 import { getDb } from "../../services/db";
 import { customPaginate } from "./util/PaginateCalculator";
@@ -76,12 +76,13 @@ export default function NearestPharmacies() {
             setAllPharmacies(pharmaciesWithDistance);
 
             const customPharmaciesMap = customPaginate(pharmaciesWithDistance, LIMIT_PER_PAGE);
-            console.log(customPharmaciesMap);
+         
 
             setLoading(false);
+            setPage(1);
+
             setPharmaciesMap(customPharmaciesMap);
             setPharmacies(customPharmaciesMap?.get(page) as Pharmacy[]);
-
         },
 
             (error) => {
@@ -122,16 +123,12 @@ export default function NearestPharmacies() {
 
     // https://signal.me/#p/+41794997040
     const openWhatsapp = (tel: string, email?: string) => {
-        const url = `https://wa.me/${tel.includes('+') ? tel: `+${tel}`}`;
-        console.log(url);
-        console.log(userTelephone);
+        const url = `https://wa.me/${formatPhoneNumber(tel)}`;
         window.open(url);
 
-
-
         const clientHistory: ClientHistory = {
-            clientPhoneNumber: userTelephone!,
-            pharmacyPhoneNumber: tel,
+            clientPhoneNumber: formatPhoneNumber(userTelephone!),
+            pharmacyPhoneNumber: formatPhoneNumber(tel),
             pharmacyEmail: email,
             location: new GeoPoint(latitudeNumber, longitudeNumber),
             createTime: Timestamp.now(),
@@ -143,14 +140,12 @@ export default function NearestPharmacies() {
 
     const openTelegram = (tel: string, email?: string) => {
         
-        const url = `https://t.me/${tel.includes('+') ? tel: `+${tel}`}`;
-        console.log(url);
-        // console.log(userTelephone);
+        const url = `https://t.me/${formatPhoneNumber(tel)}`;
         window.open(url);
 
         const clientHistory: ClientHistory = {
-            clientPhoneNumber: userTelephone!,
-            pharmacyPhoneNumber: tel,
+            clientPhoneNumber: formatPhoneNumber(userTelephone!),
+            pharmacyPhoneNumber: formatPhoneNumber(tel),
             pharmacyEmail: email,
             location: new GeoPoint(latitudeNumber, longitudeNumber),
             createTime: Timestamp.now(),
@@ -162,13 +157,11 @@ export default function NearestPharmacies() {
 
     const openMag = (location: GeoPoint, tel?: string, email?: string) => {
         const url = `https://www.google.com/maps/dir//${location.latitude},${location.longitude}`;
-        console.log(userTelephone);
         window.open(url);
 
-
         const clientHistory: ClientHistory = {
-            clientPhoneNumber: userTelephone!,
-            pharmacyPhoneNumber: tel!,
+            clientPhoneNumber: formatPhoneNumber(userTelephone!) ,
+            pharmacyPhoneNumber: formatPhoneNumber(tel!),
             pharmacyEmail: email,
             location: new GeoPoint(latitudeNumber, longitudeNumber),
             createTime: Timestamp.now(),
@@ -189,6 +182,7 @@ export default function NearestPharmacies() {
                 console.log("Error adding client:", error);
             });
     }
+
 
 
     return (
