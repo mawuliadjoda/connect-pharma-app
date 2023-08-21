@@ -64,7 +64,7 @@ export default function NearestPharmacies() {
         const usersRef = collection(getDb(), 'pharmacies');
         const q = query(usersRef, where("name", "!=", null), orderBy("name", "asc"), limit(50));
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
-            
+
             const newPharmacies: Pharmacy[] = [];
             querySnapshot.forEach((doc) => newPharmacies.push(PharmacyConverter.fromFirestore(doc)) );
 
@@ -201,6 +201,8 @@ export default function NearestPharmacies() {
                             Pharmacies Proches
                         </button>
 
+                        <br />
+                        <br />
                         {
                             <form>
                                 <div className="relative">

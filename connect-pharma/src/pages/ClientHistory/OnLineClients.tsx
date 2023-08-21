@@ -201,60 +201,63 @@ const OnLineClients = ({ showAllClient, title }: OnLineClientsProp) => {
         <>
             <main className="h-full">
                 <Navbar toggle={sidebarToggle} />
+                <div className="mainCard">
 
-                {loading ? <Loading />
+                    {loading ? <Loading />
 
-                    :
+                        :
 
-                    <div>
-                        <button
-                            className="py-2 px-4 border border-emerald-500 bg-emerald-600 w-full rounded-full text-gray-200 hover:bg-emerald-600 hover:border-emerald-600 justify-end text-sm">
-                            {title}
-                        </button>
+                        <div>
+                            <button
+                                className="py-2 px-4 border border-emerald-500 bg-emerald-600 w-full rounded-full text-gray-200 hover:bg-emerald-600 hover:border-emerald-600 justify-end text-sm">
+                                {title}
+                            </button>
+                            <br />
+                            <br />
 
+                            {
+                                clientHistories?.length > 0 ?
 
-                        {
-                            clientHistories?.length > 0 ?
+                                    <div>
+                                        <ClientHistoryTable
+                                            dataHeader={dataHeader}
+                                            data={clientHistories}
+                                            openWhatsapp={openWhatsapp}
+                                            openTelegram={openTelegram}
+                                            loading={loading}
+                                        />                                        
+                                        <div className="border w-full border-gray-200 bg-white py-4 px-6 rounded-md grid place-items-center ">
+                                            <ClientHistoryPagination
+                                                getNext={getNext}
+                                                getPrevious={getPrevious}
+                                                clientHistories={clientHistories}
+                                                page={page}
 
-                                <div>
-                                    <ClientHistoryTable
-                                        dataHeader={dataHeader}
-                                        data={clientHistories}
-                                        openWhatsapp={openWhatsapp}
-                                        openTelegram={openTelegram}
-                                        loading={loading}
-                                    />
+                                                disableNextButton={disableNextButton}
+                                                disablePreviousButton={disablePreviousButton}
 
-                                    <div className="border w-full border-gray-200 bg-white py-4 px-6 rounded-md grid place-items-center ">
-                                        <ClientHistoryPagination
-                                            getNext={getNext}
-                                            getPrevious={getPrevious}
-                                            clientHistories={clientHistories}
-                                            page={page}
-
-                                            disableNextButton={disableNextButton}
-                                            disablePreviousButton={disablePreviousButton}
-
-                                        />
+                                            />
+                                        </div>
+                                        <br></br>
+                                        <br></br>
+                                        <br></br>
                                     </div>
-                                    <br></br>
-                                    <br></br>
-                                    <br></br>
-                                </div>
 
-                                :
+                                    :
 
-                                <div>
-                                    <br />
-                                    <p className="text-center">Aucun client en ligne actuellement !...</p>
-                                </div>
+                                    <div>
+                                        <br />
+                                        <p className="text-center">Aucun client en ligne actuellement !...</p>
+                                    </div>
 
-                        }
+                            }
 
-                    </div>
+                        </div>
 
 
-                }
+                    }
+
+                </div>
             </main>
         </>
     )
