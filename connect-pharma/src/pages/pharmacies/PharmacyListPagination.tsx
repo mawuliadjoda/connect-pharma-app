@@ -96,13 +96,13 @@ export default function PharmacyListPagination() {
             );
 
             const unsubscribe = onSnapshot(q, (querySnapshot) => {
-                const newPharmacies: Pharmacy[] = [];
+                
 
                 if (querySnapshot.docs.length == 0) {
                     setDisableNextButton(true);
                     setLoading(false);
                 } else {
-
+                    const newPharmacies: Pharmacy[] = [];
                     querySnapshot.forEach((doc) => {
                         const item = PharmacyConverter.fromFirestore(doc);
                         newPharmacies.push(item);
@@ -145,18 +145,17 @@ export default function PharmacyListPagination() {
         );
 
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
-            const newPharmacies: Pharmacy[] = [];
-            querySnapshot.forEach((doc) => {
-                const item = PharmacyConverter.fromFirestore(doc);
-                newPharmacies.push(item);
-            });
+            
             if (querySnapshot.size > 0) {
-                setDisablePreviousButton(false);
-                setPharmacies(newPharmacies);
-                setPage(page - 1);
-            }
+                const newPharmacies: Pharmacy[] = [];
 
-            if (querySnapshot.size === 0) {
+                querySnapshot.forEach((doc) => newPharmacies.push(PharmacyConverter.fromFirestore(doc)));
+
+                setPharmacies(newPharmacies);
+
+                setDisablePreviousButton(false);
+                setPage(page - 1);
+            } else {
                 setDisablePreviousButton(true);
             }
 

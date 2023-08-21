@@ -1,61 +1,47 @@
 import { useContext, useEffect, useState } from "react";
 import { db } from "../../services/db";
-import { collection, onSnapshot, orderBy, query, where } from "firebase/firestore";
+import { collection, limit, onSnapshot, orderBy, query, startAfter, where } from "firebase/firestore";
 import { ClientHistory, ClientHistoryConverter } from "./ClientHistory";
 import Navbar from "../../components/Navbar/Index";
 import { useOutletContext } from "react-router-dom";
 import { Loading } from "../../utils/Loading";
 import ClientHistoryTable from "./ClientHistoryTable";
 import { UserContext } from "../../utils/PrivateRoutes";
+import ClientHistoryPagination from "./ClientHistoryPagination";
 
 type OnLineClientsProp = {
     showAllClient: boolean,
     title: string
 }
+
+const LIMIT_PER_PAGE = 10;
+
 const OnLineClients = ({ showAllClient, title }: OnLineClientsProp) => {
     const [clientHistories, setClientHistories] = useState<ClientHistory[]>([]);
     const [loading, setLoading] = useState(true);
     const [sidebarToggle] = useOutletContext<any>();
     const connectedUser = useContext(UserContext);
 
+    const [disableNextButton, setDisableNextButton] = useState(false);
+    const [disablePreviousButton, setDisablePreviousButton] = useState(false);
+
+    const [clientHistoriesMap, setClientHistoriesMap] = useState<Map<number, ClientHistory[]>>();
+
+    const [page, setPage] = useState(1);
+
     useEffect(() => {
 
-        /*   Firebase v9    */
-        const usersRef = collection(db, 'clientHistories');
+        const unsubscribe = onSnapshot(getQuery(showAllClient), (querySnapshot) => {
 
-        const start = new Date();
-        const end = new Date();
-
-        start.setHours(0, 0, 0, 0)
-        end.setHours(23, 59, 59, 0)
-
-        const onlineQuery = query(
-            usersRef,
-
-            where('pharmacyEmail', '==', connectedUser?.email),
-            where("createTime", "!=", null),
-            where('createTime', '>=', start),
-            where('createTime', '<=', end),
-
-            orderBy("createTime", "desc")
-        );
-
-        const allOnlineQuery = query(
-            usersRef,
-
-
-            where("createTime", "!=", null),
-            where('createTime', '>=', start),
-            where('createTime', '<=', end),
-
-            orderBy("createTime", "desc")
-        );
-        const unsubscribe = onSnapshot(showAllClient ? allOnlineQuery : onlineQuery, (querySnapshot) => {
             const newClientHistories: ClientHistory[] = [];
             querySnapshot.forEach((doc) => newClientHistories.push(ClientHistoryConverter.fromFirestore(doc)));
-            // console.log(newClientHistories);
-            // console.log(connectedUser);
-            setClientHistories(newClientHistories)
+
+            setClientHistories(newClientHistories);
+
+            const clientHistoriesMapInitialValue = new Map<number, ClientHistory[]>();
+            clientHistoriesMapInitialValue.set(page, newClientHistories);
+            setClientHistoriesMap(clientHistoriesMapInitialValue);
+
             setLoading(false);
         },
 
@@ -68,6 +54,123 @@ const OnLineClients = ({ showAllClient, title }: OnLineClientsProp) => {
     }, []);
 
 
+    const getNext = (clientHistory: ClientHistory) => {
+
+        setDisablePreviousButton(false);
+        setLoading(true);
+        setDisableNextButton(true);
+
+        if (!clientHistory) return;
+
+        const unsubscribe = onSnapshot(getNextQuery(showAllClient, clientHistory), (querySnapshot) => {
+
+            if (querySnapshot.docs.length == 0) {
+                setDisableNextButton(true);
+            } else {
+                const newClientHistories: ClientHistory[] = [];
+                querySnapshot.forEach((doc) => newClientHistories.push(ClientHistoryConverter.fromFirestore(doc)));
+                setClientHistories(newClientHistories);
+
+
+                querySnapshot.docs.length < LIMIT_PER_PAGE ? setDisableNextButton(true) : setDisableNextButton(false);
+
+                const clientHistoriesMapInitialValue = clientHistoriesMap;
+                clientHistoriesMapInitialValue?.set(page + 1, newClientHistories);
+                setClientHistoriesMap(clientHistoriesMapInitialValue);
+
+                setPage(page + 1);
+            }
+            setLoading(false);
+        },
+
+            (error) => {
+                console.log(error);
+            }
+
+        );
+        return () => unsubscribe();
+
+    }
+
+    const getPrevious = (clientHistory: ClientHistory) => {
+        setDisableNextButton(false);
+        setDisablePreviousButton(true);
+
+        if (!clientHistory) return;
+
+        if (page > 1) {
+
+            setClientHistories(clientHistoriesMap!.get(page - 1)!);
+            setPage(page - 1);
+        }
+
+        (page === 1) ? setDisablePreviousButton(true) : setDisablePreviousButton(false);
+
+    }
+
+
+    const getQuery = (showAllClient: boolean) => {
+
+        const usersRef = collection(db, 'clientHistories');
+
+        const onlineQuery = query(
+            usersRef,
+            where('pharmacyEmail', '==', connectedUser?.email),
+            where("createTime", "!=", null),
+            where('createTime', '>=', startDate()),
+            where('createTime', '<=', endDate()),
+
+            orderBy("createTime", "desc"),
+            limit(LIMIT_PER_PAGE)
+        );
+
+        const allOnlineQuery = query(
+            usersRef,
+            where("createTime", "!=", null),
+            where('createTime', '>=', startDate()),
+            where('createTime', '<=', endDate()),
+
+            orderBy("createTime", "desc"),
+            limit(LIMIT_PER_PAGE)
+        );
+
+        return showAllClient ? allOnlineQuery : onlineQuery;
+    }
+
+
+    const getNextQuery = (showAllClient: boolean, clientHistory: ClientHistory) => {
+
+        const usersRef = collection(db, 'clientHistories');
+
+        const onlineQuery = query(
+            usersRef,
+            where('pharmacyEmail', '==', connectedUser?.email),
+            where("createTime", "!=", null),
+            where('createTime', '>=', startDate()),
+            where('createTime', '<=', endDate()),
+
+            orderBy("createTime", "desc"),
+
+            startAfter(clientHistory.createTime),
+
+            limit(LIMIT_PER_PAGE)
+        );
+
+        const allOnlineQuery = query(
+            usersRef,
+            where("createTime", "!=", null),
+            where('createTime', '>=', startDate()),
+            where('createTime', '<=', endDate()),
+
+            orderBy("createTime", "desc"),
+
+            startAfter(clientHistory.createTime),
+
+            limit(LIMIT_PER_PAGE)
+        );
+
+        return showAllClient ? allOnlineQuery : onlineQuery;
+    }
 
     const openWhatsapp = (tel: string) => {
         const url = `https://wa.me/${tel.includes('+') ? tel : `+${tel}`}`;
@@ -81,6 +184,16 @@ const OnLineClients = ({ showAllClient, title }: OnLineClientsProp) => {
         window.open(url);
     }
 
+    const startDate = () => {
+        const start = new Date();
+        start.setHours(0, 0, 0, 0)
+        return start;
+    }
+    const endDate = () => {
+        const end = new Date();
+        end.setHours(23, 59, 59, 0);
+        return end;
+    }
 
     return (
         <>
@@ -101,13 +214,31 @@ const OnLineClients = ({ showAllClient, title }: OnLineClientsProp) => {
                         {
                             clientHistories?.length > 0 ?
 
-                                <ClientHistoryTable
-                                    dataHeader={dataHeader}
-                                    data={clientHistories}
-                                    openWhatsapp={openWhatsapp}
-                                    openTelegram={openTelegram}
-                                    loading={loading}
-                                />
+                                <div>
+                                    <ClientHistoryTable
+                                        dataHeader={dataHeader}
+                                        data={clientHistories}
+                                        openWhatsapp={openWhatsapp}
+                                        openTelegram={openTelegram}
+                                        loading={loading}
+                                    />
+
+                                    <div className="border w-full border-gray-200 bg-white py-4 px-6 rounded-md grid place-items-center ">
+                                        <ClientHistoryPagination
+                                            getNext={getNext}
+                                            getPrevious={getPrevious}
+                                            clientHistories={clientHistories}
+                                            page={page}
+
+                                            disableNextButton={disableNextButton}
+                                            disablePreviousButton={disablePreviousButton}
+
+                                        />
+                                    </div>
+                                    <br></br>
+                                    <br></br>
+                                    <br></br>
+                                </div>
 
                                 :
 
@@ -137,6 +268,10 @@ const dataHeader = [
     {
         key: "clientPhoneNumber",
         label: "Tel",
+    },
+    {
+        key: "click",
+        label: "Action Clik",
     },
     {
         key: "action",
