@@ -96,7 +96,7 @@ export default function PharmacyListPagination() {
             );
 
             const unsubscribe = onSnapshot(q, (querySnapshot) => {
-                
+
 
                 if (querySnapshot.docs.length == 0) {
                     setDisableNextButton(true);
@@ -145,7 +145,7 @@ export default function PharmacyListPagination() {
         );
 
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
-            
+
             if (querySnapshot.size > 0) {
                 const newPharmacies: Pharmacy[] = [];
 
@@ -200,8 +200,6 @@ export default function PharmacyListPagination() {
 
                     <div className="border w-full border-gray-200 bg-white py-4 px-6 rounded-md">
                         <PharmacyTable loading={loading} dataHeader={dataHeader} data={filteredPharmacies} isClient={false} />
-
-
                     </div>
                     <div className="border w-full border-gray-200 bg-white py-4 px-6 rounded-md grid place-items-center ">
                         <PharmacyPagination
@@ -215,6 +213,12 @@ export default function PharmacyListPagination() {
 
                         />
                     </div>
+
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
 
                 </div>
             </main>

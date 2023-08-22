@@ -27,7 +27,7 @@ const USER_LOCATION: Coordinate = {
 };
 */
 
-const LIMIT_PER_PAGE = 7;
+const LIMIT_PER_PAGE = 10;
 export default function NearestPharmacies() {
     // const [sidebarToggle] = useOutletContext<any>();
     const [loading, setLoading] = useState(true);
@@ -66,7 +66,7 @@ export default function NearestPharmacies() {
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
 
             const newPharmacies: Pharmacy[] = [];
-            querySnapshot.forEach((doc) => newPharmacies.push(PharmacyConverter.fromFirestore(doc)) );
+            querySnapshot.forEach((doc) => newPharmacies.push(PharmacyConverter.fromFirestore(doc)));
 
             const haversinePharmacies = applyHaversine(newPharmacies, userLocation);
             const pharmaciesWithDistance = getNearPharmacies(haversinePharmacies);
@@ -234,16 +234,20 @@ export default function NearestPharmacies() {
 
                         {
                             !searchQuery &&
-                            <div className="border w-full border-gray-200 bg-white py-4 px-6 rounded-md grid place-items-center ">
-                                <PharmacyPagination
-                                    getNext={getNext}
-                                    getPrevious={getPrevious}
-                                    pharmacies={pharmacies}
-                                    page={page}
-                                    disableNextButton={disableNextButton}
-                                    disablePreviousButton={disablePreviousButton}
-                                />
-
+                            <div>
+                                <div className="border w-full border-gray-200 bg-white py-4 px-6 rounded-md grid place-items-center ">
+                                    <PharmacyPagination
+                                        getNext={getNext}
+                                        getPrevious={getPrevious}
+                                        pharmacies={pharmacies}
+                                        page={page}
+                                        disableNextButton={disableNextButton}
+                                        disablePreviousButton={disablePreviousButton}
+                                    />
+                                </div>
+                                <br />
+                                <br />
+                                <br />
                             </div>
                         }
 
