@@ -2,14 +2,15 @@ import { DocumentData, QueryDocumentSnapshot, Timestamp } from "firebase/firesto
 
 export type User = {
     id?: string | undefined,
-    name: string,
+    name?: string,
     username: string,
     email?: string,
     roles?: string[],
     tel?: string,
     authProvider?: string,
     uid?: string | null,
-    createTime?: Timestamp
+    createTime?: Timestamp,
+    password?: string
 } | null
 
 

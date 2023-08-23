@@ -3,21 +3,26 @@ import { faEnvelope, faLock, faPhone, faUser } from "@fortawesome/free-solid-svg
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { UserCredential, createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { FormEvent, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { User } from "../../Users/User";
 import { Timestamp, addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { db, getDb } from "../../../services/db";
+import { buildEmail } from "../../../utils/Utils";
+import { formatPhoneNumber } from './../../../utils/Utils';
 
 
 function RegisterIndex() {
   const navigate = useNavigate();
   // const [error, setError] = useState(false);
-  const [email, setEmail] = useState("");
+  
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
+  // const [name, setName] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [tel, setTel] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const { userTelephone, userEmail } = useParams();
+  const [email, setEmail] = useState(userEmail!.replace(",", "."));
+  const [tel, setTel] = useState(userTelephone ? formatPhoneNumber(userTelephone) : '');
 
 
   const handleSubmit = (e: FormEvent) => {
@@ -30,13 +35,15 @@ function RegisterIndex() {
     }
 
     setLoading(true);
-    onSubmit(name, email, password, tel);
+    onSubmit(email, password, tel);
   };
 
-  async function onSubmit(name: string, email: string, password: string, tel: string) {
+  async function onSubmit(email: string, password: string, tel: string) {
 
     try {
      
+      email = email ? email : buildEmail(tel);
+
       const q = query(collection(db, "users"), where("email", "==", email));
       const docs = await getDocs(q);
 
@@ -45,18 +52,22 @@ function RegisterIndex() {
       } 
 
       const auth = getAuth();
+      
       const userCredential: UserCredential = await createUserWithEmailAndPassword(auth, email, password);
 
       const user: User = {
         authProvider: "local",
         uid: userCredential.user.uid,
-        name: name,
         username: userCredential.user.displayName!,
         email: userCredential.user.email!,
         roles: ["user"],
         tel: tel,
         createTime: Timestamp.now()
       };
+
+      if(email === buildEmail(tel)) {
+        user.password = password;
+      }
       
       addUser(user);
 
@@ -128,6 +139,33 @@ function RegisterIndex() {
               {/* Register Form */}
               <div className="md:mt-10 mt-4">
                 <form onSubmit={handleSubmit}>
+
+                      {/* tel */}
+                      <div className="flex flex-col mb-3">
+                    <div className="relative">
+                      <div className="inline-flex items-center justify-center absolute left-0 top-0 h-full w-10 text-gray-400">
+                        <FontAwesomeIcon icon={faPhone} />
+                      </div>
+
+                      <input
+                        id="tel"
+                        type="text"
+                        name="tel"
+                        onChange={(e) => setTel(e.target.value)}
+                        className="text-sm placeholder-gray-500 pl-10 pr-4 rounded-lg border border-gray-400 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400"
+                        
+                        required
+                        defaultValue={tel}
+                        disabled={true}
+
+                        placeholder="Tel"
+                      />
+                    </div>
+
+                  </div>
+
+
+
                   {/* Username */}
                   <div className="flex flex-col mb-3">
                     <div className="relative">
@@ -141,14 +179,20 @@ function RegisterIndex() {
                         name="email"
                         onChange={(e) => setEmail(e.target.value)}
                         className="text-sm placeholder-gray-500 pl-10 pr-4 rounded-lg border border-gray-400 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400"
-                        placeholder="@email"
+                        
+                        
+                        required
+                        defaultValue={email}
+                        disabled={true}
+
+                        placeholder="Email"
                       />
                     </div>
 
                   </div>
 
                   {/* Username */}
-                  <div className="flex flex-col mb-3">
+                  {/* <div className="flex flex-col mb-3">
                     <div className="relative">
                       <div className="inline-flex items-center justify-center absolute left-0 top-0 h-full w-10 text-gray-400">
                         <FontAwesomeIcon icon={faUser} />
@@ -164,26 +208,9 @@ function RegisterIndex() {
                       />
                     </div>
 
-                  </div>
+                  </div> */}
 
-                  {/* tel */}
-                  <div className="flex flex-col mb-3">
-                    <div className="relative">
-                      <div className="inline-flex items-center justify-center absolute left-0 top-0 h-full w-10 text-gray-400">
-                        <FontAwesomeIcon icon={faPhone} />
-                      </div>
-
-                      <input
-                        id="tel"
-                        type="text"
-                        name="tel"
-                        onChange={(e) => setTel(e.target.value)}
-                        className="text-sm placeholder-gray-500 pl-10 pr-4 rounded-lg border border-gray-400 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400"
-                        placeholder="Tel"
-                      />
-                    </div>
-
-                  </div>
+              
 
                   {/* Password */}
                   <div className="flex flex-col mb-3">
@@ -198,7 +225,7 @@ function RegisterIndex() {
                         name="password"
                         onChange={(e) => setPassword(e.target.value)}
                         className="text-sm placeholder-gray-500 pl-10 pr-4 rounded-lg border border-gray-400 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400"
-                        placeholder="Password"
+                        placeholder="Mot de passe"
                       />
                     </div>
 
@@ -217,7 +244,7 @@ function RegisterIndex() {
                         name="confirm_password"
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         className="text-sm placeholder-gray-500 pl-10 pr-4 rounded-lg border border-gray-400 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400"
-                        placeholder="confirmer Password"
+                        placeholder="Ressaisir le mot de passe"
                       />
                     </div>
 
@@ -225,7 +252,7 @@ function RegisterIndex() {
                   </div>
 
                   {/* Forgot Password Link */}
-                  <div className="flex items-center mb-6 -mt-2 md:-mt-4">
+                  {/* <div className="flex items-center mb-6 -mt-2 md:-mt-4">
                     <div className="flex ml-auto">
                       <Link
                         to=""
@@ -237,7 +264,7 @@ function RegisterIndex() {
                         password oublié ?
                       </Link>
                     </div>
-                  </div>
+                  </div> */}
 
                   {/* Button Register */}
                   <div className="flex w-full">
@@ -274,16 +301,7 @@ function RegisterIndex() {
                   <span className="mr-2 flex-1">Login with Google</span>
                 </button>
               </div>
-              <div className="flex justify-between w-full mt-2">
-                <button
-                  disabled={loading}
-                  type="submit"
-                  className="flex items-center justify-center focus:outline-none text-slate-500 text-sm bg-slate-200 rounded-lg md:rounded md:py-2 px-3 py-3 w-full transition duration-150 ease-in"
-                >
-                  <FontAwesomeIcon icon={faUser} />
-                  <span className="mr-2 flex-1">Login with Facebook</span>
-                </button>
-              </div>
+             
               {/* End Social Button */}
 
               {/* Register Link */}

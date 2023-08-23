@@ -5,8 +5,12 @@ import { GoogleAuthProvider, getAuth, signInWithEmailAndPassword, signInWithPopu
 import { FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { auth, db } from "../../../services/db";
-import { Timestamp, addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import { 
+  // Query, 
+  Timestamp,  addDoc, collection, getDocs, query, where } from "firebase/firestore";
+  
 import { User, UserConverter } from "../../Users/User";
+import { buildEmail } from "../../../utils/Utils";
 
 const LoginImage = "https://edp.raincode.my.id/static/media/login.cc0578413db10119a7ff.png";
 
@@ -16,7 +20,7 @@ function LoginIndex() {
   const navigate = useNavigate();
   const history = useNavigate();
   const [error, setError] = useState<any>(null);
-  const [email, setEmail] = useState("");
+  const [emailOrTel, setEmailOrTel] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -25,52 +29,117 @@ function LoginIndex() {
     setError(false);
     setLoading(true);
 
-    onSubmit(email, password);
+    onSubmit(emailOrTel, password);
   };
 
-  async function onSubmit(email: string, password: string) {
+  async function onSubmit(emailOrTel: string, password: string) {
 
     try {
-      const auth = getAuth();
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      setLoading(false);
+      setLoading(true);
+
+       emailOrTel = emailOrTel.includes('@') ? emailOrTel : buildEmail(emailOrTel);
+
+       const auth = getAuth();
+       const userCredential = await signInWithEmailAndPassword(
+         auth,
+         emailOrTel,
+         password
+       );
+
+       if(!userCredential.user) {
+         throw new Error(`User with ${emailOrTel} not found in database !`);
+       }
+     
+
       if (userCredential.user) {
         checkUserRoleAndRedirect(userCredential.user.email!);
       }
-    } catch (error: any) {
-      console.log(error.code);
+    
+    } catch (error: unknown) {
+      /*
+      console.log(error?.code);
       console.log(error.message);
+      */
+      console.log(error);
+
     }
   }
 
   // https://blog.logrocket.com/user-authentication-firebase-react-apps/
-  const checkUserRoleAndRedirect = async (email: string) => {
-    const q = query(collection(db, "users"), where("email", "==", email));
+  const checkUserRoleAndRedirect = async (emailOrTel: string) => {
+
+    // const user = await ( emailOrTel.includes('@') ? getUserByEmailInDB(emailOrTel) : getUserByTelInDB(emailOrTel) );
+
+
+
+    const q = query(collection(db, "users"), where("email", "==", emailOrTel));
     const querySnapshot = await getDocs(q);
 
+    
     let user: User = null;
+
+    switch (querySnapshot.size) {
+      case 0:
+        throw new Error(`User with ${emailOrTel} not found in database !`);
+      case 1:
+        user = UserConverter.fromFirestore(querySnapshot.docs[0]);
+
+        localStorage.setItem("user", JSON.stringify(user));
+
+        setLoading(false);
+        user!.roles?.includes('admin') ? navigate("/") : navigate("/onlineClients", { state: user });
+        window.location.reload();
+        break;
+        
+      default:
+        throw new Error(`Multiple users with the same ${emailOrTel} in database !`);
+    }
+
+    /*
     if (querySnapshot.size === 1) {
       querySnapshot.docs.map((doc) => {
         user = UserConverter.fromFirestore(doc)
       })
     }
-    localStorage.setItem("user", JSON.stringify(user));
+    */
 
-    setLoading(false);
-    user!.roles?.includes('admin') ? navigate("/") : navigate("/onlineClients", { state: user });
-    window.location.reload();
+ 
 
   }
 
-  const googleProvider = new GoogleAuthProvider();
+  
 
+  /*
+  const getUserByEmailInDB = async (email: string): Promise<User> => {    
+    const q = query(collection(db, "users"), where("email", "==", email.trim()));
+    return await getUserInDB(q, email);
+  }
+
+  const getUserByTelInDB = async (tel: string): Promise<User> => {    
+    const q = query(collection(db, "users"), where("tel", "==", tel.trim()));
+    return await getUserInDB(q, tel);
+  }
+  const getUserInDB =async (q: Query, emailOrTel: string): Promise<User> => {
+
+    const querySnapshot = await getDocs(q);
+    let user: User = null;
+    switch (querySnapshot.size) {
+      case 0:
+        throw new Error(`User with ${emailOrTel} not found in database !`);
+      case 1:
+        user = UserConverter.fromFirestore(querySnapshot.docs[0])
+        break;
+      default:
+        throw new Error(`Multiple users with the same ${emailOrTel} in database !`);
+    }
+    return user;
+  }
+
+  */
   const signInWithGoogle = async () => {
     setLoading(true);
     try {
+      const googleProvider = new GoogleAuthProvider();
       const res = await signInWithPopup(auth, googleProvider);
       const user = res.user;
       const q = query(collection(db, "users"), where("email", "==", user.email));
@@ -170,9 +239,9 @@ function LoginIndex() {
                         id="email"
                         type="text"
                         name="email"
-                        onChange={(e) => setEmail(e.target.value)}
+                        onChange={(e) => setEmailOrTel(e.target.value)}
                         className="text-sm placeholder-gray-500 pl-10 pr-4 rounded-lg border border-gray-400 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400"
-                        placeholder="E-Mail Address"
+                        placeholder="Email ou Tel"
                       />
                     </div>
                     {error?.email && (
@@ -258,16 +327,7 @@ function LoginIndex() {
                   </span>
                 </button>
               </div>
-              <div className="flex justify-between w-full mt-2">
-                <button
-                  disabled={loading}
-                  type="submit"
-                  className="flex items-center justify-center focus:outline-none text-slate-500 text-sm bg-slate-200 rounded-lg md:rounded md:py-2 px-3 py-3 w-full transition duration-150 ease-in"
-                >
-                  {/* <FontAwesomeIcon icon={faFacebook} /> */}
-                  <span className="mr-2 flex-1">Login with Facebook</span>
-                </button>
-              </div>
+            
               {/* End Social Button */}
 
               {/* Register Link */}

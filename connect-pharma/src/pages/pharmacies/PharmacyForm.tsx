@@ -83,7 +83,7 @@ export default function PharmacyForm({ onSubmit, initialPharmacyData, isLoading 
                                 className="text-sm placeholder-gray-500 px-4 rounded-lg border border-gray-200 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400 mt-1"
                                 placeholder="email"
                                 ref={emailRef}
-                                required
+                                // required
                                 defaultValue={initialPharmacyData.email}
 
                             />

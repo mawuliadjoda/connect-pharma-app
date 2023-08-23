@@ -4,8 +4,9 @@ import { Pharmacy } from "./Pharmacy";
 import { GeoPoint, addDoc, collection } from "firebase/firestore";
 import { getDb } from "../../services/db";
 import PharmacyForm from "./PharmacyForm";
-import { convertToENecimal } from "../../utils/Utils";
+import { buildEmail, convertToENecimal } from "../../utils/Utils";
 import { useEffect, useState } from "react";
+import { formatPhoneNumber } from './../../utils/Utils';
 
 
 export {};
@@ -35,7 +36,7 @@ export default function AddPharmacy() {
         isActive: false,
         location: new GeoPoint(latitudeNumber, longitudeNumber),
         name: '',
-        tel: userTelephone ? userTelephone : '',
+        tel: userTelephone ? formatPhoneNumber(userTelephone) : '',
     }
 
 
@@ -48,13 +49,28 @@ export default function AddPharmacy() {
         /*   Firebase v9    */
         const pharmaciesRef = collection(getDb(), 'pharmacies');
         setIsLoading(true);
+
+        let hasEmail: boolean = true;
+        
+        if (!pharmacy.email) {
+            pharmacy.email = buildEmail(pharmacy.tel);
+            hasEmail = false;
+        }
+        
+
         addDoc(pharmaciesRef, pharmacy)
             .then(() => {
                 setIsLoading(false);
                 navigate(`/nearestPharmacies/${latitude}/${longitude}/${userTelephone}`);
                 console.log("Data sucessfuly submitted");
 
-                tele.sendData('Votre pharmacie a été bien enregistrer dans notre système ! ');
+                const data = {
+                    message: 'Votre pharmacie a été bien enregistrer dans notre système ! ',
+                    email: pharmacy.email,
+                    tel: formatPhoneNumber(userTelephone!),
+                    hasEmail: hasEmail
+                }
+                tele.sendData(JSON.stringify(data));
 
             })
             .catch((error) => {

@@ -95,7 +95,7 @@ function App() {
           <Route path="/pharmacies/add/:latitude/:longitude/:userTelephone" element={<AddPharmacy />} />
           <Route path="/*" element={<NotFound />}></Route>
 
-          <Route path="/auth/register" element={<RegisterIndex />}></Route>
+          <Route path="/auth/register/:userTelephone/:userEmail" element={<RegisterIndex />}></Route>
           <Route path="/auth/login" element={<LoginIndex />}></Route>
           <Route path="/reset/password" element={<ForgotPassword />}></Route>
         </Routes>
