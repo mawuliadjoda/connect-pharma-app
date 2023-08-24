@@ -17,7 +17,7 @@ import EditUser from "./pages/Users/EditUser";
 import LoginIndex from "./pages/auth/Login";
 // import PharmacyList from "./pages/pharmacies/PharmacyList";
 import AddPharmacy from "./pages/pharmacies/AddPharmacy";
-import NearestPharmacies from "./pages/pharmacies/NearestPharmacies";
+import NearestPharmacies from "./pages/pharmacies/NearestPharmacies/NearestPharmacies";
 import PopulatePharmacies from "./pages/pharmacies/PopulatePharmacies";
 import PrivateRoutes from "./utils/PrivateRoutes";
 import ForgotPassword from "./pages/auth/ForgotPassword";

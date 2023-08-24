@@ -4,18 +4,18 @@ import {
     useState,
     useMemo
 } from "react";
-import { Pharmacy, PharmacyConverter } from "./Pharmacy";
-import { Loading } from "../../utils/Loading";
-import PharmacyTable from "./PharmacyTable";
+import { Pharmacy, PharmacyConverter } from "../Pharmacy";
+import { Loading } from "../../../utils/Loading";
+import PharmacyTable from "../PharmacyTable";
 // import Navbar from "../../components/Navbar/Index";
-import { applyHaversine, getNearPharmacies } from "../../services/LocationService";
+import { applyHaversine, getNearPharmacies } from "../../../services/LocationService";
 import { Coordinate } from "calculate-distance-between-coordinates";
-import { convertToENecimal, formatPhoneNumber, formatToSimpleDateWithSeconds } from "../../utils/Utils";
+import { convertToENecimal, formatPhoneNumber, formatToSimpleDateWithSeconds } from "../../../utils/Utils";
 import { GeoPoint, Timestamp, addDoc, collection, limit, onSnapshot, orderBy, query, where } from "firebase/firestore";
-import { getDb } from "../../services/db";
-import { customPaginate } from "./util/PaginateCalculator";
-import PharmacyPagination from "./util/PharmacyPagination";
-import { ClientAction, ClientHistory } from "../ClientHistory/ClientHistory";
+import { getDb } from "../../../services/db";
+import { customPaginate } from "../util/PaginateCalculator";
+import { ClientAction, ClientHistory } from "../../ClientHistory/ClientHistory";
+import NearestPaginator from "./NearestPaginator";
 
 
 
@@ -93,9 +93,7 @@ export default function NearestPharmacies() {
 
     }, []);
 
-    const getNext = (pharmacy: Pharmacy) => {
-        console.log(pharmacy);
-
+    const getNext = () => {
         setDisableNextButton(true);
         if (pharmaciesMap?.get(page + 1)) {
             setDisableNextButton(false);
@@ -105,8 +103,7 @@ export default function NearestPharmacies() {
         setDisablePreviousButton(false);
     }
 
-    const getPrevious = (pharmacy: Pharmacy) => {
-        console.log(pharmacy);
+    const getPrevious = () => {
 
         setDisablePreviousButton(true);
         if (pharmaciesMap?.get(page - 1)) {
@@ -236,10 +233,9 @@ export default function NearestPharmacies() {
                             !searchQuery &&
                             <div>
                                 <div className="border w-full border-gray-200 bg-white py-4 px-6 rounded-md grid place-items-center ">
-                                    <PharmacyPagination
+                                    <NearestPaginator
                                         getNext={getNext}
                                         getPrevious={getPrevious}
-                                        pharmacies={pharmacies}
                                         page={page}
                                         disableNextButton={disableNextButton}
                                         disablePreviousButton={disablePreviousButton}
