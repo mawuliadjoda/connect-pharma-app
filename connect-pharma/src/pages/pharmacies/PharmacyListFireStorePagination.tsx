@@ -24,7 +24,7 @@ import PharmacyPagination from "./util/PharmacyPagination";
 
 
 const LIMIT_PER_PAGE = 10;
-export default function PharmacyListPagination() {
+export default function PharmacyListFireStorePagination() {
     const [sidebarToggle] = useOutletContext<any>();
     const [loading, setLoading] = useState(true);
     const [pharmacies, setPharmacies] = useState<Pharmacy[]>([]);

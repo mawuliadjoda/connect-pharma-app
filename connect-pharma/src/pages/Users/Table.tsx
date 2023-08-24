@@ -26,7 +26,7 @@ const Table = () => {
      https://firebase.google.com/docs/firestore/query-data/query-cursors?hl=fr#paginate_a_query
      https://firebase.google.com/docs/firestore/manage-data/transactions?hl=fr
      */
-    const q = query(usersRef, where("name", "!=", null), orderBy("name", "asc"), limit(50));
+    const q = query(usersRef, where("createTime", "!=", null), orderBy("createTime", "desc"), limit(50));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const newUsers: User[] = [];
       querySnapshot.forEach((doc) => {
