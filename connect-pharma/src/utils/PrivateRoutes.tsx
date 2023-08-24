@@ -34,7 +34,7 @@ const PrivateRoutes = () => {
         }
       }, []);
    
-    return conectedUser  ?  <UserContext.Provider value={conectedUser}>   <Outlet />  </UserContext.Provider> : <LoginIndex />;
+    return conectedUser?.roles  ?  <UserContext.Provider value={conectedUser}>   <Outlet />  </UserContext.Provider> : <LoginIndex />;
 }
 
 export default PrivateRoutes

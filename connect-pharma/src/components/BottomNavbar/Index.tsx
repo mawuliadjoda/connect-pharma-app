@@ -10,6 +10,7 @@ import { useMemo, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import "./style.css";
 import { useEffect } from "react";
+import { onLogout } from "../../services/db";
 
 function Index() {
   const menus = useMemo(
@@ -58,6 +59,13 @@ function Index() {
     setActive(menus.findIndex((x) => x.link === pathname));
   }, [pathname, menus]);
 
+  const handleClik = (index: number, link: string) => {
+    setActive(index);
+    if("/auth/login" === link) {
+      onLogout();
+    }
+  } 
+
   return (
     <div className="md:hidden flex justify-center fixed bottom-0 w-full bg-white left-0 z-20 h-16">
       <div className="flex text-gray-600 relative">
@@ -70,7 +78,7 @@ function Index() {
           <NavLink
             key={index}
             to={menu.link}
-            onClick={() => setActive(index)}
+            onClick={() => handleClik(index, menu.link)}
             className="buttonNavbarBottom"
           >
             <span

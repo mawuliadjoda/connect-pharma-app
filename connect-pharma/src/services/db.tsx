@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import {getFirestore} from "firebase/firestore";
-import { getAuth, signOut } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
 
@@ -30,16 +30,24 @@ export default app;
 // const db = getFirestore(app);
 
 
+/*
 const logout = () => {
     localStorage.removeItem("user");
     signOut(auth);
     auth.signOut();
 };
+*/
+
+function onLogout() {
+    auth.signOut();
+    // localStorage.removeItem("user");
+    localStorage.clear();
+}
 
 
 export {
     auth,
     db,
     // signInWithGoogle,
-    logout,
+    onLogout,
 };

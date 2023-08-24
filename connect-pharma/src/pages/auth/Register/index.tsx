@@ -2,14 +2,25 @@
 import { faEnvelope, faLock, faPhone, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { UserCredential, createUserWithEmailAndPassword, getAuth } from "firebase/auth";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { User } from "../../Users/User";
 import { Timestamp, addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { db, getDb } from "../../../services/db";
 import { buildEmail } from "../../../utils/Utils";
 import { formatPhoneNumber } from './../../../utils/Utils';
+import { WebAppData, WebAppDataStep } from "../../../utils/WebAppData";
 
+
+export {};
+
+declare global {
+  interface Window {
+    Telegram: any; // 👈️ turn off type checking
+  }
+}
+
+const tele = window.Telegram.WebApp;
 
 function RegisterIndex() {
   const navigate = useNavigate();
@@ -24,6 +35,10 @@ function RegisterIndex() {
   const [email, setEmail] = useState(userEmail!.replace(",", "."));
   const [tel, setTel] = useState(userTelephone ? formatPhoneNumber(userTelephone) : '');
 
+
+  useEffect(() => {
+    tele.ready();
+  });
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -82,7 +97,20 @@ function RegisterIndex() {
     const usersRef = collection(getDb(), 'users');
     addDoc(usersRef, user)
       .then(() => {
-        setLoading(true);
+        setLoading(false);
+
+        // send this data to bot
+        const data: WebAppData = {
+          message: 'Votre compte a été bien créé dans notre système ! ',
+          email: email,
+          tel: formatPhoneNumber(tel),
+          hasEmail: true, 
+          frontendUrl: 'https://connect-pharma-911ea.web.app',
+          step: WebAppDataStep.LOGIN
+        }
+        tele.sendData(JSON.stringify(data));
+
+        //
         navigate("/auth/login");
         console.log("Data sucessfuly submitted")
       })

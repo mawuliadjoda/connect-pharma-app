@@ -7,6 +7,7 @@ import PharmacyForm from "./PharmacyForm";
 import { buildEmail, convertToENecimal } from "../../utils/Utils";
 import { useEffect, useState } from "react";
 import { formatPhoneNumber } from './../../utils/Utils';
+import { WebAppData, WebAppDataStep } from "../../utils/WebAppData";
 
 
 export {};
@@ -64,11 +65,12 @@ export default function AddPharmacy() {
                 navigate(`/nearestPharmacies/${latitude}/${longitude}/${userTelephone}`);
                 console.log("Data sucessfuly submitted");
 
-                const data = {
+                const data: WebAppData = {
                     message: 'Votre pharmacie a été bien enregistrer dans notre système ! ',
                     email: pharmacy.email,
                     tel: formatPhoneNumber(userTelephone!),
-                    hasEmail: hasEmail
+                    hasEmail: hasEmail,
+                    step: WebAppDataStep.CREATE_ACOUNT
                 }
                 tele.sendData(JSON.stringify(data));
 

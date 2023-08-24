@@ -7,7 +7,7 @@ import SidebarLogo from "./SidebarLogo.jsx";
 import SidebarSearch from "./SidebarSearch.tsx";
 import MenuList from "./MenuList.tsx";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../../services/db.tsx";
+import { onLogout } from "../../services/db.tsx";
 
 function Sidebar({ ...props }) {
   const navigate = useNavigate();
@@ -36,14 +36,11 @@ function Sidebar({ ...props }) {
   };
 
   const logout = () => {
-    localStorage.removeItem("user");
     onLogout();
     navigate("/auth/login");
   };
 
-  function onLogout() {
-    auth.signOut();
-  }
+
 
   return (
     <>
@@ -70,7 +67,6 @@ function Sidebar({ ...props }) {
           {/* Profile */}
           <div className="pt-2 border-t border-gray-300">
             <div className="py-2 px-4">
-              {/* Logout Button */}
               <button
                 className="py-2 px-4 border border-emerald-500 bg-emerald-600 w-full rounded-full text-gray-200 hover:bg-emerald-600 hover:border-emerald-600 justify-end text-sm"
                 onClick={() => logout()}
@@ -79,6 +75,7 @@ function Sidebar({ ...props }) {
               </button>
             </div>
           </div>
+          
         </div>
       </aside>
 
