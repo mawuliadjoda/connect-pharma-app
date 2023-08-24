@@ -32,7 +32,7 @@ function RegisterIndex() {
   const [loading, setLoading] = useState(false);
 
   const { userTelephone, userEmail } = useParams();
-  const [email, setEmail] = useState(userEmail!.replace(",", "."));
+  const [email, setEmail] = useState(userEmail!.replaceAll(",", "."));
   const [tel, setTel] = useState(userTelephone ? formatPhoneNumber(userTelephone) : '');
 
 
@@ -254,6 +254,7 @@ function RegisterIndex() {
                         onChange={(e) => setPassword(e.target.value)}
                         className="text-sm placeholder-gray-500 pl-10 pr-4 rounded-lg border border-gray-400 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400"
                         placeholder="Mot de passe"
+                        required
                       />
                     </div>
 
@@ -273,6 +274,7 @@ function RegisterIndex() {
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         className="text-sm placeholder-gray-500 pl-10 pr-4 rounded-lg border border-gray-400 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400"
                         placeholder="Ressaisir le mot de passe"
+                        required
                       />
                     </div>
 
