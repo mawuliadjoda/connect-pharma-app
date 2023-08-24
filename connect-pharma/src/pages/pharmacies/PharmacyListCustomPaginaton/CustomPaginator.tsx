@@ -10,7 +10,7 @@ type CustomPaginationProps = {
     disablePreviousButton: boolean
 }
 
-export default function CustomPagination({ getNext, getPrevious, page, disableNextButton, disablePreviousButton }: CustomPaginationProps) {
+export default function CustomPaginator({ getNext, getPrevious, page, disableNextButton, disablePreviousButton }: CustomPaginationProps) {
 
     return (
         <nav aria-label="Page navigation example">

@@ -8,10 +8,10 @@ import Navbar from './../../../components/Navbar/Index';
 import { Loading } from "../../../utils/Loading";
 import PharmacyTable from "../PharmacyTable";
 import { customPaginate } from "../util/PaginateCalculator";
-import CustomPagination from "./CustomPagination";
+import CustomPaginator from "./CustomPaginator";
 
 
-const LIMIT_PER_PAGE = 5;
+const LIMIT_PER_PAGE = 10;
 
 const PharmacyListCustomPaginaton = () => {
     const [sidebarToggle] = useOutletContext<any>();
@@ -25,6 +25,7 @@ const PharmacyListCustomPaginaton = () => {
 
     const [disableNextButton, setDisableNextButton] = useState(true);
     const [disablePreviousButton, setDisablePreviousButton] = useState(true);
+
 
     const filteredPharmacies = useMemo(() => {
         return allPharmacies.map(pharmacy => pharmacy).filter(pharmacy => {
@@ -122,38 +123,26 @@ const PharmacyListCustomPaginaton = () => {
 
 
                     <div className="border w-full border-gray-200 bg-white py-4 px-6 rounded-md">
+
+                        <PharmacyTable
+                            loading={loading}
+                            dataHeader={dataHeader}
+                            data={searchQuery ? filteredPharmacies : pharmacies}
+                            isClient={false}
+                        />
                         {
-                            searchQuery ?
-                                <PharmacyTable
-                                    loading={loading}
-                                    dataHeader={dataHeader}
-                                    data={filteredPharmacies}
-                                    isClient={false}
+                            !searchQuery &&
+                            <div className="border w-full border-gray-200 bg-white py-4 px-6 rounded-md grid place-items-center ">
+
+                                <CustomPaginator
+                                    getNext={getNext}
+                                    getPrevious={getPrevious}
+                                    page={page}
+                                    disableNextButton={disableNextButton}
+                                    disablePreviousButton={disablePreviousButton}
+
                                 />
-                                :
-                                <div>
-                                    <PharmacyTable
-                                        loading={loading}
-                                        dataHeader={dataHeader}
-                                        data={pharmacies}
-                                        isClient={false}
-                                    />
-                                    <div className="border w-full border-gray-200 bg-white py-4 px-6 rounded-md grid place-items-center ">
-
-                                        <CustomPagination
-                                            getNext={getNext}
-                                            getPrevious={getPrevious}
-                                            page={page}
-                                            disableNextButton={disableNextButton}
-                                            disablePreviousButton={disablePreviousButton}
-
-                                        />
-                                    </div>
-
-                                    <br></br>
-                                    <br></br>
-                                    <br></br>
-                                </div>
+                            </div>
                         }
 
                     </div>
