@@ -17,6 +17,8 @@ import { customPaginate } from "../util/PaginateCalculator";
 import { ClientAction, ClientHistory } from "../../ClientHistory/ClientHistory";
 import NearestPaginator from "./NearestPaginator";
 
+import Fuse  from "fuse.js";
+
 
 
 // https://gps-coordinates.org/my-location.php
@@ -43,17 +45,42 @@ export default function NearestPharmacies() {
     const [disablePreviousButton, setDisablePreviousButton] = useState(true);
 
 
+    /*
     const filteredPharmacies = useMemo(() => {
         return allPharmacies.map(pharmacy => pharmacy).filter(pharmacy => {
             return pharmacy.name.toLowerCase().includes(searchQuery.toLowerCase());
         })
     }, [allPharmacies, searchQuery]);
+    */
 
+    // https://www.fusejs.io/demo.html
+    const filteredPharmacies = useMemo(() => {
 
-    // const latitudeNumber: number =  convertToENecimal(latitude);
-    // const longitudeNumber: number = convertToENecimal(longitude);
+        const fuseOptions = {
+            // isCaseSensitive: false,
+            // includeScore: false,
+            shouldSort: true,
+            // includeMatches: false,
+            // findAllMatches: false,
+            // minMatchCharLength: 1,
+            // location: 0,
+            // threshold: 0.6,
+            // distance: 100,
+            // useExtendedSearch: false,
+            // ignoreLocation: false,
+            // ignoreFieldNorm: false,
+            // fieldNormWeight: 1,
+            keys: [
+                "name",
+            ]
+        };
+        const fuse = new Fuse(allPharmacies, fuseOptions);
+        const result = fuse.search(searchQuery).map(line => line.item);
+        return result;
+        
+    }, [allPharmacies, searchQuery]);
 
-
+  
     const latitudeNumber: number = useMemo(() => {
         return convertToENecimal(latitude);
     }, [latitude]);
@@ -102,6 +129,7 @@ export default function NearestPharmacies() {
 
 
     }, []);
+
 
     const getNext = () => {
         setDisableNextButton(true);
