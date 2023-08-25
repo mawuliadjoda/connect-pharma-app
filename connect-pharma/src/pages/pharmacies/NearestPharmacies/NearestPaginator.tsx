@@ -16,8 +16,6 @@ export default function NearestPaginator({ getNext, getPrevious, page, disableNe
             <ul className="list-style-none flex">
                 <li>
 
-
-
                     <a onClick={getPrevious}
                         className={disablePreviousButton ? "disabledLink relative block rounded bg-transparent px-3 py-1.5 text-sm text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white" : "relative block rounded bg-transparent px-3 py-1.5 text-sm text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white"}
                         href="#!">

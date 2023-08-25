@@ -28,7 +28,7 @@ const USER_LOCATION: Coordinate = {
     lon: 1.1449074
 };
 */
-
+const unexpectedWordInSearchQuery = 'pharmacie';
 const LIMIT_PER_PAGE = 10;
 export default function NearestPharmacies() {
     // const [sidebarToggle] = useOutletContext<any>();
@@ -55,7 +55,9 @@ export default function NearestPharmacies() {
 
     // https://www.fusejs.io/demo.html
     const filteredPharmacies = useMemo(() => {
-
+        
+        const search = searchQuery.toLowerCase().includes(unexpectedWordInSearchQuery) ? searchQuery.toLowerCase().replace(unexpectedWordInSearchQuery, '') : searchQuery
+   
         const fuseOptions = {
             // isCaseSensitive: false,
             // includeScore: false,
@@ -75,7 +77,7 @@ export default function NearestPharmacies() {
             ]
         };
         const fuse = new Fuse(allPharmacies, fuseOptions);
-        const result = fuse.search(searchQuery).map(line => line.item);
+        const result = fuse.search(search).map(line => line.item);
         return result;
         
     }, [allPharmacies, searchQuery]);
@@ -151,7 +153,6 @@ export default function NearestPharmacies() {
         }
 
         setDisableNextButton(false);
-        console.log(disablePreviousButton);
     }
 
     // https://signal.me/#p/+41794997040
