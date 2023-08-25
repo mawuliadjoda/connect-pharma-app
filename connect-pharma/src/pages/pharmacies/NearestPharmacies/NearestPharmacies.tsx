@@ -52,16 +52,16 @@ export default function NearestPharmacies() {
 
     // const latitudeNumber: number =  convertToENecimal(latitude);
     // const longitudeNumber: number = convertToENecimal(longitude);
-    
-    
-    const latitudeNumber: number =  useMemo( () => {
+
+
+    const latitudeNumber: number = useMemo(() => {
         return convertToENecimal(latitude);
     }, [latitude]);
 
-    const longitudeNumber: number = useMemo( () => {
+    const longitudeNumber: number = useMemo(() => {
         return convertToENecimal(longitude);
     }, [longitude]);
-    
+
 
     useEffect(() => {
         setLoading(true);
@@ -173,7 +173,7 @@ export default function NearestPharmacies() {
             pharmacyPhoneNumber: formatPhoneNumber(pharmacy.tel!),
             pharmacyEmail: pharmacy.email,
             pharmacyName: pharmacy.name,
-            
+
             clientLocation: new GeoPoint(latitudeNumber, longitudeNumber),
             pharmacyLocation: pharmacy.location,
 
@@ -205,7 +205,17 @@ export default function NearestPharmacies() {
 
                 {loading ?
 
-                    <Loading /> :
+
+                    <div className="my-24">
+                        <Loading message="Moteur de calcul en cours d'exécution ..." />
+                    </div>
+                    // <div className="h-screen  w-full flex justify-center items-center">
+                    //     <div className="w-100 h-100">
+                    //     <Loading message="Moteur de calcul en cours d'exécution ..." />
+                    //     </div>
+                    // </div>
+
+                    :
 
                     <div className="mainCard">
                         <button
