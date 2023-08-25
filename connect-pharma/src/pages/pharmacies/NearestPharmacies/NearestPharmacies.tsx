@@ -40,7 +40,7 @@ export default function NearestPharmacies() {
     const [searchQuery, setSearchQuery] = useState("");
     const [page, setPage] = useState(1);
     const [disableNextButton, setDisableNextButton] = useState(false);
-    const [disablePreviousButton, setDisablePreviousButton] = useState(false);
+    const [disablePreviousButton, setDisablePreviousButton] = useState(true);
 
 
     const filteredPharmacies = useMemo(() => {
