@@ -201,13 +201,18 @@ const OnLineClients = ({ showAllClient, title }: OnLineClientsProp) => {
         <>
             <main className="h-full">
                 <Navbar toggle={sidebarToggle} />
-                <div className="mainCard">
 
-                    {loading ? <Loading />
+                {
+                    loading 
 
-                        :
+                    ?
 
-                        <div>
+                    <Loading />
+
+                    :
+
+                    <div className="mainCard">
+                         <div>
                             <button
                                 className="py-2 px-4 border border-emerald-500 bg-emerald-600 w-full rounded-full text-gray-200 hover:bg-emerald-600 hover:border-emerald-600 justify-end text-sm">
                                 {title}
@@ -253,11 +258,10 @@ const OnLineClients = ({ showAllClient, title }: OnLineClientsProp) => {
                             }
 
                         </div>
-
-
-                    }
-
-                </div>
+                    </div>
+                    
+                }
+          
             </main>
         </>
     )
