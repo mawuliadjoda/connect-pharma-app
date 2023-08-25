@@ -50,7 +50,7 @@ export default function PharmacyTable({ loading, dataHeader, data, openWhatsapp,
                             {
                                 isClient &&
                                 <TableCell dataLabel="distance" showLabel={isClient}>
-                                    <p className="font-normal text-sm text-gray-500">{row.distanceStr} km</p>
+                                    <p className="font-normal text-sm text-gray-500">{row.distanceStr}</p>
                                 </TableCell>
                             }
 

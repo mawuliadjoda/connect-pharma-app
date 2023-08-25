@@ -15,7 +15,7 @@ export function applyHaversine(pharmacies: Pharmacy[], userLocation: Coordinate)
             lon: pharmacy.location.longitude
         };
         pharmacy.distance = getDistanceBetweenTwoPoints(userLocation, placeLocation,unitKm);
-        pharmacy.distanceStr = getDistanceBetweenTwoPoints(userLocation, placeLocation,unitKm).toFixed(2);
+        pharmacy.distanceStr = `${getDistanceBetweenTwoPoints(userLocation, placeLocation,unitKm).toFixed(2)} ${unitKm}`;
     });
 
     return pharmacies;
