@@ -1,3 +1,4 @@
+import { GeoPoint } from "firebase/firestore";
 import { Pharmacy } from "../pages/pharmacies/Pharmacy";
 import { Coordinate, getDistanceBetweenTwoPoints } from "calculate-distance-between-coordinates";
 
@@ -24,4 +25,31 @@ export function getNearPharmacies(pharmacies: Pharmacy[]) {
     return pharmacies.sort((pharmacyA, pharmacyB) => {
         return pharmacyA.distance! - pharmacyB.distance!;
     });
+}
+
+
+
+export function distanceBetweenTwoPlace(pharmacyLocation: GeoPoint, userLocation: GeoPoint) {
+
+    const pharmacyCoordinate: Coordinate  = {
+        lat: pharmacyLocation.latitude,
+        lon: pharmacyLocation.longitude
+    };
+
+    const userCoordinate: Coordinate  = {
+        lat: userLocation.latitude,
+        lon: userLocation.longitude
+    };
+
+    const distanceBetween : DistanceData = {
+        distance: getDistanceBetweenTwoPoints(userCoordinate, pharmacyCoordinate,unitKm),
+        distanceStr: `${getDistanceBetweenTwoPoints(userCoordinate, pharmacyCoordinate,unitKm).toFixed(2)} ${unitKm}`
+    }
+
+    return distanceBetween;
+}
+
+export type DistanceData = {
+    distance: number,
+    distanceStr: string
 }

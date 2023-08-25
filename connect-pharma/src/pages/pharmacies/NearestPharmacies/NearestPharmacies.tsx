@@ -62,7 +62,7 @@ export default function NearestPharmacies() {
         return convertToENecimal(longitude);
     }, [longitude]);
     
-    
+
     useEffect(() => {
         setLoading(true);
 
@@ -136,7 +136,8 @@ export default function NearestPharmacies() {
             pharmacyPhoneNumber: formatPhoneNumber(pharmacy.tel),
             pharmacyEmail: pharmacy.email,
             pharmacyName: pharmacy.name,
-            location: new GeoPoint(latitudeNumber, longitudeNumber),
+            clientLocation: new GeoPoint(latitudeNumber, longitudeNumber),
+            pharmacyLocation: pharmacy.location,
             createTime: Timestamp.now(),
             createTimeFormat: formatToSimpleDateWithSeconds(Timestamp.now().toDate()),
             action: ClientAction.CLICK_WHATSAPP
@@ -154,7 +155,8 @@ export default function NearestPharmacies() {
             pharmacyPhoneNumber: formatPhoneNumber(pharmacy.tel),
             pharmacyEmail: pharmacy.email,
             pharmacyName: pharmacy.name,
-            location: new GeoPoint(latitudeNumber, longitudeNumber),
+            clientLocation: new GeoPoint(latitudeNumber, longitudeNumber),
+            pharmacyLocation: pharmacy.location,
             createTime: Timestamp.now(),
             createTimeFormat: formatToSimpleDateWithSeconds(Timestamp.now().toDate()),
             action: ClientAction.CLICK_TELEGRAM
@@ -171,7 +173,10 @@ export default function NearestPharmacies() {
             pharmacyPhoneNumber: formatPhoneNumber(pharmacy.tel!),
             pharmacyEmail: pharmacy.email,
             pharmacyName: pharmacy.name,
-            location: new GeoPoint(latitudeNumber, longitudeNumber),
+            
+            clientLocation: new GeoPoint(latitudeNumber, longitudeNumber),
+            pharmacyLocation: pharmacy.location,
+
             createTime: Timestamp.now(),
             createTimeFormat: formatToSimpleDateWithSeconds(Timestamp.now().toDate()),
             action: ClientAction.CLICK_MAP

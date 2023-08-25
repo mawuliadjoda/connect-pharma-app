@@ -275,6 +275,10 @@ const dataHeader = [
         label: "Tel",
     },
     {
+        key: "distance",
+        label: "Distance",
+    },
+    {
         key: "pharmacyName",
         label: "Pharmacie",
     },
