@@ -50,9 +50,19 @@ export default function NearestPharmacies() {
     }, [allPharmacies, searchQuery]);
 
 
-    const latitudeNumber: number = convertToENecimal(latitude);
-    const longitudeNumber: number = convertToENecimal(longitude);
+    // const latitudeNumber: number =  convertToENecimal(latitude);
+    // const longitudeNumber: number = convertToENecimal(longitude);
+    
+    
+    const latitudeNumber: number =  useMemo( () => {
+        return convertToENecimal(latitude);
+    }, [latitude]);
 
+    const longitudeNumber: number = useMemo( () => {
+        return convertToENecimal(longitude);
+    }, [longitude]);
+    
+    
     useEffect(() => {
         setLoading(true);
 
