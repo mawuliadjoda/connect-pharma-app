@@ -33,7 +33,9 @@ const HandleWebClientPhoneNumber = ({ latitude, longitude }: HandleWebClientPhon
 
     return (
         <>
-            <div className="mainCard">
+            {
+                latitude && longitude && 
+                <div className="mainCard">
                 <div className="border w-full border-gray-200 bg-white py-4 px-6 rounded-md">
                     <form>
                         <div>
@@ -74,6 +76,7 @@ const HandleWebClientPhoneNumber = ({ latitude, longitude }: HandleWebClientPhon
                     </form>
                 </div>
             </div>
+            }
         </>
     )
 }
