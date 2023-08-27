@@ -1,4 +1,3 @@
-import { useParams } from "react-router-dom";
 import {
     useEffect,
     useState,
@@ -10,7 +9,7 @@ import PharmacyTable from "../PharmacyTable";
 // import Navbar from "../../components/Navbar/Index";
 import { applyHaversine, getNearPharmacies } from "../../../services/LocationService";
 import { Coordinate } from "calculate-distance-between-coordinates";
-import { convertToENecimal, formatPhoneNumber, formatToSimpleDateWithSeconds } from "../../../utils/Utils";
+import { formatPhoneNumber, formatToSimpleDateWithSeconds } from "../../../utils/Utils";
 import { GeoPoint, Timestamp, addDoc, collection, limit, onSnapshot, orderBy, query, where } from "firebase/firestore";
 import { getDb } from "../../../services/db";
 import { customPaginate } from "../util/PaginateCalculator";
@@ -30,14 +29,20 @@ const USER_LOCATION: Coordinate = {
 */
 const unexpectedWordInSearchQuery = 'pharmacie';
 const LIMIT_PER_PAGE = 10;
-export default function NearestPharmacies() {
+
+type NearestPharmaciesProps = {
+    latitudeNumber: number, 
+    longitudeNumber: number, 
+    userTelephone: string
+}
+export default function NearestPharmacies({ latitudeNumber, longitudeNumber, userTelephone } : NearestPharmaciesProps) {
     // const [sidebarToggle] = useOutletContext<any>();
     const [loading, setLoading] = useState(true);
     const [pharmacies, setPharmacies] = useState<Pharmacy[]>([]);
     const [pharmaciesMap, setPharmaciesMap] = useState<Map<number, Pharmacy[]>>();
     const [allPharmacies, setAllPharmacies] = useState<Pharmacy[]>([]);
 
-    const { latitude, longitude, userTelephone } = useParams();
+    // const { latitude, longitude, userTelephone } = useParams();
 
     const [searchQuery, setSearchQuery] = useState("");
     const [page, setPage] = useState(1);
@@ -83,6 +88,7 @@ export default function NearestPharmacies() {
     }, [allPharmacies, searchQuery]);
 
   
+    /*
     const latitudeNumber: number = useMemo(() => {
         return convertToENecimal(latitude);
     }, [latitude]);
@@ -90,14 +96,15 @@ export default function NearestPharmacies() {
     const longitudeNumber: number = useMemo(() => {
         return convertToENecimal(longitude);
     }, [longitude]);
+    */
 
 
     useEffect(() => {
         setLoading(true);
 
         const userLocation: Coordinate = {
-            lat: latitudeNumber.valueOf(),
-            lon: longitudeNumber.valueOf()
+            lat: latitudeNumber,
+            lon: longitudeNumber
         }
 
         const usersRef = collection(getDb(), 'pharmacies');

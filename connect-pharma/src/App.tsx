@@ -17,7 +17,7 @@ import EditUser from "./pages/Users/EditUser";
 import LoginIndex from "./pages/auth/Login";
 // import PharmacyList from "./pages/pharmacies/PharmacyList";
 import AddPharmacy from "./pages/pharmacies/AddPharmacy";
-import NearestPharmacies from "./pages/pharmacies/NearestPharmacies/NearestPharmacies";
+// import NearestPharmacies from "./pages/pharmacies/NearestPharmacies/NearestPharmacies";
 import PopulatePharmacies from "./pages/pharmacies/PopulatePharmacies";
 import PrivateRoutes from "./utils/PrivateRoutes";
 import ForgotPassword from "./pages/auth/ForgotPassword";
@@ -25,6 +25,7 @@ import MyOnlineClient from "./pages/ClientHistory/MyOnlineClient";
 import AllOnlineClient from "./pages/ClientHistory/AllOnlineClient";
 // import PharmacyListFireStorePagination from "./pages/pharmacies/PharmacyListFireStorePagination";
 import PharmacyListCustomPaginaton from "./pages/pharmacies/PharmacyListCustomPaginaton";
+import NearestPharmaciesPage from "./pages/pharmacies/NearestPharmacies/NearestPharmaciesPage";
 
 
 
@@ -95,7 +96,7 @@ function App() {
           
           
           
-          <Route path="/nearestPharmacies/:latitude/:longitude/:userTelephone" element={<NearestPharmacies />} ></Route>
+          <Route path="/nearestPharmacies/:latitude?/:longitude?/:userTelephone?" element={<NearestPharmaciesPage />} ></Route>
           <Route path="/pharmacies/add/:latitude/:longitude/:userTelephone" element={<AddPharmacy />} />
           <Route path="/*" element={<NotFound />}></Route>
 
