@@ -1,5 +1,4 @@
 
-
 export type CallFromValue = '/nearestPharmacies' | '/pharmacies/add';
 
 export enum CallFromPageEnum {

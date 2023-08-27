@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { convertToENecimal } from "../../../utils/Utils";
 import AddPharmacy from "./AddPharmacy";
 import HandleWebClientPhoneNumber from "../HandleWebClientPhoneNumber/HandleWebClientPhoneNumber";
-import { CallFromPageEnum, CandRedirectMessageEnum } from "../util/UtilEnum";
+import { CallFromPageEnum, CandRedirectMessageEnum } from "../HandleWebClientPhoneNumber/UtilEnum";
 
 const AddPharmacyPage = () => {
 

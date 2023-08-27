@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import NearestPharmacies from "./NearestPharmacies";
 import { convertToENecimal } from "../../../utils/Utils";
 import HandleWebClientPhoneNumber from "../HandleWebClientPhoneNumber/HandleWebClientPhoneNumber";
-import { CallFromPageEnum, CandRedirectMessageEnum } from "../util/UtilEnum";
+import { CallFromPageEnum, CandRedirectMessageEnum } from "../HandleWebClientPhoneNumber/UtilEnum";
 
 
 
