@@ -1,11 +1,11 @@
 import { useNavigate } from "react-router-dom";
 // import Navbar from "../../components/Navbar/Index";
 import { Pharmacy } from "../Pharmacy";
-import { GeoPoint, addDoc, collection } from "firebase/firestore";
-import { getDb } from "../../../services/db";
+import { GeoPoint, addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import { db, getDb } from "../../../services/db";
 import PharmacyForm from "../PharmacyForm";
-import { 
-    buildEmail, 
+import {
+    buildEmail,
     // convertToENecimal 
 } from "../../../utils/Utils";
 import { useEffect, useMemo, useState } from "react";
@@ -13,19 +13,19 @@ import { formatPhoneNumber } from '../../../utils/Utils';
 import { WebAppData, WebAppDataStep } from "../../../utils/WebAppData";
 
 
-export {};
+export { };
 
 declare global {
-  interface Window {
-    Telegram: any; // 👈️ turn off type checking
-  }
+    interface Window {
+        Telegram: any; // 👈️ turn off type checking
+    }
 }
 
 const tele = window.Telegram.WebApp;
 
 type AddPharmacyProps = {
-    latitude: number, 
-    longitude: number, 
+    latitude: number,
+    longitude: number,
     userTelephone: string
 }
 export default function AddPharmacy({ latitude, longitude, userTelephone }: AddPharmacyProps) {
@@ -46,7 +46,7 @@ export default function AddPharmacy({ latitude, longitude, userTelephone }: AddP
     }, [longitude]);
     */
 
-    const initialPharmacyData: Pharmacy =  useMemo(() => {
+    const initialPharmacyData: Pharmacy = useMemo(() => {
         return {
             address: '',
             email: '',
@@ -56,32 +56,39 @@ export default function AddPharmacy({ latitude, longitude, userTelephone }: AddP
             tel: userTelephone ? formatPhoneNumber(userTelephone) : '',
         }
     }, [latitude, longitude, userTelephone]);
-    
-    
+
+
 
 
     useEffect(() => {
         tele.ready();
     });
 
-    const addPharmacy = (pharmacy: Pharmacy) => {
+    const addPharmacy = async (pharmacy: Pharmacy) => {
         console.log(userTelephone);
         /*   Firebase v9    */
         const pharmaciesRef = collection(getDb(), 'pharmacies');
         setIsLoading(true);
 
         let hasEmail: boolean = true;
-        
+
         if (!pharmacy.email) {
             pharmacy.email = buildEmail(pharmacy.tel);
             hasEmail = false;
         }
-        
+
+        /*  check tel  */
+        await checkExistPharmacy(pharmacy);
+        /*   end check tel */
+
 
         addDoc(pharmaciesRef, pharmacy)
             .then(() => {
                 setIsLoading(false);
-                navigate(`/nearestPharmacies/${latitude}/${longitude}/${userTelephone}`);
+                // navigate(`/nearestPharmacies/${latitude}/${longitude}/${userTelephone}`);
+                navigate(`/auth/register/${pharmacy.tel}/${pharmacy.email.replaceAll(`.`, `,`)}`);
+
+                
                 console.log("Data sucessfuly submitted");
 
                 const data: WebAppData = {
@@ -97,6 +104,33 @@ export default function AddPharmacy({ latitude, longitude, userTelephone }: AddP
             .catch((error) => {
                 console.log("Error adding document:", error);
             });
+    }
+
+    const checkExistPharmacy = async (pharmacy: Pharmacy) => {
+        setIsLoading(false);
+        const qTel = query(collection(db, "pharmacies"),
+            where("tel", "==", pharmacy.tel),
+        );
+        const docsTel = await getDocs(qTel);
+        if (docsTel.docs.length > 0) {
+            throw new Error(`Pharmacy with tel ${pharmacy.tel} already exist !`);
+        }
+
+        const qEmail = query(collection(db, "pharmacies"),
+            where("email", "==", pharmacy.email),
+        );
+        const docsEmail = await getDocs(qEmail);
+        if (docsEmail.docs.length > 0) {
+            throw new Error(`Pharmacy with email ${pharmacy.email} already exist !`);
+        }
+
+        const qName = query(collection(db, "pharmacies"),
+            where("name", "==", pharmacy.name)
+        );
+        const docsName = await getDocs(qName);
+        if (docsName.docs.length > 0) {
+            throw new Error(`Pharmacy with name ${pharmacy.name} already exist !`);
+        }
     }
 
     return (

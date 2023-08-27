@@ -30,7 +30,7 @@ const HandleWebClientPhoneNumber = ({ latitude, longitude, callFromPage, candRed
         console.log(telRef.current!.value);
 
         setCandRedirect(false);
-        if (telRef.current!.value.length === TEL_PHONE_NUMBER_LENGHT) {
+        if (telRef.current!.value.length === TEL_PHONE_NUMBER_LENGHT || telRef.current!.value.length === TEL_PHONE_NUMBER_LENGHT+1) {
             setCandRedirect(true);
         }
 
