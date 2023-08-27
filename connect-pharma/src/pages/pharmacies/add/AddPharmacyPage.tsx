@@ -1,13 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
-import NearestPharmacies from "./NearestPharmacies";
 import { convertToENecimal } from "../../../utils/Utils";
+import AddPharmacy from "./AddPharmacy";
 import HandleWebClientPhoneNumber from "../HandleWebClientPhoneNumber/HandleWebClientPhoneNumber";
 import { CallFromPageEnum, CandRedirectMessageEnum } from "../util/UtilEnum";
 
+const AddPharmacyPage = () => {
 
-
-const NearestPharmaciesPage = () => {
     const { latitude, longitude, userTelephone } = useParams();
 
     const [latitudeWeb, setLatitudeWeb] = useState<number | null>(null);
@@ -45,26 +44,6 @@ const NearestPharmaciesPage = () => {
             console.log('latitude && longitude && userTelephone probably passed to browser.');
         }
 
-        /*
-        if (!(latitude && longitude && userTelephone)) {
-
-            getUserLocationFromBrowser.then((userLocation: UserGeolocationCoordinates) => {
-
-                setLatitudeWeb(userLocation!.latitude);
-                setLongitudeWeb(userLocation!.longitude);
-
-                console.log(userLocation?.latitude);
-                console.log(userLocation?.longitude);
-
-            }).catch(error => {
-                console.error(error);
-            })
-
-        } else {
-            console.log('latitude && longitude && userTelephone probably passed to browser.');
-        }
-        */
-
 
     }, []);
 
@@ -73,7 +52,7 @@ const NearestPharmaciesPage = () => {
             {
                 (latitude && longitude && userTelephone)
                     ?
-                    <NearestPharmacies
+                    <AddPharmacy
                         latitude={latitudeNumber!}
                         longitude={longitudeNumber!}
                         userTelephone={userTelephone!}
@@ -82,12 +61,12 @@ const NearestPharmaciesPage = () => {
                     <HandleWebClientPhoneNumber
                         latitude={latitudeWeb!}
                         longitude={longitudeWeb!}
-                        callFromPage={CallFromPageEnum.NearestPharmaciesPage}
-                        candRedirectMessage={CandRedirectMessageEnum.FromNearestPharmaciesPage}
+                        callFromPage={CallFromPageEnum.AddPharmacy}
+                        candRedirectMessage={CandRedirectMessageEnum.FromAddPharmacy}
                     />
 
             }
         </>
     );
 }
-export default NearestPharmaciesPage;
+export default AddPharmacyPage;

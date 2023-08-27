@@ -31,11 +31,11 @@ const unexpectedWordInSearchQuery = 'pharmacie';
 const LIMIT_PER_PAGE = 10;
 
 type NearestPharmaciesProps = {
-    latitudeNumber: number, 
-    longitudeNumber: number, 
+    latitude: number, 
+    longitude: number, 
     userTelephone: string
 }
-export default function NearestPharmacies({ latitudeNumber, longitudeNumber, userTelephone } : NearestPharmaciesProps) {
+export default function NearestPharmacies({ latitude, longitude, userTelephone } : NearestPharmaciesProps) {
     // const [sidebarToggle] = useOutletContext<any>();
     const [loading, setLoading] = useState(true);
     const [pharmacies, setPharmacies] = useState<Pharmacy[]>([]);
@@ -89,11 +89,11 @@ export default function NearestPharmacies({ latitudeNumber, longitudeNumber, use
 
   
     /*
-    const latitudeNumber: number = useMemo(() => {
+    const latitude: number = useMemo(() => {
         return convertToENecimal(latitude);
     }, [latitude]);
 
-    const longitudeNumber: number = useMemo(() => {
+    const longitude: number = useMemo(() => {
         return convertToENecimal(longitude);
     }, [longitude]);
     */
@@ -103,8 +103,8 @@ export default function NearestPharmacies({ latitudeNumber, longitudeNumber, use
         setLoading(true);
 
         const userLocation: Coordinate = {
-            lat: latitudeNumber,
-            lon: longitudeNumber
+            lat: latitude,
+            lon: longitude
         }
 
         const usersRef = collection(getDb(), 'pharmacies');
@@ -172,7 +172,7 @@ export default function NearestPharmacies({ latitudeNumber, longitudeNumber, use
             pharmacyPhoneNumber: formatPhoneNumber(pharmacy.tel),
             pharmacyEmail: pharmacy.email,
             pharmacyName: pharmacy.name,
-            clientLocation: new GeoPoint(latitudeNumber, longitudeNumber),
+            clientLocation: new GeoPoint(latitude, longitude),
             pharmacyLocation: pharmacy.location,
             createTime: Timestamp.now(),
             createTimeFormat: formatToSimpleDateWithSeconds(Timestamp.now().toDate()),
@@ -191,7 +191,7 @@ export default function NearestPharmacies({ latitudeNumber, longitudeNumber, use
             pharmacyPhoneNumber: formatPhoneNumber(pharmacy.tel),
             pharmacyEmail: pharmacy.email,
             pharmacyName: pharmacy.name,
-            clientLocation: new GeoPoint(latitudeNumber, longitudeNumber),
+            clientLocation: new GeoPoint(latitude, longitude),
             pharmacyLocation: pharmacy.location,
             createTime: Timestamp.now(),
             createTimeFormat: formatToSimpleDateWithSeconds(Timestamp.now().toDate()),
@@ -210,7 +210,7 @@ export default function NearestPharmacies({ latitudeNumber, longitudeNumber, use
             pharmacyEmail: pharmacy.email,
             pharmacyName: pharmacy.name,
 
-            clientLocation: new GeoPoint(latitudeNumber, longitudeNumber),
+            clientLocation: new GeoPoint(latitude, longitude),
             pharmacyLocation: pharmacy.location,
 
             createTime: Timestamp.now(),

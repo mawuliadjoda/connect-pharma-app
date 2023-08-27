@@ -1,15 +1,20 @@
 import { FormEvent, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { CallFromPageEnum, CallFromValue } from "../util/UtilEnum";
+
 
 
 type HandleWebClientPhoneNumberProps = {
-    latitude: number
-    longitude: number
+    latitude: number,
+    longitude: number,
+    callFromPage: CallFromValue,
+    candRedirectMessage: string
 }
+const TEL_PHONE_NUMBER_LENGHT = 11;
 
-const HandleWebClientPhoneNumber = ({ latitude, longitude }: HandleWebClientPhoneNumberProps) => {
+const HandleWebClientPhoneNumber = ({ latitude, longitude, callFromPage, candRedirectMessage}: HandleWebClientPhoneNumberProps) => {
     const telRef = useRef<HTMLInputElement>(null);
-    const [showPharmacies, setShowPharmacies] = useState<boolean>(false);
+    const [candRedirect, setCandRedirect] = useState<boolean>(false);
 
     // function handleSubmit(e: FormEvent) {
     //     e.preventDefault();
@@ -24,9 +29,9 @@ const HandleWebClientPhoneNumber = ({ latitude, longitude }: HandleWebClientPhon
         console.log(longitude);
         console.log(telRef.current!.value);
 
-        setShowPharmacies(false);
-        if (telRef.current!.value.length === 11) {
-            setShowPharmacies(true);
+        setCandRedirect(false);
+        if (telRef.current!.value.length === TEL_PHONE_NUMBER_LENGHT) {
+            setCandRedirect(true);
         }
 
     };
@@ -57,18 +62,18 @@ const HandleWebClientPhoneNumber = ({ latitude, longitude }: HandleWebClientPhon
                         </div>
 
                         {
-                            showPharmacies &&
+                            candRedirect &&
                             <Link
                                 className="btn btn-primary"
                                 to={{
-                                    pathname: `/nearestPharmacies/${latitude}/${longitude}/${telRef.current!.value}`,
+                                    pathname: `${callFromPage === CallFromPageEnum.NearestPharmaciesPage ? CallFromPageEnum.NearestPharmaciesPage : CallFromPageEnum.AddPharmacy}/${latitude}/${longitude}/${telRef.current!.value}`,
                                     // state
                                 }}
                             >
                                 <div className="mt-6 flex flex-row gap-4">
                                     <button
                                         className="bg-emerald-600 text-gray-100 px-3 py-2 rounded-lg shadow-lg text-sm">
-                                        Voir les pharmacies proches
+                                        {candRedirectMessage}
                                     </button>
                                 </div>
                             </Link>

@@ -1,13 +1,16 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 // import Navbar from "../../components/Navbar/Index";
-import { Pharmacy } from "./Pharmacy";
+import { Pharmacy } from "../Pharmacy";
 import { GeoPoint, addDoc, collection } from "firebase/firestore";
-import { getDb } from "../../services/db";
-import PharmacyForm from "./PharmacyForm";
-import { buildEmail, convertToENecimal } from "../../utils/Utils";
-import { useEffect, useState } from "react";
-import { formatPhoneNumber } from './../../utils/Utils';
-import { WebAppData, WebAppDataStep } from "../../utils/WebAppData";
+import { getDb } from "../../../services/db";
+import PharmacyForm from "../PharmacyForm";
+import { 
+    buildEmail, 
+    // convertToENecimal 
+} from "../../../utils/Utils";
+import { useEffect, useMemo, useState } from "react";
+import { formatPhoneNumber } from '../../../utils/Utils';
+import { WebAppData, WebAppDataStep } from "../../../utils/WebAppData";
 
 
 export {};
@@ -20,25 +23,41 @@ declare global {
 
 const tele = window.Telegram.WebApp;
 
-export default function AddPharmacy() {
+type AddPharmacyProps = {
+    latitude: number, 
+    longitude: number, 
+    userTelephone: string
+}
+export default function AddPharmacy({ latitude, longitude, userTelephone }: AddPharmacyProps) {
     // const [sidebarToggle] = useOutletContext<any>();
     const [isLoading, setIsLoading] = useState(false);
 
-    const { latitude, longitude, userTelephone } = useParams();
+    // const { latitude, longitude, userTelephone } = useParams();
     const navigate = useNavigate();
 
 
-    const latitudeNumber: number = convertToENecimal(latitude);
-    const longitudeNumber: number = convertToENecimal(longitude);
+    /*
+    const latitudeNumber: number | null = useMemo(() => {
+        return latitude ? convertToENecimal(latitude) : null;
+    }, [latitude]);
 
-    const initialPharmacyData: Pharmacy = {
-        address: '',
-        email: '',
-        isActive: false,
-        location: new GeoPoint(latitudeNumber, longitudeNumber),
-        name: '',
-        tel: userTelephone ? formatPhoneNumber(userTelephone) : '',
-    }
+    const longitudeNumber: number | null = useMemo(() => {
+        return longitude ? convertToENecimal(longitude) : null;
+    }, [longitude]);
+    */
+
+    const initialPharmacyData: Pharmacy =  useMemo(() => {
+        return {
+            address: '',
+            email: '',
+            isActive: false,
+            location: new GeoPoint(latitude, longitude),
+            name: '',
+            tel: userTelephone ? formatPhoneNumber(userTelephone) : '',
+        }
+    }, [latitude, longitude, userTelephone]);
+    
+    
 
 
     useEffect(() => {
