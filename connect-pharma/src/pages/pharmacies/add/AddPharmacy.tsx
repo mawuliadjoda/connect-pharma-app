@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Pharmacy } from "../Pharmacy";
 import { GeoPoint, addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { db, getDb } from "../../../services/db";
-import PharmacyForm from "../PharmacyForm";
+import PharmacyForm from "../PharmacyForm/PharmacyForm";
 import {
     buildEmail,
     // convertToENecimal 

@@ -1,6 +1,6 @@
-import { Pharmacy } from "./Pharmacy"
-import Datatables from "../../components/Datatables/Table";
-import TableCell from "../../components/Datatables/TableCell";
+import { Pharmacy } from "../Pharmacy"
+import Datatables from "../../../components/Datatables/Table";
+import TableCell from "../../../components/Datatables/TableCell";
 import { Link } from "react-router-dom";
 import  "./PharmacyTable.css";
 

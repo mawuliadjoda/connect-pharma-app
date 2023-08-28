@@ -18,7 +18,7 @@ import LoginIndex from "./pages/auth/Login";
 // import PharmacyList from "./pages/pharmacies/PharmacyList";
 // import AddPharmacy from "./pages/pharmacies/add/AddPharmacy";
 // import NearestPharmacies from "./pages/pharmacies/NearestPharmacies/NearestPharmacies";
-import PopulatePharmacies from "./pages/pharmacies/PopulatePharmacies";
+import PopulatePharmacies from "./pages/pharmacies/Populate/PopulatePharmacies";
 import PrivateRoutes from "./utils/PrivateRoutes";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import MyOnlineClient from "./pages/ClientHistory/MyOnlineClient";
@@ -27,6 +27,7 @@ import AllOnlineClient from "./pages/ClientHistory/AllOnlineClient";
 import PharmacyListCustomPaginaton from "./pages/pharmacies/PharmacyListCustomPaginaton";
 import NearestPharmaciesPage from "./pages/pharmacies/NearestPharmacies/NearestPharmaciesPage";
 import AddPharmacyPage from "./pages/pharmacies/add/AddPharmacyPage";
+import PharmacyListFireStorePagination from "./pages/pharmacies/PharmacyList/PharmacyListFireStorePagination";
 
 
 
@@ -81,7 +82,7 @@ function App() {
 
 
               {/* <Route path="/pagination" element={<PharmacyListPagination />}></Route> */}
-              {/* <Route path="/pharmacies" element={<PharmacyListFireStorePagination />}></Route> */}
+              <Route path="/pagination" element={<PharmacyListFireStorePagination />}></Route>
               <Route path="/pharmacies" element={<PharmacyListCustomPaginaton />}></Route>
 
               

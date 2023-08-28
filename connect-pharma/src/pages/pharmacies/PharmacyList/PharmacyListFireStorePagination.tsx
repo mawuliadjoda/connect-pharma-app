@@ -1,6 +1,5 @@
 import { useOutletContext } from "react-router-dom";
 import { useState, useMemo, useEffect } from "react";
-import { Pharmacy, PharmacyConverter } from "./Pharmacy";
 import {
     collection, endBefore,
     limit,
@@ -13,11 +12,13 @@ import {
     //startAt,
     // where 
 } from "firebase/firestore";
-import { db } from "../../services/db";
-import { Loading } from "../../utils/Loading";
-import PharmacyTable from "./PharmacyTable";
-import Navbar from "../../components/Navbar/Index";
-import PharmacyPagination from "./util/PharmacyPagination";
+import { Pharmacy, PharmacyConverter } from "../Pharmacy";
+import { db } from "../../../services/db";
+import Navbar from './../../../components/Navbar/Index';
+
+import { Loading } from "../../../utils/Loading";
+import PharmacyTable from "../PharmacyTable/PharmacyTable";
+import PharmacyPagination from "../util/PharmacyPagination";
 
 
 // https://gist.github.com/joeljerushan/e931f5ee4a4ab3664bbd47d1b06b7264

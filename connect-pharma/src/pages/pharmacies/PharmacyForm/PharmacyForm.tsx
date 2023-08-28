@@ -1,5 +1,5 @@
 import { FormEvent, useRef } from "react";
-import { Pharmacy } from "./Pharmacy"
+import { Pharmacy } from "../Pharmacy"
 import { Timestamp } from "firebase/firestore";
 
 

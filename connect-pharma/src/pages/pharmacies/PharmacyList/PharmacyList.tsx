@@ -1,11 +1,11 @@
 import { useOutletContext } from "react-router-dom";
 import { useEffect, useState, useMemo } from "react";
-import { Pharmacy, PharmacyConverter } from "./Pharmacy";
+import { Pharmacy, PharmacyConverter } from "../Pharmacy";
 import { collection, limit, onSnapshot, orderBy, query, where } from "firebase/firestore";
-import { getDb } from "../../services/db";
-import { Loading } from "../../utils/Loading";
-import PharmacyTable from "./PharmacyTable";
-import Navbar from "../../components/Navbar/Index";
+import { getDb } from "../../../services/db";
+import { Loading } from "../../../utils/Loading";
+import PharmacyTable from "../PharmacyTable/PharmacyTable";
+import Navbar from "../../../components/Navbar/Index";
 
 
 

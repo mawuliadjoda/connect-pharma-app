@@ -1,9 +1,9 @@
 
 import { useEffect } from 'react';
-import { getPharmacyData } from '../../services/FileService';
-import { Pharmacy } from './Pharmacy';
+import { getPharmacyData } from '../../../services/FileService';
+import { Pharmacy } from '../Pharmacy';
 import { GeoPoint, addDoc, collection } from 'firebase/firestore';
-import { getDb } from '../../services/db';
+import { getDb } from '../../../services/db';
 
 export default function PopulatePharmacies() {
 

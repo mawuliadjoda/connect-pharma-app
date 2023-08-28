@@ -5,7 +5,7 @@ import {
 } from "react";
 import { Pharmacy, PharmacyConverter } from "../Pharmacy";
 import { Loading } from "../../../utils/Loading";
-import PharmacyTable from "../PharmacyTable";
+import PharmacyTable from "../PharmacyTable/PharmacyTable";
 // import Navbar from "../../components/Navbar/Index";
 import { applyHaversine, getNearPharmacies } from "../../../services/LocationService";
 import { Coordinate } from "calculate-distance-between-coordinates";

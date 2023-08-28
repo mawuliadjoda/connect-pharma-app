@@ -6,7 +6,7 @@ import { Pharmacy, PharmacyConverter } from "../Pharmacy";
 import { db } from "../../../services/db";
 import Navbar from './../../../components/Navbar/Index';
 import { Loading } from "../../../utils/Loading";
-import PharmacyTable from "../PharmacyTable";
+import PharmacyTable from "../PharmacyTable/PharmacyTable";
 import { customPaginate } from "../util/PaginateCalculator";
 import CustomPaginator from "./CustomPaginator";
 
