@@ -17,6 +17,7 @@ import { ClientAction, ClientHistory } from "../../ClientHistory/ClientHistory";
 import NearestPaginator from "./NearestPaginator";
 
 import Fuse  from "fuse.js";
+import SearchBar from "../../../utils/SearchBar/SearchBar";
 
 
 
@@ -261,19 +262,22 @@ export default function NearestPharmacies({ latitude, longitude, userTelephone }
                                 <form>
                                     <div className="relative">
 
-                                        <input
+                                        {/* <input
                                             value={searchQuery}
                                             onChange={e => setSearchQuery(e.target.value)}
                                             type="search"
                                             id="default-search"
                                             className="mb-2 mt-2 text-sm placeholder-gray-500 px-4 rounded-lg border border-gray-200 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400 mt-1"
                                             placeholder="Search"
-                                            required />
+                                            required 
+                                        /> */}
+
+                                        <SearchBar setSearchQuery={setSearchQuery} />
                                     </div>
                                 </form>
                             }
 
-
+                            <br />
                             <div className="border w-full border-gray-200 bg-white py-4 px-6 rounded-md">
                                 <PharmacyTable
                                     loading={loading}
