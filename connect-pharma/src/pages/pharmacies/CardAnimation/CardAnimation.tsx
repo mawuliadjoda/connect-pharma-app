@@ -10,7 +10,9 @@ interface CardAnimationProps {
     openMag: (pharmacy: Pharmacy) => void
 }
 
+
 /*
+https://codepen.io/sohrabzia/pen/XWoXRbg
 document.addEventListener("DOMContentLoaded", function () {
     const cards = document.querySelectorAll(".card") as NodeListOf<HTMLElement>;
     // Apply animation to each card with a delay

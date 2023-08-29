@@ -16,7 +16,7 @@ import { customPaginate } from "../util/PaginateCalculator";
 import { ClientAction, ClientHistory } from "../../ClientHistory/ClientHistory";
 import NearestPaginator from "./NearestPaginator";
 
-import Fuse  from "fuse.js";
+import Fuse from "fuse.js";
 import SearchBar from "../../../utils/SearchBar/SearchBar";
 import CardAnimation from './../CardAnimation/CardAnimation';
 
@@ -33,11 +33,11 @@ const unexpectedWordInSearchQuery = 'pharmacie';
 const LIMIT_PER_PAGE = 10;
 
 type NearestPharmaciesProps = {
-    latitude: number, 
-    longitude: number, 
+    latitude: number,
+    longitude: number,
     userTelephone: string
 }
-export default function NearestPharmacies({ latitude, longitude, userTelephone } : NearestPharmaciesProps) {
+export default function NearestPharmacies({ latitude, longitude, userTelephone }: NearestPharmaciesProps) {
     // const [sidebarToggle] = useOutletContext<any>();
     const [loading, setLoading] = useState(true);
     const [pharmacies, setPharmacies] = useState<Pharmacy[]>([]);
@@ -50,6 +50,7 @@ export default function NearestPharmacies({ latitude, longitude, userTelephone }
     const [page, setPage] = useState(1);
     const [disableNextButton, setDisableNextButton] = useState(false);
     const [disablePreviousButton, setDisablePreviousButton] = useState(true);
+    const [isProbablyNetworkError, setIsProbablyNetworkError] = useState(false);
 
 
     /*
@@ -62,9 +63,9 @@ export default function NearestPharmacies({ latitude, longitude, userTelephone }
 
     // https://www.fusejs.io/demo.html
     const filteredPharmacies = useMemo(() => {
-        
+
         const search = searchQuery.toLowerCase().includes(unexpectedWordInSearchQuery) ? searchQuery.toLowerCase().replace(unexpectedWordInSearchQuery, '') : searchQuery
-   
+
         const fuseOptions = {
             // isCaseSensitive: false,
             // includeScore: false,
@@ -86,10 +87,10 @@ export default function NearestPharmacies({ latitude, longitude, userTelephone }
         const fuse = new Fuse(allPharmacies, fuseOptions);
         const result = fuse.search(search).map(line => line.item);
         return result;
-        
+
     }, [allPharmacies, searchQuery]);
 
-  
+
     /*
     const latitude: number = useMemo(() => {
         return convertToENecimal(latitude);
@@ -103,7 +104,7 @@ export default function NearestPharmacies({ latitude, longitude, userTelephone }
 
     useEffect(() => {
         setLoading(true);
-
+        setIsProbablyNetworkError(false);
         const userLocation: Coordinate = {
             lat: latitude,
             lon: longitude
@@ -113,22 +114,31 @@ export default function NearestPharmacies({ latitude, longitude, userTelephone }
         const q = query(usersRef, where("name", "!=", null), orderBy("name", "asc"), limit(50));
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
 
-            const newPharmacies: Pharmacy[] = [];
-            querySnapshot.forEach((doc) => newPharmacies.push(PharmacyConverter.fromFirestore(doc)));
+            if (querySnapshot.size > 0) {
 
-            const haversinePharmacies = applyHaversine(newPharmacies, userLocation);
-            const pharmaciesWithDistance = getNearPharmacies(haversinePharmacies);
+                const newPharmacies: Pharmacy[] = [];
+                querySnapshot.forEach((doc) => newPharmacies.push(PharmacyConverter.fromFirestore(doc)));
 
-            setAllPharmacies(pharmaciesWithDistance);
+                const haversinePharmacies = applyHaversine(newPharmacies, userLocation);
+                const pharmaciesWithDistance = getNearPharmacies(haversinePharmacies);
 
-            const customPharmaciesMap = customPaginate(pharmaciesWithDistance, LIMIT_PER_PAGE);
+                setAllPharmacies(pharmaciesWithDistance);
+
+                const customPharmaciesMap = customPaginate(pharmaciesWithDistance, LIMIT_PER_PAGE);
 
 
-            setLoading(false);
-            setPage(1);
+                setLoading(false);
+                setPage(1);
 
-            setPharmaciesMap(customPharmaciesMap);
-            setPharmacies(customPharmaciesMap?.get(page) as Pharmacy[]);
+                setPharmaciesMap(customPharmaciesMap);
+                setPharmacies(customPharmaciesMap?.get(page) as Pharmacy[]);
+
+                setIsProbablyNetworkError(false);
+
+            } else {
+                setLoading(true);
+                setIsProbablyNetworkError(true);
+            }
         },
 
             (error) => {
@@ -137,6 +147,7 @@ export default function NearestPharmacies({ latitude, longitude, userTelephone }
 
         );
         return () => unsubscribe();
+
 
 
     }, []);
@@ -248,6 +259,7 @@ export default function NearestPharmacies({ latitude, longitude, userTelephone }
                         <Loading
                             message="Moteur de calcul en cours d'exécution ..."
                             isForClient={true}
+                            isProbablyNetworkError={isProbablyNetworkError}
                         />
 
                         :
@@ -278,7 +290,7 @@ export default function NearestPharmacies({ latitude, longitude, userTelephone }
                                 </form>
                             }
 
-                            
+
                             {/* <div className="border w-full border-gray-200 bg-white py-4 px-6 rounded-md"> */}
                             <div className="border w-full">
                                 {/* <PharmacyTable
@@ -290,12 +302,12 @@ export default function NearestPharmacies({ latitude, longitude, userTelephone }
                                     openTelegram={openTelegram}
                                     openMag={openMag}
                                 /> */}
-                                <CardAnimation 
-                                    data={searchQuery ? filteredPharmacies : pharmacies}                         
+                                <CardAnimation
+                                    data={searchQuery ? filteredPharmacies : pharmacies}
                                     openWhatsapp={openWhatsapp}
                                     openTelegram={openTelegram}
                                     openMag={openMag}
-                                 />
+                                />
                             </div>
 
                             {
