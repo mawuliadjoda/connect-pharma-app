@@ -38,13 +38,21 @@ const HandleWebClientPhoneNumber = ({ latitude, longitude, callFromPage, candRed
 
     return (
         <>
-            <main className="h-full shadow">
+            <main className="h-full">
                 {
                     latitude && longitude &&
-                    <div className="mainCard">
-                      
-                        <div className="border w-full border-gray-200 bg-white py-4 px-6 rounded-md">
+                    <div className="mainCard ">
+                      <br />
+                      <br />
+                      <br />
+                      <br />
+                      <br />
+                      <br />
+                      <br />
+                      <br />
+                        <div className="border w-full border-gray-200 bg-white py-4 px-6 rounded-md shadow-lg">
                             <form>
+                                <br />
 
                                 {/* className="block rounded-lg bg-white p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700" */}
                                 <div >

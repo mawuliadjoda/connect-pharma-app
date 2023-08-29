@@ -28,6 +28,7 @@ import PharmacyListCustomPaginaton from "./pages/pharmacies/PharmacyListCustomPa
 import NearestPharmaciesPage from "./pages/pharmacies/NearestPharmacies/NearestPharmaciesPage";
 import AddPharmacyPage from "./pages/pharmacies/add/AddPharmacyPage";
 import PharmacyListFireStorePagination from "./pages/pharmacies/PharmacyList/PharmacyListFireStorePagination";
+// import CardAnimation from "./pages/pharmacies/CardAnimation/CardAnimation";
 
 
 
@@ -100,6 +101,8 @@ function App() {
           
           <Route path="/nearestPharmacies/:latitude?/:longitude?/:userTelephone?" element={<NearestPharmaciesPage />} ></Route>
           <Route path="/pharmacies/add/:latitude?/:longitude?/:userTelephone?" element={<AddPharmacyPage />} />
+          {/* <Route path="/animation" element={<CardAnimation props="animation" />}></Route> */}
+
           <Route path="/*" element={<NotFound />}></Route>
 
           <Route path="/auth/register/:userTelephone/:userEmail" element={<RegisterIndex />}></Route>

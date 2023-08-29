@@ -5,7 +5,7 @@ import {
 } from "react";
 import { Pharmacy, PharmacyConverter } from "../Pharmacy";
 import { Loading } from "../../../utils/Loading";
-import PharmacyTable from "../PharmacyTable/PharmacyTable";
+// import PharmacyTable from "../PharmacyTable/PharmacyTable";
 // import Navbar from "../../components/Navbar/Index";
 import { applyHaversine, getNearPharmacies } from "../../../services/LocationService";
 import { Coordinate } from "calculate-distance-between-coordinates";
@@ -18,6 +18,7 @@ import NearestPaginator from "./NearestPaginator";
 
 import Fuse  from "fuse.js";
 import SearchBar from "../../../utils/SearchBar/SearchBar";
+import CardAnimation from './../CardAnimation/CardAnimation';
 
 
 
@@ -278,8 +279,9 @@ export default function NearestPharmacies({ latitude, longitude, userTelephone }
                             }
 
                             
-                            <div className="border w-full border-gray-200 bg-white py-4 px-6 rounded-md">
-                                <PharmacyTable
+                            {/* <div className="border w-full border-gray-200 bg-white py-4 px-6 rounded-md"> */}
+                            <div className="border w-full">
+                                {/* <PharmacyTable
                                     loading={loading}
                                     dataHeader={dataHeader}
                                     data={searchQuery ? filteredPharmacies : pharmacies}
@@ -287,12 +289,19 @@ export default function NearestPharmacies({ latitude, longitude, userTelephone }
                                     openWhatsapp={openWhatsapp}
                                     openTelegram={openTelegram}
                                     openMag={openMag}
-                                />
+                                /> */}
+                                <CardAnimation 
+                                    data={searchQuery ? filteredPharmacies : pharmacies}                         
+                                    openWhatsapp={openWhatsapp}
+                                    openTelegram={openTelegram}
+                                    openMag={openMag}
+                                 />
                             </div>
 
                             {
                                 !searchQuery &&
                                 <div>
+                                    <br />
                                     <div className="border w-full border-gray-200 bg-white py-4 px-6 rounded-md grid place-items-center ">
                                         <NearestPaginator
                                             getNext={getNext}
@@ -318,6 +327,7 @@ export default function NearestPharmacies({ latitude, longitude, userTelephone }
 }
 
 
+/*
 const dataHeader = [
     {
         key: "name",
@@ -340,3 +350,4 @@ const dataHeader = [
         label: "Action",
     }
 ];
+*/
