@@ -5,6 +5,7 @@ export enum ClientAction {
     CLICK_WHATSAPP = 'CLICK_WHATSAPP',
     CLICK_TELEGRAM = 'CLICK_TELEGRAM',
     CLICK_MAP = 'CLICK_MAP',
+    CLIK_PHONE = 'CLIK_PHONE'
 }
 export type ClientHistory = {
     id?: string,

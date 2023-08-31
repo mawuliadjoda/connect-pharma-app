@@ -7,7 +7,8 @@ interface CardAnimationProps {
     data: Pharmacy[],
     openWhatsapp: (pharmacy: Pharmacy) => void,
     openTelegram: (pharmacy: Pharmacy) => void,
-    openMag: (pharmacy: Pharmacy) => void
+    openMag: (pharmacy: Pharmacy) => void,
+    openPhone: (pharmacy: Pharmacy) => void
 }
 
 
@@ -29,6 +30,7 @@ const CardAnimation = ({
     openWhatsapp,
     openTelegram,
     openMag,
+    openPhone
 }: CardAnimationProps) => {
 
 
@@ -36,7 +38,7 @@ const CardAnimation = ({
         <>
 
             <div className="h-full m-2">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8 p-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8 p-2 bg-gray-50">
 
                     {data?.map((row: Pharmacy, index: number) => (
                         
@@ -48,10 +50,10 @@ const CardAnimation = ({
                                     animation: `slide-fade-up ${index * 900}ms ease-out forwards`
                             }}   
                             // https://tailwindcss.com/docs/background-color                           
-                            className="card animate-slide-fade p-4 rounded shadow bg-gray-50">
+                            className="card animate-slide-fade p-4 rounded shadow bg-white">
 
                             <div className="flex items-center">
-                                <span className="h-3 w-3 mr-2 rounded-full bg-green-500"></span>
+                                <span className="h-3 w-3 mr-2 rounded-full bg-green-800"></span>
                                 {/* <span className="h-3 w-3 mr-2 rounded-full bg-gray-300"></span> */}
                        
                                 {/* <span className="font-semibold">{row.name}</span> */}
@@ -73,8 +75,10 @@ const CardAnimation = ({
                                     <i className="fa fa-telegram icon_size" style={{fontSize: `18px`, color: '#0088cc'}} aria-hidden="true" />                        
                                 </div>
 
-                                <div >
-                                    <i className="fa fa-phone icon_size" style={{fontSize: `18px`}} aria-hidden="true" />
+                                <div onClick={(e) => {e.preventDefault(); openPhone(row)}} >
+                                    {/* <a href={`tel://${row.tel}`} > */}
+                                        <i  className="fa fa-phone icon_size" style={{fontSize: `18px`}} aria-hidden="true" />
+                                    {/* </a> */}
                                 </div>
 
                                 {/* maps */}

@@ -177,46 +177,29 @@ export default function NearestPharmacies({ latitude, longitude, userTelephone }
 
     // https://signal.me/#p/+41794997040
     const openWhatsapp = (pharmacy: Pharmacy) => {
-        const url = `https://wa.me/${formatPhoneNumber(pharmacy.tel)}`;
-        window.open(url);
+        const whatsappBaseLink = 'https://api.whatsapp.com/send?phone=';
+        const whatsappMessage = `Bonjour je vous contact concernant les médicaments suivants: \nJe vous envoie une capture de l'ordonnance`;
 
-        const clientHistory: ClientHistory = {
-            clientPhoneNumber: formatPhoneNumber(userTelephone!),
-            pharmacyPhoneNumber: formatPhoneNumber(pharmacy.tel),
-            pharmacyEmail: pharmacy.email,
-            pharmacyName: pharmacy.name,
-            clientLocation: new GeoPoint(latitude, longitude),
-            pharmacyLocation: pharmacy.location,
-            createTime: Timestamp.now(),
-            createTimeFormat: formatToSimpleDateWithSeconds(Timestamp.now().toDate()),
-            action: ClientAction.CLICK_WHATSAPP
-        }
-        addClientHistory(clientHistory);
+        window.open(`${whatsappBaseLink}${formatPhoneNumber(pharmacy.tel)}&text=${encodeURIComponent(whatsappMessage)}`);
+        handleAddClientHistory(pharmacy, ClientAction.CLICK_WHATSAPP);
     }
 
     const openTelegram = (pharmacy: Pharmacy) => {
-
-        const url = `https://t.me/${formatPhoneNumber(pharmacy.tel)}`;
-        window.open(url);
-
-        const clientHistory: ClientHistory = {
-            clientPhoneNumber: formatPhoneNumber(userTelephone!),
-            pharmacyPhoneNumber: formatPhoneNumber(pharmacy.tel),
-            pharmacyEmail: pharmacy.email,
-            pharmacyName: pharmacy.name,
-            clientLocation: new GeoPoint(latitude, longitude),
-            pharmacyLocation: pharmacy.location,
-            createTime: Timestamp.now(),
-            createTimeFormat: formatToSimpleDateWithSeconds(Timestamp.now().toDate()),
-            action: ClientAction.CLICK_TELEGRAM
-        }
-        addClientHistory(clientHistory);
+        window.open(`https://t.me/${formatPhoneNumber(pharmacy.tel)}`);
+        handleAddClientHistory(pharmacy, ClientAction.CLICK_TELEGRAM);
     }
 
     const openMag = (pharmacy: Pharmacy) => {
-        const url = `https://www.google.com/maps/dir//${pharmacy.location.latitude},${pharmacy.location.longitude}`;
-        window.open(url);
+        window.open(`https://www.google.com/maps/dir//${pharmacy.location.latitude},${pharmacy.location.longitude}`);
+        handleAddClientHistory(pharmacy, ClientAction.CLICK_MAP);
+    }
 
+    const openPhone = (pharmacy: Pharmacy) => {
+        window.open(`tel:${formatPhoneNumber(pharmacy.tel)}`);        
+        handleAddClientHistory(pharmacy, ClientAction.CLIK_PHONE);
+    }
+    
+    const handleAddClientHistory = (pharmacy: Pharmacy, action: ClientAction) =>{
         const clientHistory: ClientHistory = {
             clientPhoneNumber: formatPhoneNumber(userTelephone!),
             pharmacyPhoneNumber: formatPhoneNumber(pharmacy.tel!),
@@ -228,12 +211,10 @@ export default function NearestPharmacies({ latitude, longitude, userTelephone }
 
             createTime: Timestamp.now(),
             createTimeFormat: formatToSimpleDateWithSeconds(Timestamp.now().toDate()),
-            action: ClientAction.CLICK_MAP
+            action: action
         }
         addClientHistory(clientHistory);
     }
-
-
     const addClientHistory = (clientHistory: ClientHistory) => {
         const clientHistoriesRef = collection(getDb(), 'clientHistories');
         addDoc(clientHistoriesRef, clientHistory)
@@ -307,6 +288,7 @@ export default function NearestPharmacies({ latitude, longitude, userTelephone }
                                     openWhatsapp={openWhatsapp}
                                     openTelegram={openTelegram}
                                     openMag={openMag}
+                                    openPhone={openPhone}                                    
                                 />
                             </div>
 
