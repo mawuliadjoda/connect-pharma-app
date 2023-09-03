@@ -59,6 +59,7 @@ function Sidebar({ ...props }) {
             handleChange={handleChange}
             scButton={scButton}
             search={search}
+            className="px-4 w-full py-4 px-2 items-center flex relative"
           />
 
           {/* Menu */}

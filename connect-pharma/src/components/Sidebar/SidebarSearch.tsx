@@ -3,15 +3,18 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 
 type SidebarSearchProps = {
-  scButton: any, 
-  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void, 
-  clearSearch: () => void, 
-  search: any
+  scButton: boolean,
+  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
+  clearSearch: () => void,
+  search: any,
+  className?: string
 }
-function SidebarSearch({ scButton, handleChange, clearSearch, search }: SidebarSearchProps) {
+function SidebarSearch({ scButton, handleChange, clearSearch, search, className }: SidebarSearchProps) {
   return (
-    <div className="px-4">
-      <div className="w-full py-4 px-2 items-center flex relative">
+    // className="px-4"
+    <div>
+      {/* className="w-full mt-1 mb-1 items-center flex relative" */}
+      <div className={className ? className : "w-full mt-1 mb-1 items-center flex relative"}>
         <input
           type="text"
           name=""
