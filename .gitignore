@@ -26,3 +26,33 @@ connect-pharma/.gitignore
 connect-pharma/.firebaserc
 
 connect-pharma/.env
+
+# connect-pharma-228
+
+connect-pharma-228/logs
+connect-pharma-228/*.log
+connect-pharma-228/npm-debug.log*
+connect-pharma-228/yarn-debug.log*
+connect-pharma-228/yarn-error.log*
+connect-pharma-228/pnpm-debug.log*
+connect-pharma-228/lerna-debug.log*
+
+connect-pharma-228/node_modules
+connect-pharma-228/dist
+connect-pharma-228/dist-ssr
+connect-pharma-228/*.local
+
+# Editor directories and files
+connect-pharma-228/.vscode/*
+connect-pharma-228/!.vscode/extensions.json
+connect-pharma-228/.idea
+connect-pharma-228/.DS_Store
+connect-pharma-228/*.suo
+connect-pharma-228/*.ntvs*
+connect-pharma-228/*.njsproj
+connect-pharma-228/*.sln
+connect-pharma-228/*.sw?
+connect-pharma-228/.gitignore
+connect-pharma-228/.firebaserc
+
+connect-pharma-228/.env
