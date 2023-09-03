@@ -194,11 +194,11 @@ export default function NearestPharmacies({ latitude, longitude, userTelephone }
     }
 
     const openPhone = (pharmacy: Pharmacy) => {
-        window.open(`tel:${formatPhoneNumber(pharmacy.tel)}`);        
+        window.open(`tel:${formatPhoneNumber(pharmacy.tel)}`);
         handleAddClientHistory(pharmacy, ClientAction.CLIK_PHONE);
     }
-    
-    const handleAddClientHistory = (pharmacy: Pharmacy, action: ClientAction) =>{
+
+    const handleAddClientHistory = (pharmacy: Pharmacy, action: ClientAction) => {
         const clientHistory: ClientHistory = {
             clientPhoneNumber: formatPhoneNumber(userTelephone!),
             pharmacyPhoneNumber: formatPhoneNumber(pharmacy.tel!),
@@ -236,11 +236,14 @@ export default function NearestPharmacies({ latitude, longitude, userTelephone }
                     loading
 
                         ?
-                        <Loading
-                            message="Moteur de calcul en cours d'exécution ..."
-                            isForClient={true}
-                            isProbablyNetworkError={isProbablyNetworkError}
-                        />
+                        <div className="mainCard">
+                            <Loading
+                                message="Moteur de calcul en cours d'exécution ..."
+                                isForClient={true}
+                                isProbablyNetworkError={isProbablyNetworkError}
+                            />
+                        </div>
+
 
                         :
                         <div className="mainCard">
@@ -276,7 +279,7 @@ export default function NearestPharmacies({ latitude, longitude, userTelephone }
                                     openWhatsapp={openWhatsapp}
                                     openTelegram={openTelegram}
                                     openMag={openMag}
-                                    openPhone={openPhone}                                    
+                                    openPhone={openPhone}
                                 />
                             </div>
 

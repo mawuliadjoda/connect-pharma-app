@@ -63,3 +63,6 @@ https://github.com/joeljerushan/hello-docker/blob/main/Dockerfile
 Manage pharmacie :
     isActive
 	payment
+
+
+https://typescript-eslint.io/rules/no-explicit-any/
