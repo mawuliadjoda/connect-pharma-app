@@ -1,7 +1,8 @@
 import { Outlet } from 'react-router-dom'
 import { createContext, useEffect, useState } from 'react';
-import LoginIndex from '../pages/auth/Login';
+// import LoginIndex from '../pages/auth/Login';
 import { User } from '../pages/Users/User';
+import NearestPharmaciesPage from '../pages/pharmacies/NearestPharmacies/NearestPharmaciesPage';
 
 
 // https://medium.com/@dennisivy/creating-protected-routes-with-react-router-v6-2c4bbaf7bc1c
@@ -34,7 +35,8 @@ const PrivateRoutes = () => {
         }
       }, []);
    
-    return conectedUser?.roles  ?  <UserContext.Provider value={conectedUser}>   <Outlet />  </UserContext.Provider> : <LoginIndex />;
+    // return conectedUser?.roles  ?  <UserContext.Provider value={conectedUser}>   <Outlet />  </UserContext.Provider> : <LoginIndex />;
+    return conectedUser?.roles  ?  <UserContext.Provider value={conectedUser}>   <Outlet />  </UserContext.Provider> : <NearestPharmaciesPage />;
 }
 
 export default PrivateRoutes
