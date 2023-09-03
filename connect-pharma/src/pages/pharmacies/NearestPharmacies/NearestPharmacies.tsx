@@ -17,7 +17,7 @@ import { ClientAction, ClientHistory } from "../../ClientHistory/ClientHistory";
 import NearestPaginator from "./NearestPaginator";
 
 import Fuse from "fuse.js";
-import SearchBar from "../../../utils/SearchBar/SearchBar";
+import SearchBar from "../../../components/SearchBar/SearchBar";
 import CardAnimation from './../CardAnimation/CardAnimation';
 
 

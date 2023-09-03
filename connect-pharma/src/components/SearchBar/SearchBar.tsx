@@ -1,5 +1,5 @@
 // import { TERipple } from "tw-elements-react";
-import SidebarSearch from "../../components/Sidebar/SidebarSearch";
+import CustomSearch from "./CustomSearch";
 import { useRef, useState } from "react";
 
 
@@ -31,7 +31,7 @@ const SearchBar = ({ setSearchQuery }: SearchBarProps) => {
     return (
 
         <>
-            <SidebarSearch 
+            <CustomSearch 
                 clearSearch={clearSearch}
                 handleChange={handleChange}
                 scButton={scButton}

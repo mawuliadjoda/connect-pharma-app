@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import initMenus from "../../data/menus.ts";
 import "./sidebar.css";
 import SidebarLogo from "./SidebarLogo.jsx";
-import SidebarSearch from "./SidebarSearch.tsx";
+import CustomSearch from "../SearchBar/CustomSearch.tsx";
 import MenuList from "./MenuList.tsx";
 import { useNavigate } from "react-router-dom";
 import { onLogout } from "../../services/db.tsx";
@@ -54,7 +54,7 @@ function Sidebar({ ...props }) {
           <SidebarLogo toggle={props.toggle} icon={faLeaf} text={import.meta.env.VITE_SITE_NAME} />
 
           {/* Search Menu */}
-          <SidebarSearch
+          <CustomSearch
             clearSearch={clearSearch}
             handleChange={handleChange}
             scButton={scButton}
@@ -76,7 +76,7 @@ function Sidebar({ ...props }) {
               </button>
             </div>
           </div>
-          
+
         </div>
       </aside>
 

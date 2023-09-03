@@ -9,7 +9,7 @@ type SidebarSearchProps = {
   search: any,
   className?: string
 }
-function SidebarSearch({ scButton, handleChange, clearSearch, search, className }: SidebarSearchProps) {
+function CustomSearch({ scButton, handleChange, clearSearch, search, className }: SidebarSearchProps) {
   return (
     // className="px-4"
     <div>
@@ -44,4 +44,4 @@ function SidebarSearch({ scButton, handleChange, clearSearch, search, className 
   );
 }
 
-export default SidebarSearch;
+export default CustomSearch;
