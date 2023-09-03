@@ -29,8 +29,10 @@ const USER_LOCATION: Coordinate = {
     lon: 1.1449074
 };
 */
+const clientStartMessage = `Bonjour je vous contact concernant les médicaments suivants: \nJe vous envoie une capture de l'ordonnance`;
 const unexpectedWordInSearchQuery = 'pharmacie';
 const LIMIT_PER_PAGE = 10;
+
 
 type NearestPharmaciesProps = {
     latitude: number,
@@ -177,10 +179,7 @@ export default function NearestPharmacies({ latitude, longitude, userTelephone }
 
     // https://signal.me/#p/+41794997040
     const openWhatsapp = (pharmacy: Pharmacy) => {
-        const whatsappBaseLink = 'https://api.whatsapp.com/send?phone=';
-        const whatsappMessage = `Bonjour je vous contact concernant les médicaments suivants: \nJe vous envoie une capture de l'ordonnance`;
-
-        window.open(`${whatsappBaseLink}${formatPhoneNumber(pharmacy.tel)}&text=${encodeURIComponent(whatsappMessage)}`);
+        window.open(`https://api.whatsapp.com/send?phone=${formatPhoneNumber(pharmacy.tel)}&text=${encodeURIComponent(clientStartMessage)}`);
         handleAddClientHistory(pharmacy, ClientAction.CLICK_WHATSAPP);
     }
 
