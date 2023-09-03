@@ -254,17 +254,6 @@ export default function NearestPharmacies({ latitude, longitude, userTelephone }
                             {
                                 <form>
                                     <div className="relative">
-
-                                        {/* <input
-                                            value={searchQuery}
-                                            onChange={e => setSearchQuery(e.target.value)}
-                                            type="search"
-                                            id="default-search"
-                                            className="mb-2 mt-2 text-sm placeholder-gray-500 px-4 rounded-lg border border-gray-200 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400 mt-1"
-                                            placeholder="Search"
-                                            required 
-                                        /> */}
-
                                         <SearchBar setSearchQuery={setSearchQuery} />
                                     </div>
                                 </form>
