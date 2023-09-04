@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import Biography from './Biography';
 import Albums from './Album';
-import { Loading } from '../../utils/Loading';
+import { Loading } from '../../components/Loading/Loading';
 
 export type Artist = {
   id: string,

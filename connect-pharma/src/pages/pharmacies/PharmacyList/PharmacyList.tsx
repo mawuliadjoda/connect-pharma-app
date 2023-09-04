@@ -3,7 +3,7 @@ import { useEffect, useState, useMemo } from "react";
 import { Pharmacy, PharmacyConverter } from "../Pharmacy";
 import { collection, limit, onSnapshot, orderBy, query, where } from "firebase/firestore";
 import { getDb } from "../../../services/db";
-import { Loading } from "../../../utils/Loading";
+import { Loading } from "../../../components/Loading/Loading";
 import PharmacyTable from "../PharmacyTable/PharmacyTable";
 import Navbar from "../../../components/Navbar/Index";
 

@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { collection, deleteDoc, doc, getFirestore, limit, onSnapshot, orderBy, query, where } from 'firebase/firestore';
 import { getDb } from "../../services/db";
 import { User, UserConverter } from "./User";
-import { Loading } from "../../utils/Loading";
+import { Loading } from "../../components/Loading/Loading";
 
 
 const Table = () => {

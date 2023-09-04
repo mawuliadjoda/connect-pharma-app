@@ -4,7 +4,7 @@ import { collection, limit, onSnapshot, orderBy, query, startAfter, where } from
 import { ClientHistory, ClientHistoryConverter } from "./ClientHistory";
 import Navbar from "../../components/Navbar/Index";
 import { useOutletContext } from "react-router-dom";
-import { Loading } from "../../utils/Loading";
+import { Loading } from "../../components/Loading/Loading";
 import ClientHistoryTable from "./ClientHistoryTable";
 import { UserContext } from "../../utils/PrivateRoutes";
 import ClientHistoryPagination from "./ClientHistoryPagination";

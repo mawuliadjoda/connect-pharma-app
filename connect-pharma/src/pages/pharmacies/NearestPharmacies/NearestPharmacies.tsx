@@ -4,7 +4,7 @@ import {
     useMemo
 } from "react";
 import { Pharmacy, PharmacyConverter } from "../Pharmacy";
-import { Loading } from "../../../utils/Loading";
+import { Loading } from "../../../components/Loading/Loading";
 // import PharmacyTable from "../PharmacyTable/PharmacyTable";
 // import Navbar from "../../components/Navbar/Index";
 import { applyHaversine, getNearPharmacies } from "../../../services/LocationService";

@@ -5,7 +5,7 @@ import { collection, limit, onSnapshot, orderBy, query, where } from "firebase/f
 import { Pharmacy, PharmacyConverter } from "../Pharmacy";
 import { db } from "../../../services/db";
 import Navbar from './../../../components/Navbar/Index';
-import { Loading } from "../../../utils/Loading";
+import { Loading } from "../../../components/Loading/Loading";
 import PharmacyTable from "../PharmacyTable/PharmacyTable";
 import { customPaginate } from "../util/PaginateCalculator";
 import CustomPaginator from "./CustomPaginator";

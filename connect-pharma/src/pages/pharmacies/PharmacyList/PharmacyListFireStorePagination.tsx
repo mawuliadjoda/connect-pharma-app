@@ -16,7 +16,7 @@ import { Pharmacy, PharmacyConverter } from "../Pharmacy";
 import { db } from "../../../services/db";
 import Navbar from './../../../components/Navbar/Index';
 
-import { Loading } from "../../../utils/Loading";
+import { Loading } from "../../../components/Loading/Loading";
 import PharmacyTable from "../PharmacyTable/PharmacyTable";
 import PharmacyPagination from "../util/PharmacyPagination";
 
