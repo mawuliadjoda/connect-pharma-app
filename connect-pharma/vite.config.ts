@@ -43,6 +43,7 @@ const manifestForPlugIn = {
   }
 }
 // https://vitejs.dev/config/
+// https://vite-pwa-org.netlify.app/guide/
 // https://medium.com/@rakeshdhariwal61/converting-your-react-vite-app-into-pwa-d7211e9cd0c5
 export default defineConfig({
   // plugins: [react(), VitePWA(manifestForPlugIn)],

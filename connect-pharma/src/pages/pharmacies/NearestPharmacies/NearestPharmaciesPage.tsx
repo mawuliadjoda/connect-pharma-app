@@ -9,6 +9,7 @@ import { CallFromPageEnum, CandRedirectMessageEnum } from "../HandleWebClientPho
 
 const NearestPharmaciesPage = () => {
     const { latitude, longitude, userTelephone } = useParams();
+    const [isGeoLocationError, setIsGeoLocationError] = useState(false);
 
     const [latitudeWeb, setLatitudeWeb] = useState<number | null>(null);
     const [longitudeWeb, setLongitudeWeb] = useState<number | null>(null);
@@ -36,13 +37,18 @@ const NearestPharmaciesPage = () => {
                     console.log(position.coords.latitude);
                     console.log(position.coords.longitude);
 
+                    setIsGeoLocationError(false);
+
                 },
                 (error) => {
                     console.error(error);
+                    // alert(error);
+                    setIsGeoLocationError(true);
                 }
             );
         } else {
             console.log('latitude && longitude && userTelephone probably passed to browser.');
+            setIsGeoLocationError(false);
         }
 
         /*
@@ -85,6 +91,30 @@ const NearestPharmaciesPage = () => {
                         callFromPage={CallFromPageEnum.NearestPharmaciesPage}
                         candRedirectMessage={CandRedirectMessageEnum.FromNearestPharmaciesPage}
                     />
+
+            }
+
+            {
+                isGeoLocationError &&
+
+                <div className="">
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+
+                    <small className="absolute w-full text-neutral-500 dark:text-neutral-200 mr-5">
+                        <span>La géolocation est décactivée sur votre téléphone ! <br />
+                            Veuillez activer la geolocation dans les paramètre de votre téléphone puis actualiser la page
+                            pour voir les pharmacies connectées auprès de vous ! <br />
+                            Nous gardons votre confidentialité !
+                        </span>
+                    </small>
+                </div>
 
             }
         </>
