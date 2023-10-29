@@ -10,7 +10,7 @@ type HandleWebClientPhoneNumberProps = {
     callFromPage: CallFromValue,
     candRedirectMessage: string
 }
-const TEL_PHONE_NUMBER_LENGHT = 11;
+const TEL_PHONE_NUMBER_LENGHT = 8;
 
 const HandleWebClientPhoneNumber = ({ latitude, longitude, callFromPage, candRedirectMessage }: HandleWebClientPhoneNumberProps) => {
     const telRef = useRef<HTMLInputElement>(null);
@@ -30,7 +30,7 @@ const HandleWebClientPhoneNumber = ({ latitude, longitude, callFromPage, candRed
         console.log(telRef.current!.value);
 
         setCandRedirect(false);
-        if (telRef.current!.value.length === TEL_PHONE_NUMBER_LENGHT || telRef.current!.value.length === TEL_PHONE_NUMBER_LENGHT + 1) {
+        if (telRef.current!.value.length === TEL_PHONE_NUMBER_LENGHT || telRef.current!.value.length === TEL_PHONE_NUMBER_LENGHT + 2) {
             setCandRedirect(true);
         }
 
@@ -86,7 +86,9 @@ const HandleWebClientPhoneNumber = ({ latitude, longitude, callFromPage, candRed
                                             id="telHelp"
                                             className="absolute w-full text-neutral-500 dark:text-neutral-200"
                                         >
-                                            <span>Votre numéro est nécessaire afin de vous mettre en contact avec les pharmacies <br /> Nous gardons la confidentialité de votre numéro</span>
+                                            <span>Votre numéro est nécessaire afin de vous mettre en contact avec les pharmacies 
+                                                <br /> Nous gardons la confidentialité de votre numéro
+                                            </span>
                                             {/* Nous gardons la confidentialité de votre numéro */}
                                         </small>
                                     </TEInput>
