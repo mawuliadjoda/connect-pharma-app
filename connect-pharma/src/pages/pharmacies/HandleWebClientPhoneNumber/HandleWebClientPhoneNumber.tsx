@@ -10,7 +10,7 @@ type HandleWebClientPhoneNumberProps = {
     callFromPage: CallFromValue,
     candRedirectMessage: string
 }
-const TEL_PHONE_NUMBER_LENGHT = 8;
+const TEL_PHONE_NUMBER_LENGHT = 11;
 
 const HandleWebClientPhoneNumber = ({ latitude, longitude, callFromPage, candRedirectMessage }: HandleWebClientPhoneNumberProps) => {
     const telRef = useRef<HTMLInputElement>(null);
@@ -30,7 +30,7 @@ const HandleWebClientPhoneNumber = ({ latitude, longitude, callFromPage, candRed
         console.log(telRef.current!.value);
 
         setCandRedirect(false);
-        if (telRef.current!.value.length === TEL_PHONE_NUMBER_LENGHT || telRef.current!.value.length === TEL_PHONE_NUMBER_LENGHT + 2) {
+        if (telRef.current!.value.length === TEL_PHONE_NUMBER_LENGHT || telRef.current!.value.length === TEL_PHONE_NUMBER_LENGHT + 1) {
             setCandRedirect(true);
         }
 
@@ -55,7 +55,7 @@ const HandleWebClientPhoneNumber = ({ latitude, longitude, callFromPage, candRed
                                 <br />
 
                                 {/* className="block rounded-lg bg-white p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700" */}
-                                <div >
+                                <div className="mb-5" >
 
                                     {/* <label htmlFor="tel" className="text-sm text-gray-600">
                                 <span>Tél</span>
@@ -74,9 +74,9 @@ const HandleWebClientPhoneNumber = ({ latitude, longitude, callFromPage, candRed
                             /> */}
 
                                     <TEInput
-
+                                        
                                         type="number"
-                                        label="Saisir votre numéro de tél"
+                                        label="Numéro de tél"
 
                                         ref={telRef}
                                         onChange={handleInputChange}
@@ -86,8 +86,10 @@ const HandleWebClientPhoneNumber = ({ latitude, longitude, callFromPage, candRed
                                             id="telHelp"
                                             className="absolute w-full text-neutral-500 dark:text-neutral-200"
                                         >
-                                            <span>Votre numéro est nécessaire afin de vous mettre en contact avec les pharmacies 
-                                                <br /> Nous gardons la confidentialité de votre numéro
+                                            <span>Si vous êtes au togo saisir le numéro au format: 
+                                                <br /> 228 XX XX XX XX
+                                                <br /> Votre numéro est nécessaire afin de vous mettre en contact avec les pharmacies.
+                                                <br /> Nous gardons la confidentialité de votre numéro.
                                             </span>
                                             {/* Nous gardons la confidentialité de votre numéro */}
                                         </small>
