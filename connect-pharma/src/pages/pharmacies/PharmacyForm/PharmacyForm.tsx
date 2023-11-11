@@ -1,6 +1,7 @@
 import { FormEvent, useRef } from "react";
 import { Pharmacy } from "../Pharmacy"
 import { Timestamp } from "firebase/firestore";
+import { trimString } from "../../../utils/Utils";
 
 
 type PharmacyFormProps = {
@@ -22,16 +23,17 @@ export default function PharmacyForm({ onSubmit, initialPharmacyData, isLoading 
 
         onSubmit({
 
-            address: addressRef.current!.value,
-            email: emailRef.current!.value,
+            address: trimString(addressRef.current!.value),
+            email: trimString(emailRef.current!.value),
             isActive: false,
             location: initialPharmacyData.location,
-            name: nameRef.current!.value,
-            tel: telRef.current!.value,
+            name: trimString(nameRef.current!.value),
+            tel: trimString(telRef.current!.value),
             createTime: Timestamp.now()
 
         });
     }
+
     return (
         <>
             <div className="mainCard">

@@ -45,6 +45,9 @@ export default function AddPharmacy({ latitude, longitude, userTelephone }: AddP
         return longitude ? convertToENecimal(longitude) : null;
     }, [longitude]);
     */
+    const [telErrorMsg, setTelErrorMsg] = useState<string | null>(null);
+    const [emailErrorMsg, setEmailErrorMsg] = useState<string | null>(null);
+    const [nameErrorMsg, setNameErrorMsg] = useState<string | null>(null);
 
     const initialPharmacyData: Pharmacy = useMemo(() => {
         return {
@@ -88,7 +91,7 @@ export default function AddPharmacy({ latitude, longitude, userTelephone }: AddP
                 // navigate(`/nearestPharmacies/${latitude}/${longitude}/${userTelephone}`);
                 navigate(`/auth/register/${pharmacy.tel}/${pharmacy.email.replaceAll(`.`, `,`)}`);
 
-                
+
                 console.log("Data sucessfuly submitted");
 
                 const data: WebAppData = {
@@ -108,29 +111,40 @@ export default function AddPharmacy({ latitude, longitude, userTelephone }: AddP
 
     const checkExistPharmacy = async (pharmacy: Pharmacy) => {
         setIsLoading(false);
-        const qTel = query(collection(db, "pharmacies"),
-            where("tel", "==", pharmacy.tel),
-        );
-        const docsTel = await getDocs(qTel);
-        if (docsTel.docs.length > 0) {
-            throw new Error(`Pharmacy with tel ${pharmacy.tel} already exist !`);
-        }
-
-        const qEmail = query(collection(db, "pharmacies"),
-            where("email", "==", pharmacy.email),
-        );
-        const docsEmail = await getDocs(qEmail);
-        if (docsEmail.docs.length > 0) {
-            throw new Error(`Pharmacy with email ${pharmacy.email} already exist !`);
-        }
 
         const qName = query(collection(db, "pharmacies"),
             where("name", "==", pharmacy.name)
         );
         const docsName = await getDocs(qName);
         if (docsName.docs.length > 0) {
-            throw new Error(`Pharmacy with name ${pharmacy.name} already exist !`);
+            const errorMsg = `Pharmacy with name ${pharmacy.name} already exist !`;
+            setNameErrorMsg(errorMsg)
+            throw new Error(errorMsg);
         }
+        
+
+        const qTel = query(collection(db, "pharmacies"),
+            where("tel", "==", pharmacy.tel),
+        );
+        const docsTel = await getDocs(qTel);
+        if (docsTel.docs.length > 0) {
+            const errorMsg = `Pharmacy with tel ${pharmacy.tel} already exist !`
+            setTelErrorMsg(errorMsg);
+            throw new Error(errorMsg);
+        }
+
+
+        const qEmail = query(collection(db, "pharmacies"),
+            where("email", "==", pharmacy.email),
+        );
+        const docsEmail = await getDocs(qEmail);
+        if (docsEmail.docs.length > 0) {
+            const errorMsg = `Pharmacy with email ${pharmacy.email} already exist !`;
+            setEmailErrorMsg(errorMsg);
+            throw new Error(errorMsg);
+        }
+
+        
     }
 
     return (
@@ -143,6 +157,20 @@ export default function AddPharmacy({ latitude, longitude, userTelephone }: AddP
                         Ajout de pharmacie
                     </button>
                     <PharmacyForm onSubmit={addPharmacy} initialPharmacyData={initialPharmacyData} isLoading={isLoading} />
+
+                    <div className="mainCard">
+                        {
+                            telErrorMsg && <small className="text-red-500 hover:text-red-600" > {telErrorMsg} </small>
+                        }
+                        <br />
+                        {
+                            emailErrorMsg && <small className="text-red-500 hover:text-red-600" > {emailErrorMsg} </small>
+                        }
+                        <br />
+                        {
+                            nameErrorMsg && <small className="text-red-500 hover:text-red-600" > {nameErrorMsg} </small>
+                        }
+                    </div>
                 </div>
             </main>
         </>

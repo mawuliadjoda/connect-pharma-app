@@ -76,7 +76,7 @@ const HandleWebClientPhoneNumber = ({ latitude, longitude, callFromPage, candRed
                                     <TEInput
                                         
                                         type="number"
-                                        label="Numéro de tél"
+                                        label="Saisir numéro de tél"
 
                                         ref={telRef}
                                         onChange={handleInputChange}
@@ -88,7 +88,13 @@ const HandleWebClientPhoneNumber = ({ latitude, longitude, callFromPage, candRed
                                         >
                                             <span>Si vous êtes au togo saisir le numéro au format: 
                                                 <br /> 228 XX XX XX XX
-                                                <br /> Votre numéro est nécessaire afin de vous mettre en contact avec les pharmacies.
+                                                <br />
+                                                {
+                                                    callFromPage === CallFromPageEnum.NearestPharmaciesPage 
+                                                    ? 'Votre numéro est nécessaire afin de vous mettre en contact avec les pharmacies.' 
+                                                    : 'Votre numéro est nécessaire pour enregistrer votre pharmacie'
+                                                }
+                                               
                                                 <br /> Nous gardons la confidentialité de votre numéro.
                                             </span>
                                             {/* Nous gardons la confidentialité de votre numéro */}

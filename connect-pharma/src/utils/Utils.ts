@@ -14,3 +14,6 @@ export const formatToSimpleDateWithSeconds = (date: Date): string | undefined =>
 export const formatPhoneNumber = (tel: string) => `${tel!.includes('+') ? tel : `+${tel}`}`;
 
 export const buildEmail = (tel: string) => `${tel.trim()}@connectpharma-228.com`;
+
+
+export const trimString = (value: string) => value ? value.trim() : value;
