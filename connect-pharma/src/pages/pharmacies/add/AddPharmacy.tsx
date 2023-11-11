@@ -121,7 +121,7 @@ export default function AddPharmacy({ latitude, longitude, userTelephone }: AddP
             setNameErrorMsg(errorMsg)
             throw new Error(errorMsg);
         }
-        
+
 
         const qTel = query(collection(db, "pharmacies"),
             where("tel", "==", pharmacy.tel),
@@ -159,6 +159,7 @@ export default function AddPharmacy({ latitude, longitude, userTelephone }: AddP
                     <PharmacyForm onSubmit={addPharmacy} initialPharmacyData={initialPharmacyData} isLoading={isLoading} />
 
                     <div className="mainCard">
+                      
                         {
                             telErrorMsg && <small className="text-red-500 hover:text-red-600" > {telErrorMsg} </small>
                         }
