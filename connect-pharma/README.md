@@ -66,3 +66,5 @@ Manage pharmacie :
 
 
 https://typescript-eslint.io/rules/no-explicit-any/
+
+# https://www.ultimateakash.com/blog-details/IixDOGAKYAo=/How-to-Implement-localization-in-React-i18next-2022

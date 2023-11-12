@@ -48,6 +48,12 @@ const initMenu: Menu[] = [
     icon: faTable,
     role: ['admin', 'user'],
   },
+  {
+    label: "Pharmacies de garde",
+    path: "/admin/dutyDrugstore",
+    icon: faTable,
+    role: ['admin'],
+  },
   /*
   {
     label: "404",

@@ -10,7 +10,11 @@ export type Pharmacy = {
     tel: string,
     distance?: number,
     distanceStr?: string,
-    createTime?: Timestamp
+    createTime?: Timestamp,
+    isOpen?: boolean,
+    isDuty?: boolean,
+    startDuty?: Timestamp,
+    endDuty?: Timestamp
 }
 
 
