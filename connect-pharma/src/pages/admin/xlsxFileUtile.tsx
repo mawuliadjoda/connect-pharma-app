@@ -2,8 +2,7 @@
 import { read, utils, writeFile } from 'xlsx';
 import { useState } from "react";
 import { DutyPharmacy } from './DutyPharmacy';
-import firebase from './../../firebase';
-import { doc, writeBatch } from '@firebase/firestore';
+import { Timestamp, doc, writeBatch } from '@firebase/firestore';
 import { db } from '../../services/db';
 
 
@@ -33,8 +32,8 @@ const XlsxFileUtile = () => {
 
                     const [dutyStartDate, dutyEndDate] = getDutyDateFromFileName(fileName.replace('.xlsx', ''));
                     rows.map(dutyDrugstore => {
-                        dutyDrugstore.dutyStartDate = firebase.firestore.Timestamp.fromDate(dutyStartDate);
-                        dutyDrugstore.dutyEndDate = firebase.firestore.Timestamp.fromDate(dutyEndDate);
+                        dutyDrugstore.dutyStartDate = Timestamp.fromDate(dutyStartDate);
+                        dutyDrugstore.dutyEndDate = Timestamp.fromDate(dutyEndDate);
                     })
                     console.log(rows);
 
