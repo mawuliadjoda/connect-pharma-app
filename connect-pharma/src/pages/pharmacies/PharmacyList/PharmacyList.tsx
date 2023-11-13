@@ -1,7 +1,11 @@
 import { useOutletContext } from "react-router-dom";
 import { useEffect, useState, useMemo } from "react";
 import { Pharmacy, PharmacyConverter } from "../Pharmacy";
-import { collection, limit, onSnapshot, orderBy, query, where } from "firebase/firestore";
+import { 
+    collection, 
+    // limit, 
+    onSnapshot, orderBy, query, where 
+} from "firebase/firestore";
 import { getDb } from "../../../services/db";
 import { Loading } from "../../../components/Loading/Loading";
 import PharmacyTable from "../PharmacyTable/PharmacyTable";
@@ -24,8 +28,9 @@ export default function PharmacyList() {
 
     useEffect(() => {
         
-        const usersRef = collection(getDb(), 'pharmacies');
-        const q = query(usersRef, where("name", "!=", null), orderBy("name", "asc"), limit(50));
+        const pharmaciesRef = collection(getDb(), 'pharmacies');
+        // const q = query(pharmaciesRef, where("name", "!=", null), orderBy("name", "asc"), limit(50));
+        const q = query(pharmaciesRef, where("name", "!=", null), orderBy("name", "asc"));
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
             const newPharmacies: Pharmacy[] = [];
             querySnapshot.forEach((doc) => {
