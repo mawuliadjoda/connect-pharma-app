@@ -130,7 +130,7 @@ export default function NearestPharmacies({ latitude, longitude, userTelephone }
                     pharmacy.status = getPharmacyStatus(pharmacy.isDuty);
                     newPharmacies.push(pharmacy);
                 });
-                console.log(newPharmacies);
+                // console.log(newPharmacies);
 
                 const haversinePharmacies = applyHaversine(newPharmacies, userLocation);
                 const pharmaciesWithDistance = getNearPharmacies(haversinePharmacies);

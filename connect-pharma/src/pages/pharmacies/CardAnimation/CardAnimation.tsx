@@ -57,7 +57,13 @@ const CardAnimation = ({
                                 {
                                     PharmacyStatusEnum.CLOSE === row.status 
                                     ? <span className="h-3 w-3 mr-2 rounded-full bg-gray-300"></span>
-                                    : <span className="h-3 w-3 mr-2 rounded-full bg-green-800"></span>
+                                    : 
+                                    
+                                    (
+                                        PharmacyStatusEnum.CLOSE_SOON === row.status 
+                                        ? <span className="h-3 w-3 mr-2 rounded-full bg-red-800"></span>
+                                        : <span className="h-3 w-3 mr-2 rounded-full bg-green-800"></span>
+                                    )
                                 }
                                 
                                 {/* <span className="h-3 w-3 mr-2 rounded-full bg-gray-300"></span> */}                       
