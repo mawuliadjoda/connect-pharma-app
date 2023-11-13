@@ -1,6 +1,7 @@
 
 import "./CardAnimation.css";
 import { Pharmacy } from "../Pharmacy";
+import { PharmacyStatusEnum } from "../HandleWebClientPhoneNumber/UtilEnum";
 
 
 interface CardAnimationProps {
@@ -53,14 +54,24 @@ const CardAnimation = ({
                             className="card animate-slide-fade p-4 rounded shadow bg-white">
 
                             <div className="flex items-center">
-                                <span className="h-3 w-3 mr-2 rounded-full bg-green-800"></span>
-                                {/* <span className="h-3 w-3 mr-2 rounded-full bg-gray-300"></span> */}
-                       
+                                {
+                                    PharmacyStatusEnum.CLOSE === row.status 
+                                    ? <span className="h-3 w-3 mr-2 rounded-full bg-gray-300"></span>
+                                    : <span className="h-3 w-3 mr-2 rounded-full bg-green-800"></span>
+                                }
+                                
+                                {/* <span className="h-3 w-3 mr-2 rounded-full bg-gray-300"></span> */}                       
                                 {/* <span className="font-semibold">{row.name}</span> */}
+
                                 <span>{row.name}</span>
                             </div>                            
                             <small id="telHelp" className="absolute w-full text-neutral-500 dark:text-neutral-200">
                                 <span className="ml-5">{row.distanceStr}</span>
+                            </small>
+                            <br />
+
+                            <small id="telHelp" className="absolute w-full text-neutral-500 dark:text-neutral-200">
+                                <span className="ml-5">{row.status}</span>
                             </small>
                             <br />
 

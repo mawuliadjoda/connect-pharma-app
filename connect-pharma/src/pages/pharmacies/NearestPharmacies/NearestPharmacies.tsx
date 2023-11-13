@@ -22,7 +22,9 @@ import NearestPaginator from "./NearestPaginator";
 import Fuse from "fuse.js";
 import SearchBar from "../../../components/SearchBar/SearchBar";
 import CardAnimation from './../CardAnimation/CardAnimation';
-
+import { isWeekend } from "date-fns";
+import moment from 'moment'
+import { PharmacyStatusEnum } from "../HandleWebClientPhoneNumber/UtilEnum";
 
 
 // https://gps-coordinates.org/my-location.php
@@ -123,7 +125,12 @@ export default function NearestPharmacies({ latitude, longitude, userTelephone }
             if (querySnapshot.size > 0) {
 
                 const newPharmacies: Pharmacy[] = [];
-                querySnapshot.forEach((doc) => newPharmacies.push(PharmacyConverter.fromFirestore(doc)));
+                querySnapshot.forEach((doc) => {
+                    const pharmacy = PharmacyConverter.fromFirestore(doc);
+                    pharmacy.status = getPharmacyStatus(pharmacy.isDuty);
+                    newPharmacies.push(pharmacy);
+                });
+                console.log(newPharmacies);
 
                 const haversinePharmacies = applyHaversine(newPharmacies, userLocation);
                 const pharmaciesWithDistance = getNearPharmacies(haversinePharmacies);
@@ -158,6 +165,29 @@ export default function NearestPharmacies({ latitude, longitude, userTelephone }
 
     }, []);
 
+    const getPharmacyStatus = (isDuty?: boolean) => {
+
+        const now = new Date();
+        const currentTime= moment();
+        const closeSoonTime = moment('06:30 pm', "HH:mm a");
+        const closeTime = moment('07:30 pm', "HH:mm a");
+        
+        if (isWeekend(now))  {
+            return isDuty ? PharmacyStatusEnum.IS_DUTY : PharmacyStatusEnum.CLOSE
+        }
+        if (currentTime.isBefore(closeSoonTime)) {
+            return PharmacyStatusEnum.OPEN;
+        }
+        if (currentTime.isBetween(closeSoonTime , closeTime)) {
+            return isDuty ? PharmacyStatusEnum.IS_DUTY : PharmacyStatusEnum.CLOSE_SOON
+        }
+        if (currentTime.isAfter(closeTime)) {
+            return isDuty ? PharmacyStatusEnum.IS_DUTY : PharmacyStatusEnum.CLOSE
+        }
+
+        return PharmacyStatusEnum.UNKNOWN;
+        
+    }
 
     const getNext = () => {
         setDisableNextButton(true);

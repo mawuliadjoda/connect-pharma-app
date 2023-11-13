@@ -68,3 +68,8 @@ Manage pharmacie :
 https://typescript-eslint.io/rules/no-explicit-any/
 
 # https://www.ultimateakash.com/blog-details/IixDOGAKYAo=/How-to-Implement-localization-in-React-i18next-2022
+
+# https://www.ultimateakash.com/blog-details/Ii4jMGAKYAo=/Top-React-Interview-Questions-And-Answers-2023
+
+# Pharmacie de garde Lome https://www.inam.tg/pharmacies-de-garde/
+https://www.inam.tg/pharmacies-de-garde/
