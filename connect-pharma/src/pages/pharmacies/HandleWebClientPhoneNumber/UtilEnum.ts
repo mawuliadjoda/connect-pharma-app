@@ -12,6 +12,7 @@ export enum CandRedirectMessageEnum {
 }
 
 export enum PharmacyStatusEnum {
+    OPEN_SOON = 'Ouvre bient\u00F4t',
     OPEN = 'Ouvert',
     CLOSE_SOON = 'Ferme bient\u00F4t',
     CLOSE = 'Ferm\u00E9e',
