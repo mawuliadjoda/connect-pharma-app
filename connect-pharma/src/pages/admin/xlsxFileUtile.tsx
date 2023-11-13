@@ -2,10 +2,11 @@
 import { read, utils, writeFile } from 'xlsx';
 import { useState } from "react";
 import { DutyPharmacy } from './DutyPharmacy';
-import { Timestamp, doc, writeBatch } from '@firebase/firestore';
+import { Timestamp, WriteBatch, doc, writeBatch } from '@firebase/firestore';
 import { db } from '../../services/db';
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { PharmacyConverter } from '../pharmacies/Pharmacy';
+
 
 
 // https://www.ultimateakash.com/blog-details/Ii0zOGAKYAo=/How-to-Import-Export-Excel-&-CSV-In-React-2022
@@ -30,67 +31,18 @@ const XlsxFileUtile = () => {
 
 
                 if (sheets.length) {
-                    const rows = utils.sheet_to_json<DutyPharmacy>(wb.Sheets[sheets[0]]);
+                    let rows = utils.sheet_to_json<DutyPharmacy>(wb.Sheets[sheets[0]]);
                     setDutyDrugstores(rows);
 
                     const [dutyStartDate, dutyEndDate] = getDutyDateFromFileName(fileName.replace('.xlsx', ''));
-                    rows.map(dutyDrugstore => {
-                        dutyDrugstore.dutyStartDate = Timestamp.fromDate(dutyStartDate);
-                        dutyDrugstore.dutyEndDate = Timestamp.fromDate(dutyEndDate);
-                    })
-                    console.log(rows);
-
-                    // https://firebase.google.com/docs/firestore/manage-data/transactions?hl=fr
-                    const batchDutyPharmacies = writeBatch(db);
-                    const dutyDrugstorePhoneNumbers = new Set<string>();
-                    rows.forEach((row, index) => {
-                        const tel = `${import.meta.env.VITE_APP_TOGO_COUNTRY_CODE}${row.TELEPHONES.replaceAll(' ', '')}`;
-                        row.TELEPHONES = tel;
-                        dutyDrugstorePhoneNumbers.add(tel);
-                        const rowRef = doc(db, "dutyPharmacies",  `${tel}_${index}`); //automatically generate unique id
-                        batchDutyPharmacies.set(rowRef, row);
-                    });
-                    // await batch.commit();
-
-                    batchDutyPharmacies
-                        .commit()
-                        .then(() => {
-                            console.log("Batch write operation completed");
-                        })
-                        .catch((error) => {
-                            console.error("Batch write operation failed: ", error);
-                        });
+                    rows = updateDutyDrugstore(rows, dutyStartDate, dutyEndDate);
                     
-                    /* get all pharmacies and set duty */
-                    const q = query(collection(db, "pharmacies"), where("name", "!=", null));
-
-                    // const pharmacies: Pharmacy[] = [];
-                    const querySnapshot = await getDocs(q);
+                    const {batchDutyPharmacies, dutyDrugstorePhoneNumbers} = saveDutyDrugstore(rows);                
+                    commitBatch(batchDutyPharmacies, 'save duty drogstores');                    
                     
-                    const batchPharmacies = writeBatch(db);
-                    querySnapshot.forEach((docPharmacy) => {
-                        // docPharmacy.data() is never undefined for query doc snapshots                         
-
-                        const pharmacy = PharmacyConverter.fromFirestore(docPharmacy);
-                        pharmacy.isDuty = false;
-                        pharmacy.isOpen = true;
-                     
-
-                        if(dutyDrugstorePhoneNumbers.has(docPharmacy.data().tel)) {
-                            
-                            pharmacy.isDuty = true;
-                            pharmacy.dutyStartDate = Timestamp.fromDate(dutyStartDate);
-                            pharmacy.dutyEndDate = Timestamp.fromDate(dutyEndDate);
-
-                            // pharmacies.push(pharmacy);
-                        }   
-                        
-                        const pharmacyRef = doc(db, "pharmacies",  docPharmacy.id );
-                        batchPharmacies.update(pharmacyRef, pharmacy);
-                        
-                    });
-                    await batchPharmacies.commit();
-                    // console.log(pharmacies);
+                    /* get all pharmacies and set duty info*/                   
+                    updateAllPharmaciesWithDutyInformation(dutyDrugstorePhoneNumbers, dutyStartDate, dutyEndDate);
+                    
                 }
             }
             reader.readAsArrayBuffer(file);
@@ -99,12 +51,78 @@ const XlsxFileUtile = () => {
         }
     }
 
+ 
+    const updateAllPharmaciesWithDutyInformation = async (dutyDrugstorePhoneNumbers: Set<string>, dutyStartDate: Date, dutyEndDate: Date) => {
+        const q = query(collection(db, "pharmacies"), where("name", "!=", null));
+
+      
+        const querySnapshot = await getDocs(q);
+        
+        const batchPharmacies = writeBatch(db);
+        querySnapshot.forEach((docPharmacy) => {                      
+
+            const pharmacy = PharmacyConverter.fromFirestore(docPharmacy);
+            pharmacy.isDuty = false;
+            pharmacy.isOpen = true;         
+           
+            delete pharmacy['dutyStartDate'];
+            delete pharmacy['dutyEndDate'];
+
+            if(dutyDrugstorePhoneNumbers.has(docPharmacy.data().tel)) {                
+                pharmacy.isDuty = true;
+                pharmacy.dutyStartDate = Timestamp.fromDate(dutyStartDate);
+                pharmacy.dutyEndDate = Timestamp.fromDate(dutyEndDate);
+            }   
+            
+            const pharmacyRef = doc(db, "pharmacies",  docPharmacy.id );
+            batchPharmacies.update(pharmacyRef, pharmacy);
+            
+        });
+        // await batchPharmacies.commit();
+        commitBatch(batchPharmacies, 'update pharmacies with duty info');
+    }
+    const saveDutyDrugstore = (rows: DutyPharmacy[]) => {
+         // https://firebase.google.com/docs/firestore/manage-data/transactions?hl=fr
+         const batchDutyPharmacies = writeBatch(db);
+         const dutyDrugstorePhoneNumbers = new Set<string>();
+         rows.forEach((row, index) => {
+             const tel = `${import.meta.env.VITE_APP_TOGO_COUNTRY_CODE}${row.TELEPHONES.replaceAll(' ', '')}`;
+             row.TELEPHONES = tel;
+             dutyDrugstorePhoneNumbers.add(tel);
+             const rowRef = doc(db, "dutyPharmacies",  `${tel}_${index}`); //automatically generate unique id
+             batchDutyPharmacies.set(rowRef, row);
+         });
+        return {batchDutyPharmacies, dutyDrugstorePhoneNumbers};
+    }
+
+    const commitBatch = (batch: WriteBatch, logMsg?: string) => {
+        console.log(logMsg)
+        
+        // await batch.commit();
+        batch
+           .commit()
+           .then(() => {
+               console.log("Batch write operation completed");
+           })
+           .catch((error) => {
+               console.error("Batch write operation failed: ", error);
+           });
+    }
+    const updateDutyDrugstore = (rows: DutyPharmacy[], dutyStartDate: Date, dutyEndDate: Date) => {
+       
+        rows.map(dutyDrugstore => {
+            dutyDrugstore.dutyStartDate = Timestamp.fromDate(dutyStartDate);
+            dutyDrugstore.dutyEndDate = Timestamp.fromDate(dutyEndDate);
+        })
+
+        return rows;
+    }
     const getDutyDateFromFileName = (fileName: string) => {
 
         const datePart = fileName?.split('-');
         const dayPart = datePart[0]?.split('_');
 
-        const dutyStartDate = new Date(+datePart[2], +datePart[1] - 1, +dayPart[0], 0, 0, 0);
+        const dutyStartDate = new Date(+datePart[2], +datePart[1] - 1, +dayPart[0], 0, 0, 1);
         const dutyEndDate = new Date(+datePart[2], +datePart[1] - 1, +dayPart[1], 23, 59, 59);
 
         return [dutyStartDate, dutyEndDate];
@@ -121,7 +139,7 @@ const XlsxFileUtile = () => {
         utils.sheet_add_aoa(ws, headings);
         utils.sheet_add_json(ws, dutyDrugstores, { origin: 'A2', skipHeader: true });
         utils.book_append_sheet(wb, ws, 'Report');
-        writeFile(wb, 'Movie Report.xlsx');
+        writeFile(wb, 'Duty Report.xlsx');
     }
 
 
@@ -178,7 +196,7 @@ const XlsxFileUtile = () => {
                                     ))
                                     :
                                     <tr>
-                                        <td colSpan={5} className="text-center">No Movies Found.</td>
+                                        <td colSpan={5} className="text-center">No Drugstore Found.</td>
                                     </tr>
                             }
                         </tbody>
