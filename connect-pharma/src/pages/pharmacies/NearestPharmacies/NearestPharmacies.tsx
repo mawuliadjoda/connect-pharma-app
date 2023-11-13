@@ -10,7 +10,10 @@ import { Loading } from "../../../components/Loading/Loading";
 import { applyHaversine, getNearPharmacies } from "../../../services/LocationService";
 import { Coordinate } from "calculate-distance-between-coordinates";
 import { formatPhoneNumber, formatToSimpleDateWithSeconds } from "../../../utils/Utils";
-import { GeoPoint, Timestamp, addDoc, collection, limit, onSnapshot, orderBy, query, where } from "firebase/firestore";
+import { GeoPoint, Timestamp, addDoc, collection, 
+    // limit, 
+    onSnapshot, orderBy, query, where 
+} from "firebase/firestore";
 import { getDb } from "../../../services/db";
 import { customPaginate } from "../util/PaginateCalculator";
 import { ClientAction, ClientHistory } from "../../ClientHistory/ClientHistory";
@@ -112,8 +115,9 @@ export default function NearestPharmacies({ latitude, longitude, userTelephone }
             lon: longitude
         }
 
-        const usersRef = collection(getDb(), 'pharmacies');
-        const q = query(usersRef, where("name", "!=", null), orderBy("name", "asc"), limit(50));
+        const pharmaciesRef = collection(getDb(), 'pharmacies');
+        // const q = query(pharmaciesRef, where("name", "!=", null), orderBy("name", "asc"), limit(50));
+        const q = query(pharmaciesRef, where("name", "!=", null), orderBy("name", "asc"));
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
 
             if (querySnapshot.size > 0) {
