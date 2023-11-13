@@ -169,8 +169,8 @@ export default function NearestPharmacies({ latitude, longitude, userTelephone }
 
         const now = new Date();
         const currentTime= moment();
-        const closeSoonTime = moment('06:30 pm', "HH:mm a");
-        const closeTime = moment('07:30 pm', "HH:mm a");
+        const closeSoonTime = moment(import.meta.env.VITE_APP_PHARMACY_CLOSE_SOON_TIME, "HH:mm a");
+        const closeTime = moment(import.meta.env.VITE_APP_PHARMACY_CLOSE_TIME, "HH:mm a");
         
         if (isWeekend(now))  {
             return isDuty ? PharmacyStatusEnum.IS_DUTY : PharmacyStatusEnum.CLOSE

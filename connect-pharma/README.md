@@ -73,3 +73,19 @@ https://typescript-eslint.io/rules/no-explicit-any/
 
 # Pharmacie de garde Lome https://www.inam.tg/pharmacies-de-garde/
 https://www.inam.tg/pharmacies-de-garde/
+
+
+
+
+# APP MESSAGE
+
+VITE_SITE= "pwa react hooks crud with firestore"
+
+
+VITE_SITE_NAME="Pharma"
+
+VITE_APP_DOMAIN_NAME = "connectpharma-228.com"
+VITE_APP_TOGO_COUNTRY_CODE = "228"
+
+VITE_APP_PHARMACY_CLOSE_SOON_TIME = "07:30 pm"
+VITE_APP_PHARMACY_CLOSE_TIME = "08:00 pm"
