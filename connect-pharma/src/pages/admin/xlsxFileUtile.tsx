@@ -65,10 +65,12 @@ const XlsxFileUtile = () => {
             pharmacy.isDuty = false;
             pharmacy.isOpen = true;         
            
+            pharmacy.tel = pharmacy.tel?.replaceAll('+', '').trim();
+
             delete pharmacy['dutyStartDate'];
             delete pharmacy['dutyEndDate'];
 
-            if(dutyDrugstorePhoneNumbers.has(docPharmacy.data().tel)) {                
+            if(dutyDrugstorePhoneNumbers.has(pharmacy.tel)) {                
                 pharmacy.isDuty = true;
                 pharmacy.dutyStartDate = Timestamp.fromDate(dutyStartDate);
                 pharmacy.dutyEndDate = Timestamp.fromDate(dutyEndDate);
@@ -97,7 +99,7 @@ const XlsxFileUtile = () => {
 
     const commitBatch = (batch: WriteBatch, logMsg?: string) => {
         console.log(logMsg)
-        
+
         // await batch.commit();
         batch
            .commit()
