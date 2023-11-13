@@ -4,6 +4,8 @@ import { useState } from "react";
 import { DutyPharmacy } from './DutyPharmacy';
 import { Timestamp, doc, writeBatch } from '@firebase/firestore';
 import { db } from '../../services/db';
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { PharmacyConverter } from '../pharmacies/Pharmacy';
 
 
 // https://www.ultimateakash.com/blog-details/Ii0zOGAKYAo=/How-to-Import-Export-Excel-&-CSV-In-React-2022
@@ -12,7 +14,8 @@ const XlsxFileUtile = () => {
 
     const [dutyDrugstores, setDutyDrugstores] = useState<DutyPharmacy[]>([]);
 
-    const handleImport = ($event: any) => {
+  
+    const handleImport =   ($event: any) => {
         const files = $event.target.files;
 
         if (files!.length) {
@@ -21,7 +24,7 @@ const XlsxFileUtile = () => {
             const fileName = file.name;
 
             const reader = new FileReader();
-            reader.onload = (event) => {
+            reader.onload = async (event) => {
                 const wb = read(event!.target!.result);
                 const sheets = wb.SheetNames;
 
@@ -38,17 +41,18 @@ const XlsxFileUtile = () => {
                     console.log(rows);
 
                     // https://firebase.google.com/docs/firestore/manage-data/transactions?hl=fr
-                    const batch = writeBatch(db);
+                    const batchDutyPharmacies = writeBatch(db);
+                    const dutyDrugstorePhoneNumbers = new Set<string>();
                     rows.forEach((row, index) => {
                         const tel = `${import.meta.env.VITE_APP_TOGO_COUNTRY_CODE}${row.TELEPHONES.replaceAll(' ', '')}`;
                         row.TELEPHONES = tel;
-
+                        dutyDrugstorePhoneNumbers.add(tel);
                         const rowRef = doc(db, "dutyPharmacies",  `${tel}_${index}`); //automatically generate unique id
-                        batch.set(rowRef, row);
+                        batchDutyPharmacies.set(rowRef, row);
                     });
                     // await batch.commit();
 
-                    batch
+                    batchDutyPharmacies
                         .commit()
                         .then(() => {
                             console.log("Batch write operation completed");
@@ -56,6 +60,37 @@ const XlsxFileUtile = () => {
                         .catch((error) => {
                             console.error("Batch write operation failed: ", error);
                         });
+                    
+                    /* get all pharmacies and set duty */
+                    const q = query(collection(db, "pharmacies"), where("name", "!=", null));
+
+                    // const pharmacies: Pharmacy[] = [];
+                    const querySnapshot = await getDocs(q);
+                    
+                    const batchPharmacies = writeBatch(db);
+                    querySnapshot.forEach((docPharmacy) => {
+                        // docPharmacy.data() is never undefined for query doc snapshots                         
+
+                        const pharmacy = PharmacyConverter.fromFirestore(docPharmacy);
+                        pharmacy.isDuty = false;
+                        pharmacy.isOpen = true;
+                     
+
+                        if(dutyDrugstorePhoneNumbers.has(docPharmacy.data().tel)) {
+                            
+                            pharmacy.isDuty = true;
+                            pharmacy.dutyStartDate = Timestamp.fromDate(dutyStartDate);
+                            pharmacy.dutyEndDate = Timestamp.fromDate(dutyEndDate);
+
+                            // pharmacies.push(pharmacy);
+                        }   
+                        
+                        const pharmacyRef = doc(db, "pharmacies",  docPharmacy.id );
+                        batchPharmacies.update(pharmacyRef, pharmacy);
+                        
+                    });
+                    await batchPharmacies.commit();
+                    // console.log(pharmacies);
                 }
             }
             reader.readAsArrayBuffer(file);

@@ -13,8 +13,8 @@ export type Pharmacy = {
     createTime?: Timestamp,
     isOpen?: boolean,
     isDuty?: boolean,
-    startDuty?: Timestamp,
-    endDuty?: Timestamp
+    dutyStartDate?: Timestamp,
+    dutyEndDate?: Timestamp
 }
 
 
