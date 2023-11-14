@@ -22,7 +22,7 @@ import NearestPaginator from "./NearestPaginator";
 import Fuse from "fuse.js";
 import SearchBar from "../../../components/SearchBar/SearchBar";
 import CardAnimation from './../CardAnimation/CardAnimation';
-import { isSunday, isWeekend } from "date-fns";
+import { isSunday } from "date-fns";
 import moment from 'moment'
 import { PharmacyStatusEnum } from "../HandleWebClientPhoneNumber/UtilEnum";
 

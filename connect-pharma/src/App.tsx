@@ -28,7 +28,8 @@ import PharmacyListCustomPaginaton from "./pages/pharmacies/PharmacyListCustomPa
 import NearestPharmaciesPage from "./pages/pharmacies/NearestPharmacies/NearestPharmaciesPage";
 import AddPharmacyPage from "./pages/pharmacies/add/AddPharmacyPage";
 import PharmacyListFireStorePagination from "./pages/pharmacies/PharmacyList/PharmacyListFireStorePagination";
-import DutyDrugstore from "./pages/admin/dutyDrugstore";
+import DutyDrugstorePage from "./pages/admin/dutyDrugstorePage";
+// import DutyDrugstore from "./pages/admin/dutyDrugstorePage";
 // import CardAnimation from "./pages/pharmacies/CardAnimation/CardAnimation";
 
 
@@ -91,7 +92,7 @@ function App() {
               <Route path="/onlineClients" element={<MyOnlineClient />}></Route>
               <Route path="/allOnlineClients" element={<AllOnlineClient />}></Route>
 
-              <Route path="/admin/dutyDrugstore" element={<DutyDrugstore />}></Route>
+              <Route path="/admin/dutyDrugstore" element={<DutyDrugstorePage />}></Route>
 
               
               

@@ -4,7 +4,6 @@ import Navbar from "../../components/Navbar/Index";
 import XlsxFileUtile from "./xlsxFileUtile";
 
 
-
 const DutyDrugstore = () => {
 
     const [sidebarToggle] = useOutletContext<any>();
