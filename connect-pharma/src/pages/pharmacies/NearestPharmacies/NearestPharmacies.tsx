@@ -168,15 +168,18 @@ export default function NearestPharmacies({ latitude, longitude, userTelephone }
     const getPharmacyStatus = (isDuty?: boolean) => {
 
         const now = new Date();
-        const currentTime= moment();
-        const closeSoonTime = moment(import.meta.env.VITE_APP_PHARMACY_CLOSE_SOON_TIME, "HH:mm a");
-        const closeTime = moment(import.meta.env.VITE_APP_PHARMACY_CLOSE_TIME, "HH:mm a");
-        const openSoonTime = moment(import.meta.env.VITE_APP_PHARMACY_OPEN_SOON_TIME, "HH:mm a");
-        const openTime = moment(import.meta.env.VITE_APP_PHARMACY_OPEN_TIME, "HH:mm a");
+        const currentTime= moment().locale('fr');
+        const closeSoonTime = moment(import.meta.env.VITE_APP_PHARMACY_CLOSE_SOON_TIME, "HH:mm").locale('fr');
+        const closeTime = moment(import.meta.env.VITE_APP_PHARMACY_CLOSE_TIME, "HH:mm").locale('fr');
+        const openSoonTime = moment(import.meta.env.VITE_APP_PHARMACY_OPEN_SOON_TIME, "HH:mm").locale('fr');
+        const openTime = moment(import.meta.env.VITE_APP_PHARMACY_OPEN_TIME, "HH:mm").locale('fr');
         
-        
+      
         if (isWeekend(now))  {
             return isDuty ? PharmacyStatusEnum.IS_DUTY : PharmacyStatusEnum.CLOSE
+        }
+        if (currentTime.isBefore(openSoonTime)) {
+            return isDuty ? PharmacyStatusEnum.IS_DUTY : PharmacyStatusEnum.CLOSE;
         }
         if (currentTime.isBetween(openSoonTime, openTime)) {
             return isDuty ? PharmacyStatusEnum.IS_DUTY : PharmacyStatusEnum.OPEN_SOON;
