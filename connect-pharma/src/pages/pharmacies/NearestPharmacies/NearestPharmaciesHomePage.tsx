@@ -8,7 +8,7 @@ const ADVICE_MESSAGE = "Votre localisation est nécéssaire pour afficher les ph
 const NearestPharmaciesHomePage = () => {
 
     const [time, setTime] = useState(0);
-    const [isCounting, setIsCounting] = useState<boolean>(false);
+    const [isCounting, setIsCounting] = useState<boolean>(true);
 
 
 
@@ -17,8 +17,9 @@ const NearestPharmaciesHomePage = () => {
         const locationAuthorized = localStorage.getItem("LocationAuthorized");
         const foundLocationAuthorized = locationAuthorized ? JSON.parse(locationAuthorized) : null;
 
-        if (!foundLocationAuthorized?.isLocationAuthorized) {
-
+        if (foundLocationAuthorized?.isLocationAuthorized) {
+            setIsCounting(false);
+        } else {
             let seconds = 5;
             setTime(seconds);
             const makeIteration = () => {
@@ -33,12 +34,9 @@ const NearestPharmaciesHomePage = () => {
                 } else {
                     console.log('Done!');
                     setIsCounting(false);
-
-                    //
                 }
             };
             setTimeout(makeIteration, 1000);  // 1 second waiting
-
         }
 
 
