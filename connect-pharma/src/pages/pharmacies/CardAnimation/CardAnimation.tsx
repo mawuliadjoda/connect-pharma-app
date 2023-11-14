@@ -54,17 +54,21 @@ const CardAnimation = ({
                             className="card animate-slide-fade p-4 rounded shadow bg-white">
 
                             <div className="flex items-center">
-                                {
-                                    PharmacyStatusEnum.CLOSE === row.status ? <span className="h-3 w-3 mr-2 rounded-full bg-gray-300"></span>: ''   
-                                }
+                              
                                 {
                                     PharmacyStatusEnum.CLOSE_SOON === row.status ? <span className="h-3 w-3 mr-2 rounded-full bg-red-800"></span>: ''   
+                                }
+                                {
+                                    PharmacyStatusEnum.CLOSE === row.status ? <span className="h-3 w-3 mr-2 rounded-full bg-gray-300"></span>: ''   
                                 }
                                 {
                                     PharmacyStatusEnum.OPEN_SOON === row.status ? <span className="h-3 w-3 mr-2 rounded-full bg-green-200"></span>: ''   
                                 }
                                 {
                                     PharmacyStatusEnum.OPEN === row.status ? <span className="h-3 w-3 mr-2 rounded-full bg-green-800"></span>: ''   
+                                }
+                                {
+                                    PharmacyStatusEnum.IS_DUTY === row.status ? <span className="h-3 w-3 mr-2 rounded-full bg-green-800"></span>: ''   
                                 }
                                 
                                 {/* <span className="h-3 w-3 mr-2 rounded-full bg-gray-300"></span> */}                       
