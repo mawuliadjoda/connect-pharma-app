@@ -25,10 +25,11 @@ import MyOnlineClient from "./pages/ClientHistory/MyOnlineClient";
 import AllOnlineClient from "./pages/ClientHistory/AllOnlineClient";
 // import PharmacyListFireStorePagination from "./pages/pharmacies/PharmacyListFireStorePagination";
 import PharmacyListCustomPaginaton from "./pages/pharmacies/PharmacyListCustomPaginaton";
-import NearestPharmaciesPage from "./pages/pharmacies/NearestPharmacies/NearestPharmaciesPage";
+// import NearestPharmaciesPage from "./pages/pharmacies/NearestPharmacies/NearestPharmaciesPage";
 import AddPharmacyPage from "./pages/pharmacies/add/AddPharmacyPage";
 import PharmacyListFireStorePagination from "./pages/pharmacies/PharmacyList/PharmacyListFireStorePagination";
 import DutyDrugstorePage from "./pages/admin/dutyDrugstorePage";
+import NearestPharmaciesHomePage from "./pages/pharmacies/NearestPharmacies/NearestPharmaciesHomePage";
 // import DutyDrugstore from "./pages/admin/dutyDrugstorePage";
 // import CardAnimation from "./pages/pharmacies/CardAnimation/CardAnimation";
 
@@ -104,7 +105,8 @@ function App() {
           
           
           
-          <Route path="/nearestPharmacies/:latitude?/:longitude?/:userTelephone?" element={<NearestPharmaciesPage />} ></Route>
+          {/* <Route path="/nearestPharmacies/:latitude?/:longitude?/:userTelephone?" element={<NearestPharmaciesPage />} ></Route> */}
+          <Route path="/nearestPharmacies/:latitude?/:longitude?/:userTelephone?" element={<NearestPharmaciesHomePage />} ></Route>
           <Route path="/pharmacies/add/:latitude?/:longitude?/:userTelephone?" element={<AddPharmacyPage />} />
           {/* <Route path="/animation" element={<CardAnimation props="animation" />}></Route> */}
 
