@@ -39,16 +39,21 @@ const NearestPharmaciesPage = () => {
 
                     setIsGeoLocationError(false);
 
+                    localStorage.setItem("LocationAuthorized", JSON.stringify({isLocationAuthorized: true}));
+
                 },
                 (error) => {
                     console.error(error);
                     // alert(error);
                     setIsGeoLocationError(true);
+
+                    localStorage.setItem("LocationAuthorized", JSON.stringify({isLocationAuthorized: false}));
                 }
             );
         } else {
             console.log('latitude && longitude && userTelephone probably passed to browser.');
             setIsGeoLocationError(false);
+            localStorage.setItem("LocationAuthorized", JSON.stringify({isLocationAuthorized: true}));
         }
 
         /*

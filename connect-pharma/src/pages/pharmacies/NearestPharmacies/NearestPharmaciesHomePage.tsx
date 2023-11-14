@@ -8,40 +8,50 @@ const ADVICE_MESSAGE = "Votre localisation est nécéssaire pour afficher les ph
 const NearestPharmaciesHomePage = () => {
 
     const [time, setTime] = useState(0);
-    const [isCounting, setIsCounting] = useState<boolean>(true);
-    
+    const [isCounting, setIsCounting] = useState<boolean>(false);
+
 
 
     useEffect(() => {
-       
-        let seconds = 5;
-        setTime(seconds);
-        const makeIteration = () => {
-            console.clear();
-            if (seconds > 0) {
-                console.log(seconds);
-                seconds -= 1;
-                setTime(seconds);
-                setTimeout(makeIteration, 1000);  // 1 second waiting
+        
+        const locationAuthorized = localStorage.getItem("LocationAuthorized");
+        const foundLocationAuthorized = locationAuthorized ? JSON.parse(locationAuthorized) : null;
 
-                setIsCounting(true);
-            } else {
-                console.log('Done!');
-                setIsCounting(false);
-            }
-        };
-        setTimeout(makeIteration, 1000);  // 1 second waiting
+        if (!foundLocationAuthorized?.isLocationAuthorized) {
+
+            let seconds = 5;
+            setTime(seconds);
+            const makeIteration = () => {
+                console.clear();
+                if (seconds > 0) {
+                    console.log(seconds);
+                    seconds -= 1;
+                    setTime(seconds);
+                    setTimeout(makeIteration, 1000);  // 1 second waiting
+
+                    setIsCounting(true);
+                } else {
+                    console.log('Done!');
+                    setIsCounting(false);
+
+                    //
+                }
+            };
+            setTimeout(makeIteration, 1000);  // 1 second waiting
+
+        }
+
 
     }, []);
 
 
     return (
-        <>           
-           {
-                isCounting 
-                ? <Loading message={ `___${time}  ___ ${ADVICE_MESSAGE}`} isForClient={true}  /> 
-                : <NearestPharmaciesPage />
-           }
+        <>
+            {
+                isCounting
+                    ? <Loading message={`___${time}  ___ ${ADVICE_MESSAGE}`} isForClient={true} />
+                    : <NearestPharmaciesPage />
+            }
         </>
     )
 }
