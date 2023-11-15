@@ -85,15 +85,16 @@ const HandleWebClientPhoneNumber = ({ latitude, longitude, callFromPage, candRed
                                             id="telHelp"
                                             className="absolute w-full text-neutral-500 dark:text-neutral-200"
                                         >
-                                            <span>Si vous êtes au togo saisir le numéro au format: 
-                                                <br /> {import.meta.env.VITE_APP_PHONE_NUMBER_FORMAT}
+                                            <span>
+                                                {import.meta.env.VITE_APP_LOCATION_PHONE_NUMBER_MESSAGE}
+                                                <br /> 
+                                                {import.meta.env.VITE_APP_PHONE_NUMBER_FORMAT}
                                                 <br />
                                                 {
                                                     callFromPage === CallFromPageEnum.NearestPharmaciesPage 
                                                     ? 'Votre numéro est nécessaire afin de vous mettre en contact avec les pharmacies.' 
                                                     : 'Votre numéro est nécessaire pour enregistrer votre pharmacie'
-                                                }
-                                               
+                                                }                                               
                                                 <br /> Nous gardons la confidentialité de votre numéro.
                                             </span>
                                             {/* Nous gardons la confidentialité de votre numéro */}
