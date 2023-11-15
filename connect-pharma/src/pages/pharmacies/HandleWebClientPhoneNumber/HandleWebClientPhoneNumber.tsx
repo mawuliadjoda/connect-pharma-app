@@ -42,9 +42,8 @@ const HandleWebClientPhoneNumber = ({ latitude, longitude, callFromPage, candRed
                 {
                     latitude && longitude &&
                     <div className="mainCard ">
-                      <br />
-                      <br />
-                      <br />
+                 
+                    
                       <br />
                       <br />
                       <br />
@@ -87,7 +86,7 @@ const HandleWebClientPhoneNumber = ({ latitude, longitude, callFromPage, candRed
                                             className="absolute w-full text-neutral-500 dark:text-neutral-200"
                                         >
                                             <span>Si vous êtes au togo saisir le numéro au format: 
-                                                <br /> 228 XX XX XX XX
+                                                <br /> {import.meta.env.VITE_APP_PHONE_NUMBER_FORMAT}
                                                 <br />
                                                 {
                                                     callFromPage === CallFromPageEnum.NearestPharmaciesPage 

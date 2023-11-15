@@ -88,7 +88,7 @@ const XlsxFileUtile = () => {
          const batchDutyPharmacies = writeBatch(db);
          const dutyDrugstorePhoneNumbers = new Set<string>();
          rows.forEach((row, index) => {
-             const tel = `${import.meta.env.VITE_APP_TOGO_COUNTRY_CODE}${row.TELEPHONES.replaceAll(' ', '')}`;
+             const tel = `${import.meta.env.VITE_APP_COUNTRY_CODE}${row.TELEPHONES.replaceAll(' ', '')}`;
              row.TELEPHONES = tel;
              dutyDrugstorePhoneNumbers.add(tel);
              const rowRef = doc(db, "dutyPharmacies",  `${tel}_${index}`); //automatically generate unique id
