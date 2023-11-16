@@ -30,6 +30,7 @@ import AddPharmacyPage from "./pages/pharmacies/add/AddPharmacyPage";
 import PharmacyListFireStorePagination from "./pages/pharmacies/PharmacyList/PharmacyListFireStorePagination";
 import DutyDrugstorePage from "./pages/admin/dutyDrugstorePage";
 import NearestPharmaciesHomePage from "./pages/pharmacies/NearestPharmacies/NearestPharmaciesHomePage";
+import ProtectedRoute from "./utils/ProtectedRoute";
 // import DutyDrugstore from "./pages/admin/dutyDrugstorePage";
 // import CardAnimation from "./pages/pharmacies/CardAnimation/CardAnimation";
 
@@ -102,6 +103,12 @@ function App() {
 
 
           <Route path="/" element={<AuthLayout />}></Route>
+          
+          
+          
+          <Route path="/.well-known/assetlinks.json" element={<ProtectedRoute isAllowed={true} redirectTo="/.well-known/assetlinks.json"  />}></Route>
+          <Route path="/android/android-launchericon-512-512.png" element={<ProtectedRoute isAllowed={true} redirectTo="/android/android-launchericon-512-512.png"  />}></Route>
+          
           
           
           

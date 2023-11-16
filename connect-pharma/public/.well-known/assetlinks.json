@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.connectpharma_228.twa",
+      "sha256_cert_fingerprints": [
+        "1C:34:7D:5B:CC:04:00:F5:E2:10:A3:94:87:66:62:33:3B:33:FC:07:6F:66:71:78:1B:19:FF:20:9E:55:62:E9"
+      ]
+    }
+  }
+]

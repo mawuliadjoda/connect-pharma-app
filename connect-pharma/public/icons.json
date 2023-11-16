@@ -1,6 +1,4 @@
 {
-  "name": "",
-  "short_name": "",
   "icons": [
     {
       "src": "windows11/SmallTile.scale-100.png",
@@ -450,8 +448,5 @@
       "src": "ios/1024.png",
       "sizes": "1024x1024"
     }
-  ],
-  "theme_color": "#ffffff",
-  "background_color": "#ffffff",
-  "display": "standalone"
+  ]
 }

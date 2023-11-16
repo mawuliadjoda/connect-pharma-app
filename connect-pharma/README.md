@@ -93,3 +93,12 @@ VITE_APP_PHARMACY_CLOSE_TIME = "08:00 pm"
 
 VITE_APP_PHARMACY_OPEN_SOON_TIME = "06:30 am"
 VITE_APP_PHARMACY_OPEN_TIME = "07:00 am"
+
+
+# deploy pwa 
+https://blog.pwabuilder.com/posts/publish-your-pwa-to-the-ios-app-store/
+https://docs.pwabuilder.com/#/builder/android
+https://www.pwabuilder.com/reportcard?site=https://connectpharma-228.com
+
+# generate app icon for play store
+https://romannurik.github.io/AndroidAssetStudio/icons-launcher.html#foreground.type=clipart&foreground.clipart=loupe&foreground.space.trim=1&foreground.space.pad=0.15&foreColor=rgba(96%2C%20125%2C%20139%2C%200)&backColor=rgb(0%2C%20150%2C%20136)&crop=0&backgroundShape=circle&effects=none&name=ic_launcher
