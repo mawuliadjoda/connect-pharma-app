@@ -33,7 +33,8 @@ function RegisterIndex() {
 
   const { userTelephone, userEmail } = useParams();
   const [email, setEmail] = useState(userEmail!.replaceAll(",", "."));
-  const [tel, setTel] = useState(userTelephone ? formatPhoneNumber(userTelephone) : '');
+  // const [tel, setTel] = useState(userTelephone ? formatPhoneNumber(userTelephone) : '');
+  const [tel, setTel] = useState(userTelephone ? userTelephone : '');
 
 
   useEffect(() => {
