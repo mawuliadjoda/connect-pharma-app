@@ -6,9 +6,9 @@ const manifestForPlugIn = {
   registerType:'prompt',
   includeAssests:['favicon.ico', "apple-touc-icon.png", "masked-icon.svg"],
   manifest:{
-    name:"React-vite-app",
-    short_name:"react-vite-app",
-    description:"I am a simple vite app",
+    name: "Connect Pharma 228",
+    short_name: "Connect Pharma 228",
+    description:"Connect Pharma Drugstore App",
     icons: [
       {
         "src": "windows11/SmallTile.scale-100.png",
