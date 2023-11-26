@@ -11,8 +11,9 @@ import {
 } from "firebase/firestore";
 
 import { User, UserConverter } from "../../Users/User";
-import { FirebaseErrorCode, FirebaseErrorMessage, buildEmail } from "../../../utils/Utils";
 import { FirebaseError } from "firebase/app";
+import { FirebaseErrorCode, FirebaseErrorMessage } from "./FirebaseErrorCodeEnum";
+import { buildEmail } from "../../../utils/Utils";
 
 const LoginImage = "https://edp.raincode.my.id/static/media/login.cc0578413db10119a7ff.png";
 
