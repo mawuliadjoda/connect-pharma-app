@@ -12,8 +12,9 @@ import {
 
 import { User, UserConverter } from "../../Users/User";
 import { FirebaseError } from "firebase/app";
-import { FirebaseErrorCode, FirebaseErrorMessage } from "./FirebaseErrorCodeEnum";
+
 import { buildEmail } from "../../../utils/Utils";
+import { getErrorMessage } from "../errorMessage";
 
 const LoginImage = "https://edp.raincode.my.id/static/media/login.cc0578413db10119a7ff.png";
 
@@ -75,19 +76,6 @@ function LoginIndex() {
       }
 
     }
-  }
-
-  const getErrorMessage = (code: string): string  => {
-    let message = '';
-    switch (code) {
-      case FirebaseErrorCode.USER_NOT_FOUND:
-        message = FirebaseErrorMessage.USER_NOT_FOUND;
-        break;
-    
-      default:
-        break;
-    }
-    return message;
   }
 
   // https://blog.logrocket.com/user-authentication-firebase-react-apps/

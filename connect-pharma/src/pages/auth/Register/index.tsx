@@ -10,9 +10,11 @@ import { db, getDb } from "../../../services/db";
 import { buildEmail } from "../../../utils/Utils";
 import { formatPhoneNumber } from './../../../utils/Utils';
 import { WebAppData, WebAppDataStep } from "../../../utils/WebAppData";
+import { FirebaseError } from "firebase/app";
+import { getErrorMessage } from "../errorMessage";
 
 
-export {};
+export { };
 
 declare global {
   interface Window {
@@ -25,7 +27,7 @@ const tele = window.Telegram.WebApp;
 function RegisterIndex() {
   const navigate = useNavigate();
   // const [error, setError] = useState(false);
-  
+
   const [password, setPassword] = useState("");
   // const [name, setName] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -34,6 +36,7 @@ function RegisterIndex() {
   const { userTelephone, userEmail } = useParams();
   const [email, setEmail] = useState(userEmail!.replaceAll(",", "."));
   const [tel, setTel] = useState(userTelephone ? formatPhoneNumber(userTelephone) : '');
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
 
   useEffect(() => {
@@ -44,8 +47,9 @@ function RegisterIndex() {
     e.preventDefault();
 
 
-    // setError(false);
-    if(password !== confirmPassword) {
+    setErrorMsg('');
+    if (password !== confirmPassword) {
+      setErrorMsg('Mot de passe non identique !');
       throw new Error(`Confirmation password is not the same to password !`);
     }
 
@@ -56,18 +60,18 @@ function RegisterIndex() {
   async function onSubmit(email: string, password: string, tel: string) {
 
     try {
-     
+
       email = email ? email : buildEmail(tel);
 
       const q = query(collection(db, "users"), where("email", "==", email));
       const docs = await getDocs(q);
 
-      if(docs.docs.length > 0 ) {        
+      if (docs.docs.length > 0) {
         throw new Error(`User with email ${email} already exist !`);
-      } 
+      }
 
       const auth = getAuth();
-      
+
       const userCredential: UserCredential = await createUserWithEmailAndPassword(auth, email, password);
 
       const user: User = {
@@ -80,16 +84,27 @@ function RegisterIndex() {
         createTime: Timestamp.now()
       };
 
-      if(email === buildEmail(tel)) {
+      if (email === buildEmail(tel)) {
         user.password = password;
       }
-      
+
       addUser(user);
 
 
     } catch (error: any) {
-      console.error(error.code);
-      console.error(error.message);
+     
+      // console.error(error.code);
+      if (error instanceof FirebaseError) {
+        const firebaseError = (error as FirebaseError);
+
+        const message = getErrorMessage(firebaseError.code);
+
+        setErrorMsg(message);
+      
+        setLoading(false);
+      }
+      // console.error(error.code);
+      // console.error(error.message);
     }
   }
 
@@ -104,7 +119,7 @@ function RegisterIndex() {
           message: 'Votre compte a été bien créé dans notre système ! ',
           email: email,
           tel: formatPhoneNumber(tel),
-          hasEmail: true, 
+          hasEmail: true,
           frontendUrl: 'https://connect-pharma-911ea.web.app',
           step: WebAppDataStep.LOGIN
         }
@@ -168,8 +183,8 @@ function RegisterIndex() {
               <div className="md:mt-10 mt-4">
                 <form onSubmit={handleSubmit}>
 
-                      {/* tel */}
-                      <div className="flex flex-col mb-3">
+                  {/* tel */}
+                  <div className="flex flex-col mb-3">
                     <div className="relative">
                       <div className="inline-flex items-center justify-center absolute left-0 top-0 h-full w-10 text-gray-400">
                         <FontAwesomeIcon icon={faPhone} />
@@ -181,7 +196,7 @@ function RegisterIndex() {
                         name="tel"
                         onChange={(e) => setTel(e.target.value)}
                         className="text-sm placeholder-gray-500 pl-10 pr-4 rounded-lg border border-gray-400 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400"
-                        
+
                         required
                         defaultValue={tel}
                         disabled={true}
@@ -207,8 +222,8 @@ function RegisterIndex() {
                         name="email"
                         onChange={(e) => setEmail(e.target.value)}
                         className="text-sm placeholder-gray-500 pl-10 pr-4 rounded-lg border border-gray-400 w-full md:py-2 py-3 focus:outline-none focus:border-emerald-400"
-                        
-                        
+
+
                         required
                         defaultValue={email}
                         disabled={true}
@@ -238,7 +253,7 @@ function RegisterIndex() {
 
                   </div> */}
 
-              
+
 
                   {/* Password */}
                   <div className="flex flex-col mb-3">
@@ -278,23 +293,19 @@ function RegisterIndex() {
                       />
                     </div>
 
-
+                    { password.length < 6 && 
+                      <div>
+                        <small className="absolute w-full text-neutral-500 dark:text-neutral-200 text-red-500 hover:text-red-600">
+                          <span>
+                            {import.meta.env.VITE_APP_PASSWORD_CONSTRAINT_MESSAGE}
+                          </span>
+                        </small>
+                      </div>
+                    }
                   </div>
 
-                  {/* Forgot Password Link */}
-                  {/* <div className="flex items-center mb-6 -mt-2 md:-mt-4">
-                    <div className="flex ml-auto">
-                      <Link
-                        to=""
-                        onClick={(e) => {
-                          e.preventDefault();
-                        }}
-                        className="inline-flex font-semibold text-xs sm:text-sm text-emerald-500 hover:text-emerald-700"
-                      >
-                        password oublié ?
-                      </Link>
-                    </div>
-                  </div> */}
+
+
 
                   {/* Button Register */}
                   <div className="flex w-full">
@@ -309,6 +320,15 @@ function RegisterIndex() {
                     </button>
                   </div>
                 </form>
+
+                <div >
+                    {
+                      errorMsg && <small className="text-red-500 hover:text-red-600" > {errorMsg} </small>
+                    }
+                    <br />
+                    <br />
+                  </div>
+
               </div>
 
               {/* Sparator */}
@@ -331,7 +351,7 @@ function RegisterIndex() {
                   <span className="mr-2 flex-1">Login with Google</span>
                 </button>
               </div>
-             
+
               {/* End Social Button */}
 
               {/* Register Link */}
