@@ -5,12 +5,14 @@ import { GoogleAuthProvider, getAuth, signInWithEmailAndPassword, signInWithPopu
 import { FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { auth, db } from "../../../services/db";
-import { 
+import {
   // Query, 
-  Timestamp,  addDoc, collection, getDocs, query, where } from "firebase/firestore";
-  
+  Timestamp, addDoc, collection, getDocs, query, where
+} from "firebase/firestore";
+
 import { User, UserConverter } from "../../Users/User";
-import { buildEmail } from "../../../utils/Utils";
+import { FirebaseErrorCode, FirebaseErrorMessage, buildEmail } from "../../../utils/Utils";
+import { FirebaseError } from "firebase/app";
 
 const LoginImage = "https://edp.raincode.my.id/static/media/login.cc0578413db10119a7ff.png";
 
@@ -23,6 +25,8 @@ function LoginIndex() {
   const [emailOrTel, setEmailOrTel] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
 
   const handleSubmit = (e: FormEvent) => {
@@ -38,32 +42,51 @@ function LoginIndex() {
     try {
       setLoading(true);
 
-       emailOrTel = emailOrTel.includes('@') ? emailOrTel : buildEmail(emailOrTel);
+      emailOrTel = emailOrTel.includes('@') ? emailOrTel : buildEmail(emailOrTel);
 
-       const auth = getAuth();
-       const userCredential = await signInWithEmailAndPassword(
-         auth,
-         emailOrTel,
-         password
-       );
+      const auth = getAuth();
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        emailOrTel,
+        password
+      );
 
-       if(!userCredential.user) {
-         throw new Error(`User with ${emailOrTel} not found in database !`);
-       }
-     
+      if (!userCredential.user) {
+        throw new Error(`User with ${emailOrTel} not found in database !`);
+      }
+
 
       if (userCredential.user) {
         checkUserRoleAndRedirect(userCredential.user.email!);
       }
-    
+
     } catch (error: unknown) {
-      /*
-      console.log(error?.code);
-      console.log(error.message);
-      */
       console.log(error);
+      if (error instanceof FirebaseError) {
+        const firebaseError = (error as FirebaseError);
+
+        const message = getErrorMessage(firebaseError.code);
+
+        setErrorMsg(message);
+      
+        setLoading(false);
+        setError(true);
+      }
 
     }
+  }
+
+  const getErrorMessage = (code: string): string  => {
+    let message = '';
+    switch (code) {
+      case FirebaseErrorCode.USER_NOT_FOUND:
+        message = FirebaseErrorMessage.USER_NOT_FOUND;
+        break;
+    
+      default:
+        break;
+    }
+    return message;
   }
 
   // https://blog.logrocket.com/user-authentication-firebase-react-apps/
@@ -76,7 +99,7 @@ function LoginIndex() {
     const q = query(collection(db, "users"), where("email", "==", emailOrTel));
     const querySnapshot = await getDocs(q);
 
-    
+
     let user: User = null;
 
     switch (querySnapshot.size) {
@@ -91,7 +114,7 @@ function LoginIndex() {
         user!.roles?.includes('admin') ? navigate("/") : navigate("/onlineClients", { state: user });
         window.location.reload();
         break;
-        
+
       default:
         throw new Error(`Multiple users with the same ${emailOrTel} in database !`);
     }
@@ -104,11 +127,11 @@ function LoginIndex() {
     }
     */
 
- 
+
 
   }
 
-  
+
 
   /*
   const getUserByEmailInDB = async (email: string): Promise<User> => {    
@@ -159,16 +182,16 @@ function LoginIndex() {
           createTime: Timestamp.now()
         };
         await addDoc(collection(db, "users"), connectedUser);
-      } else if(docs.docs.length === 1) {
+      } else if (docs.docs.length === 1) {
 
         docs.docs.map((doc) => {
           connectedUser = UserConverter.fromFirestore(doc);
-          connectedUser = {...connectedUser, authProvider: "google", createTime: Timestamp.now() } as User;
+          connectedUser = { ...connectedUser, authProvider: "google", createTime: Timestamp.now() } as User;
         })
       }
       localStorage.setItem("user", JSON.stringify(connectedUser));
       setLoading(false);
-      
+
       // navigate("/pharmacies");
       connectedUser!.roles?.includes('admin') ? navigate("/") : navigate("/onlineClients", { state: connectedUser });
 
@@ -275,6 +298,8 @@ function LoginIndex() {
                     )}
                   </div>
 
+                 
+
                   {/* Forgot Password Link */}
                   <div className="flex items-center mb-6 -mt-2 md:-mt-4">
                     <div className="flex ml-auto">
@@ -289,6 +314,14 @@ function LoginIndex() {
                         Password oublié ?
                       </Link>
                     </div>
+                  </div>
+
+                  <div >
+                    {
+                      errorMsg && <small className="text-red-500 hover:text-red-600" > {errorMsg} </small>
+                    }
+                    <br />
+                    <br />
                   </div>
 
                   {/* Button Login */}
@@ -328,7 +361,7 @@ function LoginIndex() {
                   </span>
                 </button>
               </div>
-            
+
               {/* End Social Button */}
 
               {/* Register Link */}
@@ -355,6 +388,7 @@ function LoginIndex() {
                 </Link>
               </div>
               {/* End Register Link */}
+
             </div>
           </div>
         </div>

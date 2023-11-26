@@ -17,4 +17,13 @@ export const formatPhoneNumber = (tel: string) => `${tel!.includes('+') ? tel : 
 export const buildEmail = (tel: string) => `${formatPhoneNumber(tel).trim()}@${import.meta.env.VITE_APP_DOMAIN_NAME}`;
 
 
+
 export const trimString = (value: string) => value ? value.trim() : value;
+
+export enum FirebaseErrorCode {
+    USER_NOT_FOUND = 'auth/user-not-found',
+}
+
+export enum FirebaseErrorMessage {
+    USER_NOT_FOUND = 'V\u00E9rifier votre saisie ! utilisateur et mot de passe invalides',
+}
