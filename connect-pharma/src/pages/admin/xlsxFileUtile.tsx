@@ -8,7 +8,7 @@ import { collection, query, where, getDocs } from "firebase/firestore";
 import { PharmacyConverter } from '../pharmacies/Pharmacy';
 
 
-
+// FileNameFormat = dd-mm-yyyy_dd-mm-yyyy
 // https://www.ultimateakash.com/blog-details/Ii0zOGAKYAo=/How-to-Import-Export-Excel-&-CSV-In-React-2022
 const XlsxFileUtile = () => {
 
@@ -121,11 +121,12 @@ const XlsxFileUtile = () => {
     }
     const getDutyDateFromFileName = (fileName: string) => {
 
-        const datePart = fileName?.split('-');
-        const dayPart = datePart[0]?.split('_');
+        const tap = fileName?.split('_');
+        const startDatePart = tap[0].split('-');
+        const endDatePart = tap[1].split('-');
 
-        const dutyStartDate = new Date(+datePart[2], +datePart[1] - 1, +dayPart[0], 0, 0, 1);
-        const dutyEndDate = new Date(+datePart[2], +datePart[1] - 1, +dayPart[1], 23, 59, 59);
+        const dutyStartDate = new Date(+startDatePart[2], +startDatePart[1] - 1, +startDatePart[0], 0, 0, 1);
+        const dutyEndDate = new Date(+endDatePart[2], +endDatePart[1] - 1, +endDatePart[0], 23, 59, 59);
 
         return [dutyStartDate, dutyEndDate];
 
