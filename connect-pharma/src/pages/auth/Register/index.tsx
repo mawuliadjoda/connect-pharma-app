@@ -175,10 +175,6 @@ function RegisterIndex() {
                 </div>
               </div>
 
-              <div className="md:hidden block my-4">
-                <h1 className="text-2xl font-semibold">Register</h1>
-              </div>
-
               {/* Register Form */}
               <div className="md:mt-10 mt-4">
                 <form onSubmit={handleSubmit}>
@@ -315,7 +311,7 @@ function RegisterIndex() {
                       className="flex items-center justify-center focus:outline-none text-white text-sm bg-emerald-500 hover:bg-emerald-700 rounded-lg md:rounded md:py-2 py-3 w-full transition duration-150 ease-in"
                     >
                       <span className="mr-2 md:uppercase">
-                        {loading ? "Processing...." : "Register"}
+                        {loading ? "Processing...." : "S'enregistrer"}
                       </span>
                     </button>
                   </div>
