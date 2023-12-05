@@ -105,3 +105,19 @@ https://romannurik.github.io/AndroidAssetStudio/icons-launcher.html#foreground.t
 
 
 https://www.norio.be/graphic-generator/#
+
+
+
+# deploy to firebase cmd
+
+> firebase init
+? Are you ready to proceed? (Y/n) Y
+>(*) Hosting: Configure files for Firebase Hosting and (optionally) set up GitHub Action deploys
+
+
+? What do you want to use as your public directory? dist
+? Configure as a single-page app (rewrite all urls to /index.html)? Yes
+? Set up automatic builds and deploys with GitHub? No
+? File dist/index.html already exists. Overwrite? (y/N) N
+
+> firebase deploy
